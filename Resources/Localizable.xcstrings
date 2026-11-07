@@ -1,0 +1,6279 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "": {},
+    " ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " "
+          }
+        }
+      }
+    },
+    "%1$lld Objekte vom iPhone gelöscht · %2$@ frei": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld items deleted from iPhone · %2$@ freed"
+          }
+        }
+      }
+    },
+    "%1$lld Objekte vom iPhone löschen (%2$@)?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete %1$lld items from iPhone (%2$@)?"
+          }
+        }
+      }
+    },
+    "%@  %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@  %2$lld"
+          }
+        }
+      }
+    },
+    "%@ (%@)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ (%2$@)"
+          }
+        }
+      }
+    },
+    "%@ Objekte auf deinem Server": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ items on your server"
+          }
+        }
+      }
+    },
+    "%@ ausblenden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hide %@"
+          }
+        }
+      }
+    },
+    "%@ im Laufe der Jahre": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ Over the Years"
+          }
+        }
+      }
+    },
+    "%@ löschen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete %@"
+          }
+        }
+      }
+    },
+    "%@ von %@ gesichert": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ of %2$@ backed up"
+          }
+        }
+      }
+    },
+    "%@ von %@ · %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ of %2$@ · %3$@"
+          }
+        }
+      }
+    },
+    "%@ weniger zeigen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Feature %@ Less"
+          }
+        }
+      }
+    },
+    "%@ werden geladen …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading %@ …"
+          }
+        }
+      }
+    },
+    "%lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld"
+          }
+        }
+      }
+    },
+    "%lld Alben": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld Albums"
+          }
+        }
+      }
+    },
+    "%lld Fotos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld Photos"
+          }
+        }
+      }
+    },
+    "%lld Fotos ausgewählt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld Photos Selected"
+          }
+        }
+      }
+    },
+    "%lld Fotos bestätigt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld photos confirmed"
+          }
+        }
+      }
+    },
+    "%lld Fotos löschen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete %lld Photos"
+          }
+        }
+      }
+    },
+    "%lld Fotos vom %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld photos from %2$@"
+          }
+        }
+      }
+    },
+    "%lld Fotos zu %@ hinzugefügt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld photos added to %2$@"
+          }
+        }
+      }
+    },
+    "%lld Gruppen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld groups"
+          }
+        }
+      }
+    },
+    "%lld Mitteilungen geplant": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld notifications scheduled"
+          }
+        }
+      }
+    },
+    "%lld Objekte": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld Items"
+          }
+        }
+      }
+    },
+    "%lld Objekte ausgewählt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld Items Selected"
+          }
+        }
+      }
+    },
+    "%lld Objekte hinzugefügt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld items added"
+          }
+        }
+      }
+    },
+    "%lld Objekte kopiert": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld items copied"
+          }
+        }
+      }
+    },
+    "%lld Objekte löschen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete %lld Items"
+          }
+        }
+      }
+    },
+    "%lld Objekte werden gesichert …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backing up %lld items …"
+          }
+        }
+      }
+    },
+    "%lld Objekte zu „%@“ hinzugefügt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld items added to “%@”"
+          }
+        }
+      }
+    },
+    "%lld Tage": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld days"
+          }
+        }
+      }
+    },
+    "%lld Videos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld Videos"
+          }
+        }
+      }
+    },
+    "%lld Videos ausgewählt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld Videos Selected"
+          }
+        }
+      }
+    },
+    "%lld Videos geprüft …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld videos checked …"
+          }
+        }
+      }
+    },
+    "%lld Videos löschen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete %lld Videos"
+          }
+        }
+      }
+    },
+    "%lld aus Album entfernt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld removed from album"
+          }
+        }
+      }
+    },
+    "%lld ausgeblendet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld hidden"
+          }
+        }
+      }
+    },
+    "%lld dupliziert": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld duplicated"
+          }
+        }
+      }
+    },
+    "%lld eingeblendet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld unhidden"
+          }
+        }
+      }
+    },
+    "%lld endgültig gelöscht": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld permanently deleted"
+          }
+        }
+      }
+    },
+    "%lld entfernt · Widerrufen oben links": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld removed · undo at top left"
+          }
+        }
+      }
+    },
+    "%lld fehlgeschlagen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld failed"
+          }
+        }
+      }
+    },
+    "%lld hochgeladen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld uploaded"
+          }
+        }
+      }
+    },
+    "%lld schon da": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld already there"
+          }
+        }
+      }
+    },
+    "%lld von %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld of %2$lld"
+          }
+        }
+      }
+    },
+    "%lld wiederhergestellt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld recovered"
+          }
+        }
+      }
+    },
+    "1 Album": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 Album"
+          }
+        }
+      }
+    },
+    "1 Foto ausgewählt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 Photo Selected"
+          }
+        }
+      }
+    },
+    "1 Foto bestätigt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 photo confirmed"
+          }
+        }
+      }
+    },
+    "1 Foto löschen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete 1 Photo"
+          }
+        }
+      }
+    },
+    "1 Foto zu %@ hinzugefügt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 photo added to %@"
+          }
+        }
+      }
+    },
+    "1 Jahr": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 Year"
+          }
+        }
+      }
+    },
+    "1 Mitteilung geplant": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 notification scheduled"
+          }
+        }
+      }
+    },
+    "1 Objekt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 Item"
+          }
+        }
+      }
+    },
+    "1 Objekt ausgewählt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 Item Selected"
+          }
+        }
+      }
+    },
+    "1 Objekt hinzugefügt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 item added"
+          }
+        }
+      }
+    },
+    "1 Objekt löschen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete 1 Item"
+          }
+        }
+      }
+    },
+    "1 Tag": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 day"
+          }
+        }
+      }
+    },
+    "1 Video ausgewählt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 Video Selected"
+          }
+        }
+      }
+    },
+    "1 Video löschen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete 1 Video"
+          }
+        }
+      }
+    },
+    "10 GB": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "10 GB"
+          }
+        }
+      }
+    },
+    "2 GB": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "2 GB"
+          }
+        }
+      }
+    },
+    "30 GB": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "30 GB"
+          }
+        }
+      }
+    },
+    "30 Tage": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "30 Days"
+          }
+        }
+      }
+    },
+    "7 Tage": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "7 Days"
+          }
+        }
+      }
+    },
+    "AUTO": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AUTO"
+          }
+        }
+      }
+    },
+    "Abbrechen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
+          }
+        }
+      }
+    },
+    "Abmelden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign Out"
+          }
+        }
+      }
+    },
+    "Abpraller": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bounce"
+          }
+        }
+      }
+    },
+    "Aktualisieren": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Refresh"
+          }
+        }
+      }
+    },
+    "Alben": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Albums"
+          }
+        }
+      }
+    },
+    "Alben lange drücken → „In Ordner bewegen“.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Touch and hold an album → “Move to Folder”."
+          }
+        }
+      }
+    },
+    "Album": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Album"
+          }
+        }
+      }
+    },
+    "Album anzeigen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "View Album"
+          }
+        }
+      }
+    },
+    "Album gelöscht": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Album deleted"
+          }
+        }
+      }
+    },
+    "Album in Fotos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Album in Photos"
+          }
+        }
+      }
+    },
+    "Album löschen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete Album"
+          }
+        }
+      }
+    },
+    "Album umbenennen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rename Album"
+          }
+        }
+      }
+    },
+    "Album „%@“ erstellt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Album “%@” created"
+          }
+        }
+      }
+    },
+    "Albumname": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Album Name"
+          }
+        }
+      }
+    },
+    "Alle": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All"
+          }
+        }
+      }
+    },
+    "Alle %lld Objekte werden um denselben Abstand verschoben.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All %lld items will be shifted by the same amount."
+          }
+        }
+      }
+    },
+    "Alle Fotos anzeigen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show All Photos"
+          }
+        }
+      }
+    },
+    "Alle Fotos dieser Personen erscheinen danach unter einem Namen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All photos of these people will then appear under one name."
+          }
+        }
+      }
+    },
+    "Alle Objekte": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All Items"
+          }
+        }
+      }
+    },
+    "Alle einblenden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unhide All"
+          }
+        }
+      }
+    },
+    "Alle reduzieren": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Collapse All"
+          }
+        }
+      }
+    },
+    "Alle Änderungen an diesem Foto werden entfernt.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All edits to this photo will be removed."
+          }
+        }
+      }
+    },
+    "Alle Änderungen verwerfen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Discard All Changes"
+          }
+        }
+      }
+    },
+    "Alles vor dem %@ ist schon aus iCloud übernommen. Eingeschaltet prüft die App auch ältere Fotos – aber nur die, die auf dem iPhone liegen, ohne sie aus iCloud zu laden.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Everything before %@ has already been imported from iCloud. When turned on, the app also checks older photos – but only those stored on the iPhone, without downloading them from iCloud."
+          }
+        }
+      }
+    },
+    "Als Duplikat gesichert": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved as duplicate"
+          }
+        }
+      }
+    },
+    "Als Duplikat sichern": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save as Duplicate"
+          }
+        }
+      }
+    },
+    "Als Favorit": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Favorite"
+          }
+        }
+      }
+    },
+    "Als Nächstes": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Up Next"
+          }
+        }
+      }
+    },
+    "Als Rückblick abspielen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play as Memory"
+          }
+        }
+      }
+    },
+    "Als Schlüsselfoto festlegen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Make Key Photo"
+          }
+        }
+      }
+    },
+    "Als Titelbild für %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Make Key Photo for %@"
+          }
+        }
+      }
+    },
+    "Als Video teilen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share as Video"
+          }
+        }
+      }
+    },
+    "Anfang": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start"
+          }
+        }
+      }
+    },
+    "Angepinnt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pinned"
+          }
+        }
+      }
+    },
+    "Anhalten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pause"
+          }
+        }
+      }
+    },
+    "Animiert": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Animated"
+          }
+        }
+      }
+    },
+    "Anmelden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign In"
+          }
+        }
+      }
+    },
+    "Anpassen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adjust"
+          }
+        }
+      }
+    },
+    "Anpinnen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pin"
+          }
+        }
+      }
+    },
+    "Anzeigen:": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show:"
+          }
+        }
+      }
+    },
+    "Auf deinem Server bleibt alles erhalten.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Everything stays on your server."
+          }
+        }
+      }
+    },
+    "Auf dem Server bleibt alles. Die Vorschauen werden danach im WLAN neu geladen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Everything stays on the server. Previews will be downloaded again over Wi-Fi."
+          }
+        }
+      }
+    },
+    "Auflösung": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Definition"
+          }
+        }
+      }
+    },
+    "Aus": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Off"
+          }
+        }
+      }
+    },
+    "Aus Album entfernen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove from Album"
+          }
+        }
+      }
+    },
+    "Aus Album entfernt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Removed from album"
+          }
+        }
+      }
+    },
+    "Aus Empfohlenen entfernen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove from Featured"
+          }
+        }
+      }
+    },
+    "Aus Favoriten entfernen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove from Favorites"
+          }
+        }
+      }
+    },
+    "Aus Rückblick entfernen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove from Memory"
+          }
+        }
+      }
+    },
+    "Als Titelbild verwenden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Make Key Photo"
+          }
+        }
+      }
+    },
+    "Aus Rückblick entfernt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Removed from memory"
+          }
+        }
+      }
+    },
+    "Aus „%@“ entfernen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove from “%@”"
+          }
+        }
+      }
+    },
+    "Aus „%@“ entfernt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Removed from “%@”"
+          }
+        }
+      }
+    },
+    "Aus „Personen“ ausblenden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hide from “People”"
+          }
+        }
+      }
+    },
+    "Ausblenden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hide"
+          }
+        }
+      }
+    },
+    "Ausgeblendet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hidden"
+          }
+        }
+      }
+    },
+    "Ausgeblendete anzeigen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show Hidden"
+          }
+        }
+      }
+    },
+    "Auswählen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select"
+          }
+        }
+      }
+    },
+    "Auto": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auto"
+          }
+        }
+      }
+    },
+    "BLENDE  ƒ %.1f": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "APERTURE  ƒ %.1f"
+          }
+        }
+      }
+    },
+    "Backup": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backup"
+          }
+        }
+      }
+    },
+    "Backup & Offline": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backup & Offline"
+          }
+        }
+      }
+    },
+    "Backup ist aktiv": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backup is on"
+          }
+        }
+      }
+    },
+    "Backup ist aus": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backup is off"
+          }
+        }
+      }
+    },
+    "Bearbeiten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edit"
+          }
+        }
+      }
+    },
+    "Bearbeitet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edited"
+          }
+        }
+      }
+    },
+    "Bearbeitungen auf %lld Fotos eingesetzt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edits pasted on %lld photos"
+          }
+        }
+      }
+    },
+    "Bearbeitungen eingesetzt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edits pasted"
+          }
+        }
+      }
+    },
+    "Bearbeitungen einsetzen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paste Edits"
+          }
+        }
+      }
+    },
+    "Bearbeitungen einsetzen … %lld von %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pasting edits… %lld of %lld"
+          }
+        }
+      }
+    },
+    "Bearbeitungen konnten nicht eingesetzt werden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edits couldn't be pasted"
+          }
+        }
+      }
+    },
+    "Bearbeitungen kopieren": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy Edits"
+          }
+        }
+      }
+    },
+    "Bearbeitungen kopiert": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edits copied"
+          }
+        }
+      }
+    },
+    "Bearbeitungen werden eingesetzt …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pasting edits…"
+          }
+        }
+      }
+    },
+    "Beenden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop"
+          }
+        }
+      }
+    },
+    "Begradigen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Straighten"
+          }
+        }
+      }
+    },
+    "Belege": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receipts"
+          }
+        }
+      }
+    },
+    "Belichtung": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exposure"
+          }
+        }
+      }
+    },
+    "Bereinigen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clean Up"
+          }
+        }
+      }
+    },
+    "Bereinigen in voller Auflösung fehlgeschlagen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clean Up at full resolution failed"
+          }
+        }
+      }
+    },
+    "Bereinigen nicht erreichbar – läuft der Server?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clean Up unavailable – is the server running?"
+          }
+        }
+      }
+    },
+    "Berge": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mountains"
+          }
+        }
+      }
+    },
+    "Berge und Natur": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mountains and nature"
+          }
+        }
+      }
+    },
+    "Bernstein": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Amber"
+          }
+        }
+      }
+    },
+    "Beschreibe den Rückblick, den du sehen möchtest – zum Beispiel einen Ort, ein Jahr, eine Person oder ein Motiv.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Describe the memory you want to see – for example a place, a year, a person or a subject."
+          }
+        }
+      }
+    },
+    "Beschreibe einen Rückblick …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Describe a memory …"
+          }
+        }
+      }
+    },
+    "Bild konnte nicht berechnet werden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn’t render the image"
+          }
+        }
+      }
+    },
+    "Bild konnte nicht geladen werden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn’t load the image"
+          }
+        }
+      }
+    },
+    "Bildschirmaufnahme": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Screen Recording"
+          }
+        }
+      }
+    },
+    "Bildschirmaufnahmen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Screen Recordings"
+          }
+        }
+      }
+    },
+    "Bildschirmfoto": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Screenshot"
+          }
+        }
+      }
+    },
+    "Bildschirmfotos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Screenshots"
+          }
+        }
+      }
+    },
+    "Brillanz": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Brilliance"
+          }
+        }
+      }
+    },
+    "Code eingeben": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter Passcode"
+          }
+        }
+      }
+    },
+    "Code eingeben, um dieses Album anzuzeigen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter your passcode to view this album"
+          }
+        }
+      }
+    },
+    "Darstellungsoptionen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "View Options"
+          }
+        }
+      }
+    },
+    "Das Beste aus %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Best of %@"
+          }
+        }
+      }
+    },
+    "Das beste Foto bleibt, die anderen kommen in „Zuletzt gelöscht“ (30 Tage wiederherstellbar).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The best photo stays, the others go to “Recently Deleted” (recoverable for 30 days)."
+          }
+        }
+      }
+    },
+    "Das ist nicht %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This Is Not %@"
+          }
+        }
+      }
+    },
+    "Datum": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Date"
+          }
+        }
+      }
+    },
+    "Datum & Uhrzeit anpassen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adjust Date & Time"
+          }
+        }
+      }
+    },
+    "Datum/Uhrzeit": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Date/Time"
+          }
+        }
+      }
+    },
+    "Dauer": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Duration"
+          }
+        }
+      }
+    },
+    "Dazu habe ich keine passenden Fotos gefunden.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I couldn’t find any matching photos."
+          }
+        }
+      }
+    },
+    "Deine Mediathek auf deinem eigenen Server": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your library on your own server"
+          }
+        }
+      }
+    },
+    "Diashow": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Slideshow"
+          }
+        }
+      }
+    },
+    "Die App merkt sich, wann sie hängt oder beim Scrollen ruckelt – ohne Fotos oder Namen. Schick das Protokoll, wenn etwas langsam ist.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The app notes when it hangs or stutters while scrolling – without photos or names. Send the log if something is slow."
+          }
+        }
+      }
+    },
+    "Die Fotos und Videos bleiben in deiner Mediathek.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The photos and videos stay in your library."
+          }
+        }
+      }
+    },
+    "Diese %lld Fotos werden ausgeblendet, sind aber weiterhin im Album „Ausgeblendet“ zu sehen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "These %lld photos will be hidden, but you can still see them in the Hidden album."
+          }
+        }
+      }
+    },
+    "Diese %lld Objekte werden ausgeblendet, sind aber weiterhin im Album „Ausgeblendet“ zu sehen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "These %lld items will be hidden, but you can still see them in the Hidden album."
+          }
+        }
+      }
+    },
+    "Diese %lld Objekte werden endgültig gelöscht. Dieser Vorgang kann nicht widerrufen werden.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "These %lld items will be permanently deleted. This action can’t be undone."
+          }
+        }
+      }
+    },
+    "Diese %lld Personen sind „%@“?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Are these %1$lld people “%2$@”?"
+          }
+        }
+      }
+    },
+    "Diese %lld Videos werden ausgeblendet, sind aber weiterhin im Album „Ausgeblendet“ zu sehen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "These %lld videos will be hidden, but you can still see them in the Hidden album."
+          }
+        }
+      }
+    },
+    "Diese Objekte kommen in „Zuletzt gelöscht“ und bleiben dort 30 Tage wiederherstellbar.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "These items go to “Recently Deleted” and can be recovered there for 30 days."
+          }
+        }
+      }
+    },
+    "Diese Person ist „%@“?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Is this person “%@”?"
+          }
+        }
+      }
+    },
+    "Diese Personen sehen alle deine Fotos (nicht „Ausgeblendet“ und „Zuletzt gelöscht“). Nur Nutzer deines eigenen Servers.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "These people see all your photos (except “Hidden” and “Recently Deleted”). Only users of your own server."
+          }
+        }
+      }
+    },
+    "Diese Tage erscheinen seltener": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "These days will be featured less"
+          }
+        }
+      }
+    },
+    "Diese Tage weniger zeigen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Feature These Days Less"
+          }
+        }
+      }
+    },
+    "Dieses Album ist leer.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This album is empty."
+          }
+        }
+      }
+    },
+    "Dieses Foto hat keine Licht- oder Farbbearbeitungen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This photo has no light or color edits"
+          }
+        }
+      }
+    },
+    "Dieses Foto wird ausgeblendet, ist aber weiterhin im Album „Ausgeblendet“ zu sehen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This photo will be hidden, but you can still see it in the Hidden album."
+          }
+        }
+      }
+    },
+    "Dieses Objekt wird ausgeblendet, ist aber weiterhin im Album „Ausgeblendet“ zu sehen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This item will be hidden, but you can still see it in the Hidden album."
+          }
+        }
+      }
+    },
+    "Dieses Objekt wird endgültig gelöscht. Dieser Vorgang kann nicht widerrufen werden.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This item will be permanently deleted. This action can’t be undone."
+          }
+        }
+      }
+    },
+    "Dieses Video wird ausgeblendet, ist aber weiterhin im Album „Ausgeblendet“ zu sehen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This video will be hidden, but you can still see it in the Hidden album."
+          }
+        }
+      }
+    },
+    "Dokumente": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Documents"
+          }
+        }
+      }
+    },
+    "Dramatisch": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dramatic"
+          }
+        }
+      }
+    },
+    "Dramatisch kühl": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dramatic Cool"
+          }
+        }
+      }
+    },
+    "Dramatisch warm": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dramatic Warm"
+          }
+        }
+      }
+    },
+    "Drucken": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Print"
+          }
+        }
+      }
+    },
+    "Du teilst mit": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You Share With"
+          }
+        }
+      }
+    },
+    "Duplikate": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Duplicates"
+          }
+        }
+      }
+    },
+    "Duplikate zusammenführen?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Merge Duplicates?"
+          }
+        }
+      }
+    },
+    "Duplizieren": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Duplicate"
+          }
+        }
+      }
+    },
+    "Durchsucht deine Mediathek auf dem eigenen Server, z. B. nach „Strand 2019“ oder „Belege“.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Searches your library on your own server, e.g. for “beach 2019” or “receipts”."
+          }
+        }
+      }
+    },
+    "E-Mail": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Email"
+          }
+        }
+      }
+    },
+    "Effekt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Effect"
+          }
+        }
+      }
+    },
+    "Eigener Mix": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Custom Mix"
+          }
+        }
+      }
+    },
+    "Einblenden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unhide"
+          }
+        }
+      }
+    },
+    "Eingeblendet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unhidden"
+          }
+        }
+      }
+    },
+    "Eingeschaltet erscheinen die Fotos dieser Person in deiner Mediathek – ausblenden geht im Mediathek-Menü unter „Mit dir geteilt“.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When on, this person’s photos appear in your library – hide them in the library menu under “Shared With You”."
+          }
+        }
+      }
+    },
+    "Empfohlene Fotos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Featured Photos"
+          }
+        }
+      }
+    },
+    "Ende": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "End"
+          }
+        }
+      }
+    },
+    "Endgültig gelöscht": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permanently deleted"
+          }
+        }
+      }
+    },
+    "Endlosschleife": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loop"
+          }
+        }
+      }
+    },
+    "Episch": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Epic"
+          }
+        }
+      }
+    },
+    "Erinnerungen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Memories"
+          }
+        }
+      }
+    },
+    "Erstellen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create"
+          }
+        }
+      }
+    },
+    "Essen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Food"
+          }
+        }
+      }
+    },
+    "Essen mit Freunden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dinner with friends"
+          }
+        }
+      }
+    },
+    "Face ID verwenden oder Code eingeben, um dieses Album anzuzeigen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use Face ID or enter your passcode to view this album"
+          }
+        }
+      }
+    },
+    "Familie": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Family"
+          }
+        }
+      }
+    },
+    "Farbton": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tint"
+          }
+        }
+      }
+    },
+    "Favorit": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Favorite"
+          }
+        }
+      }
+    },
+    "Favoriten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Favorites"
+          }
+        }
+      }
+    },
+    "Favoriten auf dem iPhone behalten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep Favorites on iPhone"
+          }
+        }
+      }
+    },
+    "Fertig": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done"
+          }
+        }
+      }
+    },
+    "Filter": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Filters"
+          }
+        }
+      }
+    },
+    "Format": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Format"
+          }
+        }
+      }
+    },
+    "Foto": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photo"
+          }
+        }
+      }
+    },
+    "Foto konnte nicht geladen werden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't load the photo"
+          }
+        }
+      }
+    },
+    "Foto, ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photo, "
+          }
+        }
+      }
+    },
+    "Fotos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photos"
+          }
+        }
+      }
+    },
+    "Fotos (%@)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photos (%@)"
+          }
+        }
+      }
+    },
+    "Fotos hinzufügen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add Photos"
+          }
+        }
+      }
+    },
+    "Fotos sichern": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Back Up Photos"
+          }
+        }
+      }
+    },
+    "Fotos suchen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search Photos"
+          }
+        }
+      }
+    },
+    "Fotos teilen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share Photos"
+          }
+        }
+      }
+    },
+    "Fotos älter als": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photos Older Than"
+          }
+        }
+      }
+    },
+    "Frei": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Freeform"
+          }
+        }
+      }
+    },
+    "Fröhlich": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Happy"
+          }
+        }
+      }
+    },
+    "Frühling": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spring"
+          }
+        }
+      }
+    },
+    "Für „%@“ gibt es nichts.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing for “%@”."
+          }
+        }
+      }
+    },
+    "Übernommen bis": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Imported Up To"
+          }
+        }
+      }
+    },
+    "Ältere Fotos sind schon auf dem Server": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Older Photos Are Already on the Server"
+          }
+        }
+      }
+    },
+    "Die App sichert die ganze Mediathek, auch Fotos, die nur in iCloud liegen (sie werden dafür geladen). Hast du ältere Fotos schon anders auf den Server gebracht, z. B. mit icloudpd, schalte das ein: Dann sichert die App nur, was danach dazukommt.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The app backs up your entire library, including photos that are only in iCloud (they are downloaded for this). If you already moved older photos to the server another way, e.g. with icloudpd, turn this on: the app then only backs up what comes after."
+          }
+        }
+      }
+    },
+    "Ganze Mediathek prüfen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check Entire Library"
+          }
+        }
+      }
+    },
+    "Geburtstag": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Birthday"
+          }
+        }
+      }
+    },
+    "Geburtstag gesichert – erscheint in Rückblicken": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Birthday saved – it will appear in Memories"
+          }
+        }
+      }
+    },
+    "Geburtstag hinzufügen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add Birthday"
+          }
+        }
+      }
+    },
+    "Geburtstag von %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@’s Birthday"
+          }
+        }
+      }
+    },
+    "Geburtstag ändern": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Change Birthday"
+          }
+        }
+      }
+    },
+    "Gedämpftes S/W": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Muted B&W"
+          }
+        }
+      }
+    },
+    "Gefiltert: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Filtered: %@"
+          }
+        }
+      }
+    },
+    "Gefällt mir": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Like"
+          }
+        }
+      }
+    },
+    "Gefällt mir nicht mehr": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlike"
+          }
+        }
+      }
+    },
+    "Gekürztes Video gesichert": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trimmed video saved"
+          }
+        }
+      }
+    },
+    "Gelbe Griffe ziehen, um Anfang und Ende festzulegen. Das Original bleibt erhalten.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drag the yellow handles to set start and end. The original is kept."
+          }
+        }
+      }
+    },
+    "Gemütlich": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cozy"
+          }
+        }
+      }
+    },
+    "Geschützte Alben anzeigen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show protected albums"
+          }
+        }
+      }
+    },
+    "Gespeichert aus %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved from %@"
+          }
+        }
+      }
+    },
+    "Gespeicherte Vorschauen löschen?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete Stored Previews?"
+          }
+        }
+      }
+    },
+    "Gestern": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yesterday"
+          }
+        }
+      }
+    },
+    "Geteilt mit dir": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shared With You"
+          }
+        }
+      }
+    },
+    "Geteilte Mediathek": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shared Library"
+          }
+        }
+      }
+    },
+    "Glanzlichter": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Highlights"
+          }
+        }
+      }
+    },
+    "Gleiche Person auswählen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose the Same Person"
+          }
+        }
+      }
+    },
+    "Gold": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gold"
+          }
+        }
+      }
+    },
+    "Groß": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Large"
+          }
+        }
+      }
+    },
+    "Große Videos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Large Videos"
+          }
+        }
+      }
+    },
+    "Große Vorschauen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Large previews"
+          }
+        }
+      }
+    },
+    "Große Vorschauen höchstens": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Large Previews Up To"
+          }
+        }
+      }
+    },
+    "Handschrift": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Handwriting"
+          }
+        }
+      }
+    },
+    "Hat nicht geklappt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "That didn't work"
+          }
+        }
+      }
+    },
+    "Haustiere": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pets"
+          }
+        }
+      }
+    },
+    "Helligkeit": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Brightness"
+          }
+        }
+      }
+    },
+    "Herbst": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fall"
+          }
+        }
+      }
+    },
+    "Heute": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today"
+          }
+        }
+      }
+    },
+    "Heute vor %lld Jahren": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld Years Ago Today"
+          }
+        }
+      }
+    },
+    "Heute vor 1 Jahr": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 Year Ago Today"
+          }
+        }
+      }
+    },
+    "Hier werden Alben angezeigt, sobald du eines erstellst oder Fotos hinzufügst.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Albums appear here as soon as you create one or add photos."
+          }
+        }
+      }
+    },
+    "HomeRoll": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "HomeRoll"
+          }
+        }
+      }
+    },
+    "Horizontal": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Horizontal"
+          }
+        }
+      }
+    },
+    "Hund": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dog"
+          }
+        }
+      }
+    },
+    "ISO %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ISO %lld"
+          }
+        }
+      }
+    },
+    "Illustrationen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Illustrations"
+          }
+        }
+      }
+    },
+    "Importe": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Imports"
+          }
+        }
+      }
+    },
+    "In %lld Alben": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In %lld Albums"
+          }
+        }
+      }
+    },
+    "In Album": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In Album"
+          }
+        }
+      }
+    },
+    "In Mediathek zeigen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show in Library"
+          }
+        }
+      }
+    },
+    "In Ordner bewegen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Move to Folder"
+          }
+        }
+      }
+    },
+    "In keinem Album": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not in Any Album"
+          }
+        }
+      }
+    },
+    "In „Alle Fotos“ anzeigen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show in “All Photos”"
+          }
+        }
+      }
+    },
+    "Info": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Info"
+          }
+        }
+      }
+    },
+    "Info, Nachschlagen verfügbar": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Info, Look Up available"
+          }
+        }
+      }
+    },
+    "Ist das %@?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Is this %@?"
+          }
+        }
+      }
+    },
+    "Istanbul": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Istanbul"
+          }
+        }
+      }
+    },
+    "Ja": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yes"
+          }
+        }
+      }
+    },
+    "Jahr": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Year"
+          }
+        }
+      }
+    },
+    "Jahre": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Years"
+          }
+        }
+      }
+    },
+    "Jetzt sichern": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Back Up Now"
+          }
+        }
+      }
+    },
+    "Karte": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Map"
+          }
+        }
+      }
+    },
+    "Karte einblenden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show Map"
+          }
+        }
+      }
+    },
+    "Kein Favorit": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unfavorite"
+          }
+        }
+      }
+    },
+    "Kein Original gefunden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No original found"
+          }
+        }
+      }
+    },
+    "Kein Ort": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Location"
+          }
+        }
+      }
+    },
+    "Kein Zugriff auf Fotos – in den Einstellungen erlauben.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No access to Photos – allow it in Settings."
+          }
+        }
+      }
+    },
+    "Kein schiefer Horizont gefunden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No tilted horizon found"
+          }
+        }
+      }
+    },
+    "Keine Alben verfügbar": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Albums"
+          }
+        }
+      }
+    },
+    "Keine Duplikate": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Duplicates"
+          }
+        }
+      }
+    },
+    "Keine Favoriten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Favorites"
+          }
+        }
+      }
+    },
+    "Keine Fotos mit Ort in diesem Album": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No photos with a location in this album"
+          }
+        }
+      }
+    },
+    "Keine Fotos oder Videos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Photos or Videos"
+          }
+        }
+      }
+    },
+    "Keine Objekte": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Items"
+          }
+        }
+      }
+    },
+    "Keine Objektivinformationen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No lens information"
+          }
+        }
+      }
+    },
+    "Keine Rückblicke verfügbar": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Memories"
+          }
+        }
+      }
+    },
+    "Keine Sammlungen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Collections"
+          }
+        }
+      }
+    },
+    "Keine Treffer": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Results"
+          }
+        }
+      }
+    },
+    "Keine Videos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Videos"
+          }
+        }
+      }
+    },
+    "Keine weiteren Vorschläge": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No More Suggestions"
+          }
+        }
+      }
+    },
+    "Kino": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cinematic"
+          }
+        }
+      }
+    },
+    "Klein": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Small"
+          }
+        }
+      }
+    },
+    "Kleine Vorschauen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Small previews"
+          }
+        }
+      }
+    },
+    "Kommentar hinzufügen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add a Comment"
+          }
+        }
+      }
+    },
+    "Kommentar löschen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete Comment"
+          }
+        }
+      }
+    },
+    "Kommentar nicht gesendet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comment not sent"
+          }
+        }
+      }
+    },
+    "Kontrast": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Contrast"
+          }
+        }
+      }
+    },
+    "Kontrastreich": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "High Contrast"
+          }
+        }
+      }
+    },
+    "Kontrastreiches S/W": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stark B&W"
+          }
+        }
+      }
+    },
+    "Kopieren": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy"
+          }
+        }
+      }
+    },
+    "Kopiert": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copied"
+          }
+        }
+      }
+    },
+    "Kurz": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Short"
+          }
+        }
+      }
+    },
+    "Kühl": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cool"
+          }
+        }
+      }
+    },
+    "Kühles Rosé": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cool Rose"
+          }
+        }
+      }
+    },
+    "Land": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Country"
+          }
+        }
+      }
+    },
+    "Lang": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Long"
+          }
+        }
+      }
+    },
+    "Langzeitbelichtung": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Long Exposure"
+          }
+        }
+      }
+    },
+    "Lebendig": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vivid"
+          }
+        }
+      }
+    },
+    "Lebendig kühl": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vivid Cool"
+          }
+        }
+      }
+    },
+    "Lebendig warm": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vivid Warm"
+          }
+        }
+      }
+    },
+    "Lebendigkeit": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vibrance"
+          }
+        }
+      }
+    },
+    "Leistung": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Performance"
+          }
+        }
+      }
+    },
+    "Leistungsprotokoll": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Performance Log"
+          }
+        }
+      }
+    },
+    "Leistungsprotokoll teilen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share Performance Log"
+          }
+        }
+      }
+    },
+    "Letzte Tage": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recent Days"
+          }
+        }
+      }
+    },
+    "Leuchtend": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Luminous"
+          }
+        }
+      }
+    },
+    "Liegt nur in iCloud (nicht auf dem iPhone)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only in iCloud (not on the iPhone)"
+          }
+        }
+      }
+    },
+    "Link konnte nicht erstellt werden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn’t create the link"
+          }
+        }
+      }
+    },
+    "Link kopiert · 30 Tage gültig": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Link copied · valid for 30 days"
+          }
+        }
+      }
+    },
+    "Link teilen (Heimnetz/VPN)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share Link (Home Network/VPN)"
+          }
+        }
+      }
+    },
+    "Link wird erstellt …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Creating link …"
+          }
+        }
+      }
+    },
+    "Live": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Live"
+          }
+        }
+      }
+    },
+    "Live Photos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Live Photos"
+          }
+        }
+      }
+    },
+    "Löschen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete"
+          }
+        }
+      }
+    },
+    "Löscht auf dem iPhone nur Fotos und Videos, die nachweislich auf deinem Server liegen. iOS fragt vorher nach, und in Apples Fotos-App liegen sie danach noch 30 Tage unter „Zuletzt gelöscht“. Achtung: Ist iCloud-Fotos eingeschaltet, löscht iOS sie auch dort.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deletes only photos and videos from the iPhone that are verified to be on your server. iOS asks first, and they stay in “Recently Deleted” in Apple’s Photos app for 30 days. Note: if iCloud Photos is on, iOS deletes them there too."
+          }
+        }
+      }
+    },
+    "Markiere einen Rückblick mit dem Herz, um ihn hier zu sehen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap the heart on a memory to see it here."
+          }
+        }
+      }
+    },
+    "Markieren": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Markup"
+          }
+        }
+      }
+    },
+    "Markierungen entfernen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove Markup"
+          }
+        }
+      }
+    },
+    "Mediathek": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Library"
+          }
+        }
+      }
+    },
+    "Mediathek durchsuchen …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search Library …"
+          }
+        }
+      }
+    },
+    "Mediathek wird geprüft …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking library …"
+          }
+        }
+      }
+    },
+    "Medienart": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Media Type"
+          }
+        }
+      }
+    },
+    "Medienarten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Media Types"
+          }
+        }
+      }
+    },
+    "Mit Person zusammenführen …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Merge with Person …"
+          }
+        }
+      }
+    },
+    "Mit dir geteilt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shared With You"
+          }
+        }
+      }
+    },
+    "Mitteilung „Heute vor … Jahren“": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“Years Ago Today” Notification"
+          }
+        }
+      }
+    },
+    "Mittel": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Medium"
+          }
+        }
+      }
+    },
+    "Monate": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Months"
+          }
+        }
+      }
+    },
+    "Moschee": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mosque"
+          }
+        }
+      }
+    },
+    "Musik": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Music"
+          }
+        }
+      }
+    },
+    "Musik: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Music: %@"
+          }
+        }
+      }
+    },
+    "Möchtest du das Album „%@“ wirklich löschen?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Are you sure you want to delete the album “%@”?"
+          }
+        }
+      }
+    },
+    "Möchtest du deine Änderungen wirklich verwerfen?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Are you sure you want to discard your changes?"
+          }
+        }
+      }
+    },
+    "NEUES SCHLÜSSELBILD": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NEW KEY PHOTO"
+          }
+        }
+      }
+    },
+    "Nach Aufnahmedatum sortieren": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sort by Date Captured"
+          }
+        }
+      }
+    },
+    "Nach zuletzt hinzugefügten Inhalten sortieren": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sort by Recently Added"
+          }
+        }
+      }
+    },
+    "Nachdenklich": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thoughtful"
+          }
+        }
+      }
+    },
+    "Nachschlagen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Look Up"
+          }
+        }
+      }
+    },
+    "Name": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Name"
+          }
+        }
+      }
+    },
+    "Name hinzufügen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add Name"
+          }
+        }
+      }
+    },
+    "Natürlich": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Natural"
+          }
+        }
+      }
+    },
+    "Nein": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No"
+          }
+        }
+      }
+    },
+    "Neu anordnen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reorder"
+          }
+        }
+      }
+    },
+    "Neue Fotos und Videos landen auf deinem eigenen Server – im Hintergrund, wenn das iPhone nachts am Strom hängt, und sobald du die App öffnest. Auf dem iPhone wird nur gelöscht, wenn du unten „Speicher freigeben“ wählst.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New photos and videos go to your own server – in the background while the iPhone charges at night, and whenever you open the app. Nothing is deleted from the iPhone unless you choose “Free Up Space” below."
+          }
+        }
+      }
+    },
+    "Neuer Ordner": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New Folder"
+          }
+        }
+      }
+    },
+    "Neues Album": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New Album"
+          }
+        }
+      }
+    },
+    "Neues Album …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New Album …"
+          }
+        }
+      }
+    },
+    "Neueste zuerst": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Newest First"
+          }
+        }
+      }
+    },
+    "Neutral": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neutral"
+          }
+        }
+      }
+    },
+    "Nicht angemeldet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not signed in"
+          }
+        }
+      }
+    },
+    "Nicht gesichert (%lld)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not Backed Up (%lld)"
+          }
+        }
+      }
+    },
+    "Nicht mehr anpinnen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unpin"
+          }
+        }
+      }
+    },
+    "Nichts zu löschen – keine passenden Fotos, die schon auf dem Server liegen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing to delete – no matching photos that are already on the server."
+          }
+        }
+      }
+    },
+    "Noch keine Fotos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Photos Yet"
+          }
+        }
+      }
+    },
+    "Noch keine Personen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No People Yet"
+          }
+        }
+      }
+    },
+    "Noch nicht gelaufen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hasn’t run yet"
+          }
+        }
+      }
+    },
+    "Noch niemand teilt seine Fotos mit dir.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nobody is sharing their photos with you yet."
+          }
+        }
+      }
+    },
+    "Nochmal": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Again"
+          }
+        }
+      }
+    },
+    "Nur Licht, Farbe, Filter und Stil lassen sich kopieren": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only light, color, filter and style can be copied"
+          }
+        }
+      }
+    },
+    "Nur im WLAN": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wi-Fi Only"
+          }
+        }
+      }
+    },
+    "Objekt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Item"
+          }
+        }
+      }
+    },
+    "Objekte auswählen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select Items"
+          }
+        }
+      }
+    },
+    "Offline – Vorschau, Original nicht verfügbar": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Offline – preview, original unavailable"
+          }
+        }
+      }
+    },
+    "Offline – nur Vorschauen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Offline – previews only"
+          }
+        }
+      }
+    },
+    "Offline-Speicher leeren": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear Offline Storage"
+          }
+        }
+      }
+    },
+    "Ohne Internet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Offline"
+          }
+        }
+      }
+    },
+    "Ohne Musik": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Music"
+          }
+        }
+      }
+    },
+    "Ohne Verbindung zum Server siehst du alle Fotos als Vorschau; Videos und Originale brauchen den Server. Geladen wird nur im WLAN, und das iPhone behält mindestens 10 GB frei.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Without a connection to the server you see all photos as previews; videos and originals need the server. Downloads only happen over Wi-Fi, and the iPhone always keeps at least 10 GB free."
+          }
+        }
+      }
+    },
+    "Optic ID verwenden oder Code eingeben, um dieses Album anzuzeigen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use Optic ID or enter your passcode to view this album"
+          }
+        }
+      }
+    },
+    "Ordner gelöscht – die Alben bleiben erhalten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Folder deleted – the albums are kept"
+          }
+        }
+      }
+    },
+    "Ordner ist leer": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Folder Is Empty"
+          }
+        }
+      }
+    },
+    "Ordner löschen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete Folder"
+          }
+        }
+      }
+    },
+    "Ordner umbenennen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rename Folder"
+          }
+        }
+      }
+    },
+    "Original": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Original"
+          }
+        }
+      }
+    },
+    "Original wiederherstellen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Revert to Original"
+          }
+        }
+      }
+    },
+    "Original wiederherstellen?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Revert to Original?"
+          }
+        }
+      }
+    },
+    "Original wird geladen …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading original …"
+          }
+        }
+      }
+    },
+    "Original-Schlüsselbild": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Original Key Photo"
+          }
+        }
+      }
+    },
+    "Ort": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Location"
+          }
+        }
+      }
+    },
+    "Ort anpassen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adjust Location"
+          }
+        }
+      }
+    },
+    "Ort hinzufügen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add Location"
+          }
+        }
+      }
+    },
+    "Ort suchen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search Location"
+          }
+        }
+      }
+    },
+    "Orte": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Places"
+          }
+        }
+      }
+    },
+    "PALETTE  %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PALETTE  %lld"
+          }
+        }
+      }
+    },
+    "PINSELGRÖSSE": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "BRUSH SIZE"
+          }
+        }
+      }
+    },
+    "PORTRÄT": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PORTRAIT"
+          }
+        }
+      }
+    },
+    "PORTRÄT AUS": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PORTRAIT OFF"
+          }
+        }
+      }
+    },
+    "Panoramen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Panoramas"
+          }
+        }
+      }
+    },
+    "Passwort": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Password"
+          }
+        }
+      }
+    },
+    "Pause": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pause"
+          }
+        }
+      }
+    },
+    "Person": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Person"
+          }
+        }
+      }
+    },
+    "Person hinzufügen …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add Person …"
+          }
+        }
+      }
+    },
+    "Person in Fotos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Person in Photos"
+          }
+        }
+      }
+    },
+    "Personen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "People"
+          }
+        }
+      }
+    },
+    "Personen erscheinen hier, sobald der Server Gesichter in deinen Fotos erkannt hat.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "People appear here once the server has recognized faces in your photos."
+          }
+        }
+      }
+    },
+    "Pflanze, Tier, Sehenswürdigkeit oder Kunstwerk im Foto": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plant, animal, landmark or artwork in the photo"
+          }
+        }
+      }
+    },
+    "Porträt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Portrait"
+          }
+        }
+      }
+    },
+    "Porträt-Blende": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Portrait Aperture"
+          }
+        }
+      }
+    },
+    "Probier einen anderen Begriff oder entferne ein Kärtchen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try a different term or remove a filter chip."
+          }
+        }
+      }
+    },
+    "Protokoll leeren": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear Log"
+          }
+        }
+      }
+    },
+    "QR-Codes": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "QR Codes"
+          }
+        }
+      }
+    },
+    "Quadrat": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Square"
+          }
+        }
+      }
+    },
+    "Rauschreduzierung": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noise Reduction"
+          }
+        }
+      }
+    },
+    "Reise": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trip"
+          }
+        }
+      }
+    },
+    "Reisen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trips"
+          }
+        }
+      }
+    },
+    "Roségold": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rose Gold"
+          }
+        }
+      }
+    },
+    "Ruhig": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quiet"
+          }
+        }
+      }
+    },
+    "Räumliche Szene": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spatial Scene"
+          }
+        }
+      }
+    },
+    "Räumliche Szene nicht möglich": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spatial scene not available"
+          }
+        }
+      }
+    },
+    "Rückblick": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Memory"
+          }
+        }
+      }
+    },
+    "Rückblick entfernt – zu wenige Fotos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Memory removed – too few photos"
+          }
+        }
+      }
+    },
+    "Rückblick erstellen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create Memory"
+          }
+        }
+      }
+    },
+    "Rückblick gelöscht": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Memory deleted"
+          }
+        }
+      }
+    },
+    "Rückblick löschen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete Memory"
+          }
+        }
+      }
+    },
+    "Rückblick wird erstellt …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Creating memory …"
+          }
+        }
+      }
+    },
+    "Rückblick-Mix": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Memory Mix"
+          }
+        }
+      }
+    },
+    "Rückblicke": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Memories"
+          }
+        }
+      }
+    },
+    "Rückblicke erscheinen hier, wenn mehr Fotos und Videos zur Mediathek hinzugefügt werden.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Memories appear here as more photos and videos are added to your library."
+          }
+        }
+      }
+    },
+    "Rückblicke erscheinen hier, wenn mehr Fotos zur Mediathek hinzugefügt werden.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Memories appear here as more photos are added to your library."
+          }
+        }
+      }
+    },
+    "SCHLÜSSELBILD: ORIGINAL": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "KEY PHOTO: ORIGINAL"
+          }
+        }
+      }
+    },
+    "Sammlungen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Collections"
+          }
+        }
+      }
+    },
+    "Sammlungen (%lld)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Collections (%lld)"
+          }
+        }
+      }
+    },
+    "Sanft": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gentle"
+          }
+        }
+      }
+    },
+    "Schatten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shadows"
+          }
+        }
+      }
+    },
+    "Schließen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close"
+          }
+        }
+      }
+    },
+    "Schlüsselfoto festgelegt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Key photo set"
+          }
+        }
+      }
+    },
+    "Schwarzpunkt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Black Point"
+          }
+        }
+      }
+    },
+    "Schwarzweiß": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Black & White"
+          }
+        }
+      }
+    },
+    "Schärfe": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sharpness"
+          }
+        }
+      }
+    },
+    "Seitenverhältnisraster": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aspect Ratio Grid"
+          }
+        }
+      }
+    },
+    "Selfies": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Selfies"
+          }
+        }
+      }
+    },
+    "Senden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send"
+          }
+        }
+      }
+    },
+    "Serien": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bursts"
+          }
+        }
+      }
+    },
+    "Server nicht erreichbar": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Server unreachable"
+          }
+        }
+      }
+    },
+    "Server, z. B. https://fotos.example.com": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Server, e.g. https://photos.example.com"
+          }
+        }
+      }
+    },
+    "Server-Fehler %lld: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Server error %1$lld: %2$@"
+          }
+        }
+      }
+    },
+    "Sichern": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save"
+          }
+        }
+      }
+    },
+    "Sichern fehlgeschlagen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saving failed"
+          }
+        }
+      }
+    },
+    "Silberton": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Silvertone"
+          }
+        }
+      }
+    },
+    "Slo-Mo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Slo-mo"
+          }
+        }
+      }
+    },
+    "Sobald der Server weitere Gesichter erkannt hat, erscheinen hier neue Vorschläge.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New suggestions appear here once the server has recognized more faces."
+          }
+        }
+      }
+    },
+    "Sommer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Summer"
+          }
+        }
+      }
+    },
+    "Sonnenuntergang": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sunset"
+          }
+        }
+      }
+    },
+    "Sonnenuntergänge": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sunsets"
+          }
+        }
+      }
+    },
+    "Sonstige": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Utilities"
+          }
+        }
+      }
+    },
+    "Sortieren": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sort"
+          }
+        }
+      }
+    },
+    "Sortieren und Zoomen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sort and Zoom"
+          }
+        }
+      }
+    },
+    "Sortierung": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sort Order"
+          }
+        }
+      }
+    },
+    "Speicher freigeben …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Free Up Space …"
+          }
+        }
+      }
+    },
+    "Standard": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Standard"
+          }
+        }
+      }
+    },
+    "Steuerfeld Ton und Farbe": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tone and color pad"
+          }
+        }
+      }
+    },
+    "Stil": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Style"
+          }
+        }
+      }
+    },
+    "Stile": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Styles"
+          }
+        }
+      }
+    },
+    "Strand": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beach"
+          }
+        }
+      }
+    },
+    "Suchbegriff": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search Term"
+          }
+        }
+      }
+    },
+    "Suchen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search"
+          }
+        }
+      }
+    },
+    "Sättigung": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saturation"
+          }
+        }
+      }
+    },
+    "Teilen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share"
+          }
+        }
+      }
+    },
+    "Teilen beenden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop Sharing"
+          }
+        }
+      }
+    },
+    "Teilen mit %@ beenden?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop sharing with %@?"
+          }
+        }
+      }
+    },
+    "Teilt mit dir": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shares With You"
+          }
+        }
+      }
+    },
+    "Text in Fotos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Text in Photos"
+          }
+        }
+      }
+    },
+    "Tippe auf „Porträt“, um die Tiefenunschärfe einzuschalten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap “Portrait” to turn on depth blur"
+          }
+        }
+      }
+    },
+    "Titel": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Title"
+          }
+        }
+      }
+    },
+    "Titel bearbeiten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edit Title"
+          }
+        }
+      }
+    },
+    "Titelbild festgelegt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Key photo set"
+          }
+        }
+      }
+    },
+    "Ton %+d · Farbe %+d": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tone %1$+d · Color %2$+d"
+          }
+        }
+      }
+    },
+    "Ton %lld, Farbe %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tone %1$lld, color %2$lld"
+          }
+        }
+      }
+    },
+    "Ton an": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sound On"
+          }
+        }
+      }
+    },
+    "Ton aus": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sound Off"
+          }
+        }
+      }
+    },
+    "Ton ist an": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sound is on"
+          }
+        }
+      }
+    },
+    "Ton ist aus": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sound is off"
+          }
+        }
+      }
+    },
+    "Touch ID verwenden oder Code eingeben, um dieses Album anzuzeigen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use Touch ID or enter your passcode to view this album"
+          }
+        }
+      }
+    },
+    "Umbenennen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rename"
+          }
+        }
+      }
+    },
+    "Unbekannte Kamera": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unknown camera"
+          }
+        }
+      }
+    },
+    "Unbenannt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unnamed"
+          }
+        }
+      }
+    },
+    "Ungültige Server-Adresse": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid server address"
+          }
+        }
+      }
+    },
+    "Untertitel hinzufügen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add a Caption"
+          }
+        }
+      }
+    },
+    "Urlaub 2025": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vacation 2025"
+          }
+        }
+      }
+    },
+    "Vergrößern": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zoom In"
+          }
+        }
+      }
+    },
+    "Verkleinern": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zoom Out"
+          }
+        }
+      }
+    },
+    "Verlauf löschen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear History"
+          }
+        }
+      }
+    },
+    "Vertikal": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vertical"
+          }
+        }
+      }
+    },
+    "Video": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Video"
+          }
+        }
+      }
+    },
+    "Video braucht Verbindung zum Server": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Video needs a connection to the server"
+          }
+        }
+      }
+    },
+    "Video konnte nicht erstellt werden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn’t create the video"
+          }
+        }
+      }
+    },
+    "Video wird erstellt …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Creating video …"
+          }
+        }
+      }
+    },
+    "Video wird erstellt … %lld %%": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Creating video … %lld %%"
+          }
+        }
+      }
+    },
+    "Video wird geschnitten …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trimming video …"
+          }
+        }
+      }
+    },
+    "Video, ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Video, "
+          }
+        }
+      }
+    },
+    "Videos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Videos"
+          }
+        }
+      }
+    },
+    "Videos & Live Photos automatisch abspielen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autoplay Videos & Live Photos"
+          }
+        }
+      }
+    },
+    "Videos können nicht dupliziert werden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Videos can’t be duplicated"
+          }
+        }
+      }
+    },
+    "Videos lassen sich nicht drucken": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Videos can't be printed"
+          }
+        }
+      }
+    },
+    "Videos werden geprüft …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking videos …"
+          }
+        }
+      }
+    },
+    "Vignette": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vignette"
+          }
+        }
+      }
+    },
+    "Vom iPhone löschen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete from iPhone"
+          }
+        }
+      }
+    },
+    "Vorschauen auf dem iPhone speichern": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Store Previews on iPhone"
+          }
+        }
+      }
+    },
+    "Vorschläge": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suggestions"
+          }
+        }
+      }
+    },
+    "Warm": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warm"
+          }
+        }
+      }
+    },
+    "Weitere Fotos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "More Photos"
+          }
+        }
+      }
+    },
+    "Weitere Fotos prüfen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Review More Photos"
+          }
+        }
+      }
+    },
+    "Weiße Griffe oben legen die Zeitlupe fest, gelbe unten Anfang und Ende. Das Original bleibt erhalten.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The white handles on top set the slow-motion part, the yellow ones below set start and end. The original is kept."
+          }
+        }
+      }
+    },
+    "Weniger aus %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Featuring %@ less"
+          }
+        }
+      }
+    },
+    "Weniger von %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Featuring %@ less"
+          }
+        }
+      }
+    },
+    "Weniger zeigen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Feature Less"
+          }
+        }
+      }
+    },
+    "Widerrufen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Undo"
+          }
+        }
+      }
+    },
+    "Wie heißt diese Person?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What’s this person’s name?"
+          }
+        }
+      }
+    },
+    "Wieder anzeigen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show Again"
+          }
+        }
+      }
+    },
+    "Wiedergabe": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Playback"
+          }
+        }
+      }
+    },
+    "Wiederhergestellt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recovered"
+          }
+        }
+      }
+    },
+    "Wiederherstellen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recover"
+          }
+        }
+      }
+    },
+    "Wiederholen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Repeat"
+          }
+        }
+      }
+    },
+    "Winter": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Winter"
+          }
+        }
+      }
+    },
+    "Wird bereinigt …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cleaning up …"
+          }
+        }
+      }
+    },
+    "Wird dupliziert … %lld von %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Duplicating … %1$lld of %2$lld"
+          }
+        }
+      }
+    },
+    "Wird gesichert …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saving …"
+          }
+        }
+      }
+    },
+    "Wird kopiert …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copying …"
+          }
+        }
+      }
+    },
+    "Wird nicht mehr empfohlen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Won't be featured anymore"
+          }
+        }
+      }
+    },
+    "Wird vorbereitet …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparing…"
+          }
+        }
+      }
+    },
+    "Wird vorbereitet … %lld von %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparing… %lld of %lld"
+          }
+        }
+      }
+    },
+    "Wird wieder angezeigt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shown again"
+          }
+        }
+      }
+    },
+    "Wonach soll ich suchen?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What should I search for?"
+          }
+        }
+      }
+    },
+    "Wärme": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warmth"
+          }
+        }
+      }
+    },
+    "Zeitlupe": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Slow Motion"
+          }
+        }
+      }
+    },
+    "Zeitlupe Griff": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Slow-motion handle"
+          }
+        }
+      }
+    },
+    "Zeitlupe gesichert": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Slow-motion video saved"
+          }
+        }
+      }
+    },
+    "Zeitraffer": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Time-lapse"
+          }
+        }
+      }
+    },
+    "Zu Favoriten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add to Favorites"
+          }
+        }
+      }
+    },
+    "Zu wenige Fotos für einen Rückblick": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Too few photos for a memory"
+          }
+        }
+      }
+    },
+    "Zu „%@“ hinzugefügt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Added to “%@”"
+          }
+        }
+      }
+    },
+    "Zuletzt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recent"
+          }
+        }
+      }
+    },
+    "Zuletzt %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last run %@"
+          }
+        }
+      }
+    },
+    "Zuletzt angesehen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recently Viewed"
+          }
+        }
+      }
+    },
+    "Zuletzt bearbeitet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recently Edited"
+          }
+        }
+      }
+    },
+    "Zuletzt gelöscht": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recently Deleted"
+          }
+        }
+      }
+    },
+    "Zuletzt gesichert": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recently Saved"
+          }
+        }
+      }
+    },
+    "Zuletzt geteilt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recently Shared"
+          }
+        }
+      }
+    },
+    "Zuletzt geändert": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recently Modified"
+          }
+        }
+      }
+    },
+    "Zum Album hinzufügen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add to Album"
+          }
+        }
+      }
+    },
+    "Zum Album hinzugefügt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Added to album"
+          }
+        }
+      }
+    },
+    "Zum Neigen ziehen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drag to tilt"
+          }
+        }
+      }
+    },
+    "Zum Ändern seitlich wischen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Swipe sideways to change"
+          }
+        }
+      }
+    },
+    "Zurücksetzen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset"
+          }
+        }
+      }
+    },
+    "Zusammen %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total %@"
+          }
+        }
+      }
+    },
+    "Zusammenführen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Merge"
+          }
+        }
+      }
+    },
+    "Zusammengeführt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Merged"
+          }
+        }
+      }
+    },
+    "Zuschneiden": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Crop"
+          }
+        }
+      }
+    },
+    "Zuschneiden zurücksetzen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset Crop"
+          }
+        }
+      }
+    },
+    "diese Person": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "this person"
+          }
+        }
+      }
+    },
+    "iPhone neigen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tilt your iPhone"
+          }
+        }
+      }
+    },
+    "iPhone-Speicher": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iPhone Storage"
+          }
+        }
+      }
+    },
+    "iPhone-Speicher fast voll – pausiert": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iPhone storage almost full – paused"
+          }
+        }
+      }
+    },
+    "in %lld s · Abbrechen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "in %lld s · Cancel"
+          }
+        }
+      }
+    },
+    "Ähnliche Gesichter werden gesucht …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Looking for similar faces …"
+          }
+        }
+      }
+    },
+    "Älteste zuerst": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oldest First"
+          }
+        }
+      }
+    },
+    "Änderungen einsetzen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paste Edits"
+          }
+        }
+      }
+    },
+    "Änderungen kopieren": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy Edits"
+          }
+        }
+      }
+    },
+    "Änderungen verwerfen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Discard Changes"
+          }
+        }
+      }
+    },
+    "Ätherisch": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ethereal"
+          }
+        }
+      }
+    },
+    "Über ein Objekt wischen, um es zu entfernen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Brush over an object to remove it"
+          }
+        }
+      }
+    },
+    "„%@“": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%@”"
+          }
+        }
+      }
+    },
+    "Das ist eine E-Mail-Adresse. Ins erste Feld gehört die Adresse deines Immich-Servers, z. B. http://192.168.1.20:2283": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "That's an email address. The first field needs your Immich server's address, e.g. http://192.168.1.20:2283"
+          }
+        }
+      }
+    },
+    "Unter dieser Adresse antwortet kein Immich-Server. Stimmen Adresse und Port (meist 2283)?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Immich server answered at this address. Are the address and port (usually 2283) right?"
+          }
+        }
+      }
+    },
+    "Erneut versuchen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try Again"
+          }
+        }
+      }
+    },
+    "Abmelden / anderer Server": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign Out / Change Server"
+          }
+        }
+      }
+    },
+    "Dieses Video kann das iPhone nicht abspielen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This video can't be played on iPhone"
+          }
+        }
+      }
+    },
+    "Das Dateiformat wird von iOS nicht unterstützt (z. B. HEVC mit Kennung „hev1“, VP9 oder AV1). Abhilfe in Immich unter Verwaltung → Einstellungen → Video-Transkodierung: Echtzeit-Transkodierung einschalten oder solche Videos in H.264 umwandeln lassen.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iOS doesn't support this file format (e.g. HEVC tagged “hev1”, VP9 or AV1). To fix it in Immich, go to Administration → Settings → Video Transcoding and turn on real-time transcoding, or have these videos transcoded to H.264."
+          }
+        }
+      }
+    },
+    "Mehr laden": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Load More"
+          }
+        }
+      }
+    },
+    "Rot": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Red"
+          }
+        }
+      }
+    },
+    "Orange": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Orange"
+          }
+        }
+      }
+    },
+    "Gelb": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yellow"
+          }
+        }
+      }
+    },
+    "Grün": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Green"
+          }
+        }
+      }
+    },
+    "Cyan": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cyan"
+          }
+        }
+      }
+    },
+    "Blau": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Blue"
+          }
+        }
+      }
+    },
+    "Lila": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Purple"
+          }
+        }
+      }
+    },
+    "Magenta": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Magenta"
+          }
+        }
+      }
+    },
+    "%@ Fotos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ Photos"
+          }
+        }
+      }
+    },
+    "%@ Videos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ Videos"
+          }
+        }
+      }
+    },
+    "%@ Fotos, %@ Videos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ Photos, %2$@ Videos"
+          }
+        }
+      }
+    },
+    "Backup für %@ Objekte pausiert": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backup Paused for %@ Items"
+          }
+        }
+      }
+    },
+    "Backup pausiert": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backup Paused"
+          }
+        }
+      }
+    },
+    "Fortsetzen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resume"
+          }
+        }
+      }
+    },
+    "Pausieren": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pause"
+          }
+        }
+      }
+    },
+    "Suche neue Fotos …": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Looking for New Photos …"
+          }
+        }
+      }
+    },
+    "%@ Objekte werden gesichert": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backing Up %@ Items"
+          }
+        }
+      }
+    },
+    "Backup unterbrochen: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backup Stopped: %@"
+          }
+        }
+      }
+    },
+    "%@ Objekte noch nicht gesichert": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ Items Not Backed Up Yet"
+          }
+        }
+      }
+    },
+    "Auf deinem Server gesichert · %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backed Up to Your Server · %@"
+          }
+        }
+      }
+    },
+    "Pausiert bis %@ morgen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paused until %@ tomorrow"
+          }
+        }
+      }
+    },
+    "Für einen Tag pausieren": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pause for One Day"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.1"
+}

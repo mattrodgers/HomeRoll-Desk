@@ -1,0 +1,51 @@
+name: HomeRollDesktop
+options:
+  bundleIdPrefix: org.homeroll
+  deploymentTarget:
+    macOS: "15.0"
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+targets:
+  HomeRollDesktop:
+    type: application
+    platform: macOS
+    deploymentTarget: "15.0"
+    sources:
+      - path: Mac
+      - path: Shared
+      - path: Resources/Localizable.xcstrings
+    info:
+      path: Mac/Info.plist
+      properties:
+        CFBundleDisplayName: HomeRoll Desktop
+        CFBundleName: HomeRoll Desktop
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        CFBundleDevelopmentRegion: en
+        CFBundleLocalizations: [en]
+        LSApplicationCategoryType: public.app-category.photography
+        NSLocalNetworkUsageDescription: "Connects to your photo server on your home network."
+        NSPhotoLibraryUsageDescription: "So new photos from Apple's Photos app can be uploaded to your own server."
+        NSHumanReadableCopyright: ""
+        NSAppTransportSecurity:
+          NSAllowsLocalNetworking: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.homeroll.desktop
+        PRODUCT_NAME: HomeRoll Desktop
+        MACOSX_DEPLOYMENT_TARGET: "15.0"
+        # ad hoc signiert: keine Entwickler-Identität, kein Team (siehe build-app.sh)
+        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGN_STYLE: Manual
+        DEVELOPMENT_TEAM: ""
+        ENABLE_HARDENED_RUNTIME: NO
+        GENERATE_INFOPLIST_FILE: NO
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+      configs:
+        Debug:
+          PRODUCT_BUNDLE_IDENTIFIER: org.homeroll.desktop.debug
+          PRODUCT_NAME: HomeRoll Desktop Test

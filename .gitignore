@@ -1,0 +1,7 @@
+# Xcode
+HomeRollDesktop.xcodeproj/
+build/
+build-app/
+*.zip
+.DS_Store
+xcuserdata/
