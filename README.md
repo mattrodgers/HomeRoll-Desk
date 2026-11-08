@@ -102,7 +102,7 @@ tools/     icon generator
 
 ## License
 
-[MIT](LICENSE). Immich (AGPL-3.0) is not included – HomeRoll Desktop only talks to its HTTP API.
+[GPL-3.0](LICENSE) (GNU General Public License v3.0; releases up to this change were published under MIT). Immich (AGPL-3.0) is not included – HomeRoll Desktop only talks to its HTTP API.
 
 <!-- home-apps:start -->
 ## More Home apps
