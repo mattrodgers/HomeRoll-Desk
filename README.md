@@ -29,6 +29,8 @@ HomeRoll Desktop is the Mac sibling of [HomeRoll](https://github.com/silentprovi
 - Years · Months · All Photos, grid with five zoom levels and month headers, made for 80,000+ items
 - Selection with click, ⇧, ⌘ and drag; context menus; drag photos into the Finder or drop files to import
 - Info window (⌘I): caption, camera, place with map, people, albums, multi-selection
+- Backup footer at the bottom of All Photos like Photos for Mac: number of photos and videos, progress of “Sync with Photos” with Pause (24 hours) / Resume, last backup time; click for details
+- Short connection drops (Wi-Fi hiccup, waking from sleep, server restart) show “Offline” instead of an error and reload on their own when the server is back
 
 **Viewer**
 - Opens in the window (Space or double-click), ←/→ to browse, pinch and double-click to zoom

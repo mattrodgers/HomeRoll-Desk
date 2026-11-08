@@ -84,7 +84,14 @@ enum SelfTest {
         _ = await waitFor(15) { lib.sections[last].assets != nil }
         await wait(2.5)
         snap("01-mediathek")
+        // nur Fußzeile + Offline prüfen (schneller Durchlauf): FOTOS_SELFTEST_ONLY=footer
+        if ProcessInfo.processInfo.environment["FOTOS_SELFTEST_ONLY"] == "footer" {
+            await footerTests()
+            await offlineTest()
+            return finish()
+        }
         await scrollBenchmark()
+        await footerTests()
 
         // 2. Auswahl + Einzelansicht + Blättern + Info
         guard let la = lib.sections[last].assets?.last, let lp = lib.indexPath(la.id) else { log("Auswahl", false); return finish() }
@@ -273,7 +280,179 @@ enum SelfTest {
                 try? FileManager.default.removeItem(at: dest)
             } catch { log("Export", false, error.localizedDescription) }
         }
+        await offlineTest()
         finish()
+    }
+
+    // MARK: Fußzeile der Mediathek
+
+    /// Zustände der Fußzeile: PhotosSync per Debug-Hook nachgestellt (kein Fotozugriff, kein Upload), Text + Knopf
+    /// geprüft, Fußzeile fotografiert (Ausschnitt unten im Fenster), hell und dunkel, Details, Konto „View only“.
+    static func footerTests() async {
+        let sync = PhotosSync.shared, model = FooterModel.shared
+        if lib.granularity != .all { lib.granularity = .all; await wait(1) }
+        lib.onScrollToEnd?()
+        await wait(1.5)
+        let stats = await api.statistics()
+        _ = await waitFor(10) { model.stats != nil }
+        let c = model.countText ?? ""
+        let countOK = stats.map { s in
+            (s.images == 0 || c.contains("\(FooterStatus.number(s.images)) Photo")) &&
+            (s.videos == 0 || c.contains("\(FooterStatus.number(s.videos)) Video"))
+        } ?? false
+        log("Fußzeile: Anzahl wie Server", countOK,
+            "„\(model.countText ?? "-")“, Server \(stats.map { "\($0.images)/\($0.videos)" } ?? "-")")
+        log("Fußzeile: unten in der Mediathek", footerHeight() == LibraryFooter.height, "Höhe \(footerHeight())")
+
+        typealias A = FooterStatus.Action
+        let cases: [(String, String, String, A?)] = [
+            ("done", "fz-01-backed-up", "Backed up to your server · 5 minutes ago", nil),
+            ("running", "fz-02-running", "676 items being backed up", .pause),
+            ("paused", "fz-03-paused", "Backup paused for 676 items", .resume),
+            ("searching", "fz-04-searching", "Looking for new photos…", .pause),
+            ("error", "fz-05-error", "Sync interrupted: No access to the Photos library", .retry),
+            ("partial", "fz-06-partial", "3 items not backed up yet", .retry),
+            ("off", "fz-07-off", "Sync with Photos is off", .turnOn),
+            ("never", "fz-08-never", "Sync with Photos hasn’t run yet", .syncNow),
+            ("offline", "fz-09-offline", "Offline – will resume when your server is reachable", nil),
+        ]
+        for (state, name, text, action) in cases {
+            sync.simulate(state)
+            await wait(0.8)
+            let st = FooterStatus.current()
+            snapFooter(name)
+            log("Fußzeile \(state)", st?.text == text && st?.action == action,
+                "„\(st?.text ?? "-")“ · \(st?.action?.title ?? "ohne Knopf")")
+        }
+        // Balken: läuft = Anteil fertig, pausiert gedimmt
+        sync.simulate("running")
+        let pr = FooterStatus.current()
+        log("Fußzeile: Balken", abs((pr?.progress ?? 0) - 312.0 / 988.0) < 0.001 && pr?.dimmed == false, "\(pr?.progress ?? -1)")
+
+        // Pausieren gilt 24 h (wie iCloud), Fortsetzen hebt es auf – ohne Fotozugriff (run() ist im Selbsttest gesperrt)
+        sync.simulate(nil)
+        FooterStatus.Action.pause.perform()
+        let until = sync.pausedUntil.map { $0.timeIntervalSinceNow } ?? 0
+        let stored = UserDefaults.standard.object(forKey: "mac.photosSync.pausedUntil") != nil
+        log("Pausieren: 24 h", sync.paused && abs(until - 24 * 3600) < 60 && stored, "\(Int(until)) s, gemerkt: \(stored)")
+        FooterStatus.Action.resume.perform()
+        await wait(0.5)
+        log("Fortsetzen", !sync.paused && UserDefaults.standard.object(forKey: "mac.photosSync.pausedUntil") == nil)
+
+        // hell und dunkel ausdrücklich (unabhängig vom Systemlook)
+        for (look, tag) in [(NSAppearance.Name.aqua, "light"), (.darkAqua, "dark")] {
+            NSApp.appearance = NSAppearance(named: look)
+            for (state, name) in [("running", "fz-11-\(tag)-running"), ("paused", "fz-11-\(tag)-paused"), ("done", "fz-11-\(tag)-backed-up")] {
+                sync.simulate(state); await wait(1.2); snapFooter(name)
+            }
+            snap("fz-11-\(tag)-window")
+        }
+        NSApp.appearance = nil
+        await wait(0.8)
+
+        // Details (Klick auf die Fußzeile)
+        sync.simulate("partial")
+        model.showDetails = true
+        await wait(1.5)
+        if let pop = NSApp.windows.first(where: { $0.isVisible && String(describing: type(of: $0)).contains("Popover") }) {
+            snap("fz-13-details", window: pop); log("Fußzeile: Details", true, "\(Int(pop.frame.width))×\(Int(pop.frame.height))")
+        } else { log("Fußzeile: Details", false, "kein Popover") }
+        model.showDetails = false
+        await wait(0.5)
+
+        // Konto „View only“: nur die Anzahl (Einstellungen danach unverändert zurück)
+        let d = UserDefaults.standard
+        let keep = (d.object(forKey: "mac.accounts"), d.object(forKey: "mac.currentAccount"))
+        if let a = AccountStore.shared.current {
+            var ro = a; ro.readOnly = true
+            AccountStore.shared.update(ro)
+            await wait(0.8)
+            snapFooter("fz-14-view-only")
+            log("Fußzeile View only: nur Anzahl", FooterStatus.current() == nil && model.countText != nil, model.countText ?? "-")
+            AccountStore.shared.update(a)
+        }
+        for (k, v) in [("mac.accounts", keep.0), ("mac.currentAccount", keep.1)] {
+            if let v { d.set(v, forKey: k) } else { d.removeObject(forKey: k) }
+        }
+        sync.simulate(nil)
+
+        // nicht in anderen Bereichen
+        await show(.favorites)
+        await wait(1)
+        log("Fußzeile nicht in Favoriten", footerHeight() == 0, "Höhe \(footerHeight())")
+        await show(.library)
+        _ = await waitFor(15) { lib.sections.last?.assets != nil }
+        lib.onScrollToEnd?()
+        await wait(1)
+    }
+
+    /// Server „weg“ (Adresse ohne Dienst) → kein Fehlerfenster, Raster bleibt stehen, Symbolleiste und Fußzeile zeigen
+    /// Offline; danach Server zurück → die App lädt von selbst neu (Neuversuch nach 2/5/15 s), Offline verschwindet.
+    static func offlineTest() async {
+        let env = ProcessInfo.processInfo.environment
+        guard let srv = env["FOTOS_SERVER"], let tok = env["FOTOS_TOKEN"], let url = URL(string: srv) else { return }
+        PhotosSync.shared.simulate(nil)
+        if lib.source != .library { await show(.library) }
+        let before = lib.totalCount
+        ImmichClient.shared.activate(server: URL(string: "http://127.0.0.1:9")!, token: tok)
+        await lib.load()
+        await wait(1.5)
+        let fz = FooterStatus.current()?.text ?? "-"
+        snap("fz-12-offline-window")
+        snapFooter("fz-12-offline")
+        log("Offline: kein Fehlerfenster", lib.error == nil && lib.offline, "error: \(lib.error ?? "–"), offline: \(lib.offline)")
+        log("Offline: Symbolleiste", lib.status?.hasPrefix("Offline") == true, lib.status ?? "-")
+        log("Offline: Raster bleibt", lib.totalCount == before && before > 0 && footerHeight() == LibraryFooter.height,
+            "\(lib.totalCount) von \(before) Objekten, Fußzeile \(footerHeight())")
+        log("Fußzeile offline (echt)", fz == "Offline – will resume when your server is reachable", fz)
+        // Aktionen melden Fehler weiter als Fenster
+        if AccountStore.shared.canWrite, let a = lib.sections.last?.assets?.last {
+            lib.selection = [a.id]; lib.focused = a
+            await lib.toggleFavorite()
+            log("Offline: Aktion meldet Fehler", lib.error != nil, lib.error ?? "-")
+            lib.error = nil
+            lib.selection = []; lib.focused = nil
+        }
+        // Server zurück: kein Neuladen von Hand – der Neuversuch muss es von selbst schaffen
+        ImmichClient.shared.activate(server: url, token: tok)
+        let back = await waitFor(30) { !lib.offline && !lib.loading && !lib.sections.isEmpty }
+        _ = await waitFor(10) { !Connectivity.shared.serverOffline }
+        await wait(1)
+        snapFooter("fz-15-online-again")
+        log("Wieder online (automatischer Neuversuch)", back && lib.status?.hasPrefix("Offline") != true
+            && FooterStatus.current()?.text.hasPrefix("Offline") == false,
+            "\(lib.totalCount) Objekte, „\(FooterStatus.current()?.text ?? "-")“")
+    }
+
+    private static var gridView: NSCollectionView? {
+        NSApp.windows.lazy.compactMap { $0.contentView.flatMap(findScroll) }.first?.documentView as? NSCollectionView
+    }
+
+    private static func footerHeight() -> CGFloat {
+        guard let cv = gridView, cv.numberOfSections > 0 else { return 0 }
+        cv.layoutSubtreeIfNeeded()
+        return cv.collectionViewLayout?.layoutAttributesForSupplementaryView(
+            ofKind: NSCollectionView.elementKindSectionFooter, at: IndexPath(item: 0, section: cv.numberOfSections - 1))?.frame.height ?? 0
+    }
+
+    /// Ausschnitt: Fußzeile + die letzte Bildreihe darüber (wie man sie unten im Fenster sieht).
+    static func snapFooter(_ name: String) {
+        guard let w = NSApp.windows.first(where: { $0.isVisible && !($0 is NSPanel) && $0.frame.height > 300 }),
+              let cv = gridView, cv.numberOfSections > 0,
+              let v = cv.supplementaryView(forElementKind: NSCollectionView.elementKindSectionFooter,
+                                           at: IndexPath(item: 0, section: cv.numberOfSections - 1)),
+              let img = windowImage(CGWindowID(w.windowNumber))
+        else { snap(name); return }
+        let r = v.convert(v.bounds, to: nil)
+        let scale = CGFloat(img.width) / w.frame.width
+        let extra: CGFloat = 90
+        let crop = CGRect(x: r.minX * scale, y: max(0, (w.frame.height - r.maxY - extra) * scale),
+                          width: r.width * scale, height: (r.height + extra) * scale)
+        guard let part = img.cropping(to: crop),
+              let d = CGImageDestinationCreateWithURL(out.appendingPathComponent("\(name).png") as CFURL, UTType.png.identifier as CFString, 1, nil)
+        else { snap(name); return }
+        CGImageDestinationAddImage(d, part, nil)
+        CGImageDestinationFinalize(d)
     }
 
     /// Scrollt von unten nach oben durchs Raster und misst, wie lange der Hauptthread je Schritt braucht

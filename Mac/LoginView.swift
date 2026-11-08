@@ -89,6 +89,12 @@ struct SettingsView: View {
                     .font(.caption).foregroundStyle(.secondary)
                 Button("Sync Now") { Task { await PhotosSync.shared.run() } }
                     .disabled(!accounts.canImport || PhotosSync.shared.running)
+                if PhotosSync.shared.paused, let u = PhotosSync.shared.pausedUntil {
+                    HStack {
+                        Text("Paused until \(u.formatted(date: .abbreviated, time: .shortened))").foregroundStyle(.secondary)
+                        Button("Resume") { PhotosSync.shared.resume() }
+                    }
+                }
             }
             Section("Keyboard (like Photos)") {
                 Text("Space/double-click open · ←/→ browse · . favorite · ⌫ delete · ⌘L hide · ⌘R rotate · ⌘I info · ⌘+/⌘− zoom · ⇧⌘I import · ⇧⌘E export · ⌥⌘E export original · ⌃⌘A add to last album")

@@ -7,6 +7,7 @@ struct MainView: View {
     @Bindable var accounts = AccountStore.shared
     @State private var query = ""
     @FocusState private var searchFocused: Bool
+    @Environment(\.openSettings) private var openSettings
 
     var body: some View {
         if accounts.current == nil {
@@ -29,6 +30,8 @@ struct MainView: View {
             .toolbar { if lib.editing == nil { toolbar } }
             .task(id: accounts.currentID) { lib.reset(); await lib.load() }
             .onReceive(NotificationCenter.default.publisher(for: .focusSearch)) { _ in searchFocused = true }
+            // Fußzeile der Mediathek → Einstellungen (Abgleich mit Fotos)
+            .onReceive(NotificationCenter.default.publisher(for: .openBackupSettings)) { _ in openSettings() }
             .onReceive(NotificationCenter.default.publisher(for: .sessionExpired)) { _ in
                 // Server lehnt die Anmeldung ab (z. B. Passwort im Browser geändert) → neu anmelden, Konto bleibt
                 guard lib.error == nil else { return }

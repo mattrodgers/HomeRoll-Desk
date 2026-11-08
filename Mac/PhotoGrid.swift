@@ -30,6 +30,8 @@ struct PhotoGrid: NSViewRepresentable {
         cv.register(ThumbItem.self, forItemWithIdentifier: ThumbItem.ident)
         cv.register(MonthHeader.self, forSupplementaryViewOfKind: NSCollectionView.elementKindSectionHeader,
                     withIdentifier: MonthHeader.ident)
+        cv.register(LibraryFooterCell.self, forSupplementaryViewOfKind: NSCollectionView.elementKindSectionFooter,
+                    withIdentifier: LibraryFooterCell.ident)
         cv.registerForDraggedTypes([.fileURL])
         cv.setDraggingSourceOperationMask(.copy, forLocal: false)
         cv.coordinator = c
@@ -116,6 +118,9 @@ struct PhotoGrid: NSViewRepresentable {
 
         func collectionView(_ cv: NSCollectionView, viewForSupplementaryElementOfKind kind: NSCollectionView.SupplementaryElementKind,
                             at p: IndexPath) -> NSView {
+            if kind == NSCollectionView.elementKindSectionFooter {
+                return cv.makeSupplementaryView(ofKind: kind, withIdentifier: LibraryFooterCell.ident, for: p)
+            }
             let h = cv.makeSupplementaryView(ofKind: kind, withIdentifier: MonthHeader.ident, for: p) as! MonthHeader
             h.label.stringValue = lib.sections.indices.contains(p.section) ? lib.sections[p.section].title : ""
             return h
@@ -134,6 +139,12 @@ struct PhotoGrid: NSViewRepresentable {
             let cols = max(1, Int((w + 2) / (edge + 2)))
             let side = floor((w - CGFloat(cols - 1) * 2) / CGFloat(cols))
             return NSSize(width: side, height: side)
+        }
+
+        /// Sicherungsstatus unter dem neuesten Monat (nur Mediathek, siehe LibraryFooter)
+        func collectionView(_ cv: NSCollectionView, layout: NSCollectionViewLayout, referenceSizeForFooterInSection s: Int) -> NSSize {
+            guard LibraryFooter.shows(lib), s == lib.sections.count - 1 else { return .zero }
+            return NSSize(width: max(1, cv.enclosingScrollView?.contentSize.width ?? cv.bounds.width), height: LibraryFooter.height)
         }
 
         // MARK: Auswahl

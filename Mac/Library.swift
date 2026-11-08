@@ -1,5 +1,6 @@
 import AppKit
 import Foundation
+import Network
 
 /// Was gerade im Raster steht – Einträge der Seitenleiste wie in Apple Fotos (macOS 15, siehe MAC-PLAN.md §2).
 enum Source: Hashable {
@@ -104,6 +105,15 @@ final class Library {
     @ObservationIgnored private var inflight: Set<Int> = []
     @ObservationIgnored private var index: [String: IndexPath] = [:]
     @ObservationIgnored private var tagIDs: [String: String] = [:]
+    /// Zu welcher Ansicht `sections` gerade gehört (bei Verbindungsaussetzern bleibt das Raster dann stehen)
+    @ObservationIgnored private var sectionsSource: Source?
+    /// Laden scheiterte an der Verbindung (kurzer WLAN-Aussetzer, Aufwachen, Server weg …) → kein Fehlerfenster,
+    /// sondern Hinweis in der Symbolleiste und in der Fußzeile; die App versucht es selbst neu (2/5/15 s, danach
+    /// jede Minute, sofort wenn das Netz zurück ist oder der Mac aufwacht). Fehler bei Aktionen bleiben Fenster.
+    private(set) var offline = false
+    @ObservationIgnored private var retryTask: Task<Void, Never>?
+    @ObservationIgnored private var pathMonitor: NWPathMonitor?
+    @ObservationIgnored private var wakeObserver: NSObjectProtocol?
 
     // MARK: Laden
 
@@ -128,15 +138,20 @@ final class Library {
         generation += 1
         sections = []; index = [:]; selection = []; focused = nil; viewer = nil; albums = []; people = []; memories = []
         SmartAlbums.shared.reload()
-        tagIDs = [:]; fileNames = [:]; source = .library
+        tagIDs = [:]; fileNames = [:]; source = .library; sectionsSource = nil
         onReloadAll?()
     }
 
-    func load() async {
+    /// `keepCurrent`: Neuversuch nach einem Verbindungsaussetzer – Raster nicht erst leeren (kein Flackern).
+    func load(keepCurrent: Bool = false) async {
         generation += 1
         let g = generation
-        sections = []; index = [:]; inflight = []; error = nil
-        onReloadAll?()
+        let previous = sectionsSource == source ? sections : []
+        if !keepCurrent {
+            sections = []; index = [:]; sectionsSource = nil
+            onReloadAll?()
+        }
+        inflight = []; error = nil
         guard ImmichClient.shared.isLoggedIn else { return }
         if source == .albums || albums.isEmpty { await loadAlbums() }
         if source == .people { await loadPeople(); return }
@@ -174,11 +189,79 @@ final class Library {
                     sections = Self.byMonth(list)
                 }
             }
+            sectionsSource = source
             rebuildIndex()
             onReloadAll?()
-            onScrollToEnd?()
+            if !keepCurrent || previous.isEmpty { onScrollToEnd?() }
+            if offline { connectionBack() }
         } catch {
-            if g == generation { self.error = error.localizedDescription }
+            guard g == generation else { return }
+            if Self.isConnectionError(error) {
+                // Raster von vorher stehen lassen (gleiche Ansicht), statt eine leere Mediathek zu zeigen
+                if sections.isEmpty, !previous.isEmpty {
+                    sections = previous; sectionsSource = source
+                    rebuildIndex(); onReloadAll?(); onScrollToEnd?()
+                }
+                offline = true
+                status = "Offline – retrying…"
+                scheduleRetry()
+            } else {
+                self.error = error.localizedDescription
+            }
+        }
+    }
+
+    // MARK: Verbindung
+
+    static func isConnectionError(_ error: Error) -> Bool {
+        guard let e = error as? URLError else { return false }
+        return [.notConnectedToInternet, .networkConnectionLost, .cannotConnectToHost, .cannotFindHost,
+                .dnsLookupFailed, .timedOut, .internationalRoamingOff, .dataNotAllowed].contains(e.code)
+    }
+
+    private func connectionBack() {
+        offline = false
+        retryTask?.cancel(); retryTask = nil
+        if status?.hasPrefix("Offline") == true { status = nil }
+    }
+
+    private func scheduleRetry() {
+        startConnectivityWatch()
+        guard retryTask == nil else { return }
+        retryTask = Task { [weak self] in
+            var attempt = 0
+            while !Task.isCancelled {
+                let delay = attempt < 3 ? [2, 5, 15][attempt] : 60
+                attempt += 1
+                try? await Task.sleep(for: .seconds(delay))
+                guard let self, !Task.isCancelled, self.offline else { break }
+                await self.load(keepCurrent: true)
+                if !self.offline { break }
+            }
+            self?.retryTask = nil
+        }
+    }
+
+    /// Einmalig: Netz zurück bzw. Mac aufgewacht → sofort neu laden, wenn gerade offline.
+    private func startConnectivityWatch() {
+        guard pathMonitor == nil else { return }
+        let m = NWPathMonitor()
+        m.pathUpdateHandler = { path in
+            guard path.status == .satisfied else { return }
+            Task { @MainActor in
+                let lib = Library.shared
+                if lib.offline { await lib.load(keepCurrent: true) }
+            }
+        }
+        m.start(queue: DispatchQueue(label: "org.homeroll.desktop.network"))
+        pathMonitor = m
+        wakeObserver = NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didWakeNotification, object: nil, queue: .main) { _ in
+            Task { @MainActor in
+                // nach dem Aufwachen braucht das WLAN einen Moment
+                try? await Task.sleep(for: .seconds(3))
+                let lib = Library.shared
+                if lib.offline { await lib.load(keepCurrent: true) }
+            }
         }
     }
 
