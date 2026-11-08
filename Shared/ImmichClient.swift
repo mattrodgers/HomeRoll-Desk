@@ -6,7 +6,7 @@ import UIKit
 import UniformTypeIdentifiers
 
 enum APIError: LocalizedError {
-    case notLoggedIn, http(Int, String), badURL, emailAsServer, notImmich
+    case notLoggedIn, http(Int, String), badURL, emailAsServer, notImmich, insecureServer
     var errorDescription: String? {
         switch self {
         case .notLoggedIn: String(localized: "Nicht angemeldet")
@@ -14,6 +14,7 @@ enum APIError: LocalizedError {
         case .badURL: String(localized: "Ungültige Server-Adresse")
         case .emailAsServer: String(localized: "Das ist eine E-Mail-Adresse. Ins erste Feld gehört die Adresse deines Immich-Servers, z. B. http://192.168.1.20:2283")
         case .notImmich: String(localized: "Unter dieser Adresse antwortet kein Immich-Server. Stimmen Adresse und Port (meist 2283)?")
+        case .insecureServer: String(localized: "Diese Adresse liegt im Internet, aber ohne https – Passwort und Fotos gingen unverschlüsselt durchs Netz. Bitte https:// verwenden (z. B. über einen Reverse-Proxy) oder per VPN die Heimnetz-Adresse.")
         }
     }
 }
@@ -87,6 +88,24 @@ final class ImmichClient: NSObject, URLSessionDelegate, @unchecked Sendable {
         }
     }
 
+    /// Heimnetz/VPN statt Internet: private IPv4/IPv6-Bereiche, Tailscale (100.64/10), Namen ohne Punkt oder mit
+    /// .local/.lan/.home/.internal/.home.arpa/.ts.net.
+    static func isPrivateHost(_ host: String) -> Bool {
+        let h = host.lowercased().trimmingCharacters(in: CharacterSet(charactersIn: "[]"))
+        if h == "localhost" || !h.contains(".") && !h.contains(":") { return true }
+        if [".local", ".lan", ".home", ".internal", ".home.arpa", ".ts.net"].contains(where: { h.hasSuffix($0) }) { return true }
+        let p = h.split(separator: ".").compactMap { Int($0) }
+        if p.count == 4 {
+            switch (p[0], p[1]) {
+            case (10, _), (127, _), (192, 168), (169, 254): return true
+            case (172, 16...31), (100, 64...127): return true
+            default: return false
+            }
+        }
+        if h.contains(":") { return h == "::1" || h.hasPrefix("fc") || h.hasPrefix("fd") || h.hasPrefix("fe80") }
+        return false
+    }
+
     /// http(s)-Adresse mit Rechnername und ohne Benutzerteil („test@email.com“ wäre sonst Benutzer test auf email.com).
     static func validBase(_ s: String) -> URL? {
         guard let u = URL(string: s), ["http", "https"].contains(u.scheme?.lowercased() ?? ""),
@@ -100,8 +119,11 @@ final class ImmichClient: NSObject, URLSessionDelegate, @unchecked Sendable {
         while s.hasSuffix("/") { s.removeLast() }
         if s.lowercased().hasSuffix("/api") { s.removeLast(4) }
         let hasScheme = s.lowercased().hasPrefix("http://") || s.lowercased().hasPrefix("https://")
-        let tries = (hasScheme ? [s] : ["https://" + s, "http://" + s]).compactMap(Self.validBase)
+        // http nur im eigenen Netz (Heimnetz, VPN, Tailscale) – im Internet nie unverschlüsselt (GitHub-Issue #11)
+        var tries = (hasScheme ? [s] : ["https://" + s, "http://" + s]).compactMap(Self.validBase)
         guard !tries.isEmpty else { throw s.contains("@") && !s.contains("/") ? APIError.emailAsServer : APIError.badURL }
+        tries = tries.filter { $0.scheme?.lowercased() == "https" || Self.isPrivateHost($0.host() ?? "") }
+        guard !tries.isEmpty else { throw APIError.insecureServer }
         var reached = false, lastError: Error?
         for u in tries {
             var req = URLRequest(url: u.appendingPathComponent("api/server/ping"))
@@ -122,6 +144,9 @@ final class ImmichClient: NSObject, URLSessionDelegate, @unchecked Sendable {
         Keychain.set(nil, for: "accessToken")
         videoLock.withLock { videoFallback = [:]; realtimeHLS = nil }
         AppGroup.saveAccess(nil)
+        // Bilder/Antworten des Kontos nicht auf dem Gerät lassen (bis 1 GB, GitHub-Issue #8)
+        session.configuration.urlCache?.removeAllCachedResponses()
+        URLCache.shared.removeAllCachedResponses()
     }
 
     // MARK: Basis
@@ -374,7 +399,7 @@ final class ImmichClient: NSObject, URLSessionDelegate, @unchecked Sendable {
         let boundary = "fotos-\(UUID().uuidString)"
         var body = Data()
         for (name, file, type, d) in [("image", "bild.jpg", "image/jpeg", image), ("mask", "maske.png", "image/png", mask)] {
-            body.append("--\(boundary)\r\nContent-Disposition: form-data; name=\"\(name)\"; filename=\"\(file)\"\r\nContent-Type: \(type)\r\n\r\n".data(using: .utf8)!)
+            body.append("--\(boundary)\r\nContent-Disposition: form-data; name=\"\(name)\"; filename=\"\(safeFilename(file))\"\r\nContent-Type: \(type)\r\n\r\n".data(using: .utf8)!)
             body.append(d); body.append("\r\n".data(using: .utf8)!)
         }
         body.append("--\(boundary)--\r\n".data(using: .utf8)!)
@@ -452,7 +477,7 @@ final class ImmichClient: NSObject, URLSessionDelegate, @unchecked Sendable {
             body.append("--\(boundary)\r\nContent-Disposition: form-data; name=\"\(name)\"\r\n\r\n\(value)\r\n".data(using: .utf8)!)
         }
         field("fileCreatedAt", created); field("fileModifiedAt", ISO8601DateFormatter().string(from: Date())); field("filename", filename)
-        body.append("--\(boundary)\r\nContent-Disposition: form-data; name=\"assetData\"; filename=\"\(filename)\"\r\nContent-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
+        body.append("--\(boundary)\r\nContent-Disposition: form-data; name=\"assetData\"; filename=\"\(safeFilename(filename))\"\r\nContent-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
         body.append(data); body.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
         var req = try authorized(try url("assets"))
         req.httpMethod = "POST"
@@ -481,17 +506,26 @@ final class ImmichClient: NSObject, URLSessionDelegate, @unchecked Sendable {
     /// Lädt eine Datei vom Datenträger hoch (Multipart wird als Datei gebaut – auch große Videos ohne viel Speicher).
     func uploadAsset(file: URL, filename: String, uti: String, fields: [String: String],
                      checksum: String, expensive: Bool) async throws -> UploadResult {
-        let boundary = "fotos-\(UUID().uuidString)"
         let body = FileManager.default.temporaryDirectory.appendingPathComponent("upload-\(UUID().uuidString)")
-        FileManager.default.createFile(atPath: body.path, contents: nil)
         defer { try? FileManager.default.removeItem(at: body) }
+        let req = try prepareUpload(file: file, filename: filename, uti: uti, fields: fields, checksum: checksum,
+                                    expensive: expensive, body: body)
+        let (d, resp) = try await session.upload(for: req, fromFile: body)
+        return try uploadResult(d, resp)
+    }
+
+    /// Multipart-Rumpf nach `body` schreiben und die passende Anfrage bauen (auch für die Hintergrund-Übertragung).
+    func prepareUpload(file: URL, filename: String, uti: String, fields: [String: String],
+                       checksum: String, expensive: Bool, body: URL) throws -> URLRequest {
+        let boundary = "fotos-\(UUID().uuidString)"
+        FileManager.default.createFile(atPath: body.path, contents: nil)
         let out = try FileHandle(forWritingTo: body)
         var head = ""
         for (k, v) in fields.sorted(by: { $0.key < $1.key }) {
             head += "--\(boundary)\r\nContent-Disposition: form-data; name=\"\(k)\"\r\n\r\n\(v)\r\n"
         }
         let mime = UTType(uti)?.preferredMIMEType ?? "application/octet-stream"
-        head += "--\(boundary)\r\nContent-Disposition: form-data; name=\"assetData\"; filename=\"\(filename)\"\r\nContent-Type: \(mime)\r\n\r\n"
+        head += "--\(boundary)\r\nContent-Disposition: form-data; name=\"assetData\"; filename=\"\(safeFilename(filename))\"\r\nContent-Type: \(mime)\r\n\r\n"
         try out.write(contentsOf: Data(head.utf8))
         let src = try FileHandle(forReadingFrom: file)
         // stückweise mit autoreleasepool (sonst bleibt die ganze Datei im Speicher, siehe Shared/FileChunks.swift)
@@ -510,7 +544,10 @@ final class ImmichClient: NSObject, URLSessionDelegate, @unchecked Sendable {
         req.timeoutInterval = 600
         req.allowsExpensiveNetworkAccess = expensive
         req.allowsConstrainedNetworkAccess = expensive
-        let (d, resp) = try await session.upload(for: req, fromFile: body)
+        return req
+    }
+
+    func uploadResult(_ d: Data, _ resp: URLResponse?) throws -> UploadResult {
         guard let h = resp as? HTTPURLResponse, (200..<300).contains(h.statusCode) else {
             throw APIError.http((resp as? HTTPURLResponse)?.statusCode ?? 0, String(data: d, encoding: .utf8)?.prefix(200).description ?? "")
         }

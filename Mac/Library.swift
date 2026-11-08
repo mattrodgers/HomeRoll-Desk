@@ -506,7 +506,9 @@ final class Library {
     /// Dateinamen für Ziehen/Export (vom Server, gemerkt).
     func fileName(_ a: Asset) async -> String {
         if let n = fileNames[a.id] { return n }
-        let n = (try? await api.asset(a.id))?.originalFileName ?? "\(a.id).\(a.isVideo ? "mov" : "jpg")"
+        // Dateiname kommt vom Server (auch aus geteilten Alben): säubern, sonst könnte „../../“ beim Export oder Ziehen
+        // in den Finder außerhalb des gewählten Ordners schreiben (HomeRoll-Issue #9)
+        let n = safeFilename((try? await api.asset(a.id))?.originalFileName ?? "", fallback: "\(a.id).\(a.isVideo ? "mov" : "jpg")")
         fileNames[a.id] = n
         return n
     }

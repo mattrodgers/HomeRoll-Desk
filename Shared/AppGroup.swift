@@ -62,3 +62,18 @@ struct WidgetSnapshot: Codable {
 /// Übersetzt einen Text, der erst zur Laufzeit feststeht (z. B. Rohwerte von Aufzählungen). Fehlt die Übersetzung,
 /// bleibt der Text, wie er ist. Feste Texte laufen über `String(localized:)` bzw. SwiftUI und brauchen das nicht.
 func L(_ key: String) -> String { Bundle.main.localizedString(forKey: key, value: key, table: nil) }
+
+/// Dateiname vom Server oder aus einer geteilten Mediathek sicher machen, bevor er in einen Pfad oder eine
+/// Multipart-Kopfzeile kommt: nur der letzte Teil (kein „../“), ohne Steuerzeichen, Zeilenumbrüche, Anführungszeichen
+/// und Schrägstriche, höchstens 200 Zeichen (GitHub-Issue #9).
+func safeFilename(_ raw: String, fallback: String = "file") -> String {
+    let bad = CharacterSet.controlCharacters.union(.newlines).union(CharacterSet(charactersIn: "\"/\\:"))
+    var s = String(String.UnicodeScalarView(raw.unicodeScalars.filter { !bad.contains($0) }))
+    s = s.trimmingCharacters(in: .whitespaces)
+    while s.hasPrefix(".") { s.removeFirst() }          // keine versteckten Dateien, kein „..“
+    if s.count > 200 {
+        let ext = (s as NSString).pathExtension
+        s = String(s.prefix(190)) + (ext.isEmpty ? "" : "." + String(ext.prefix(9)))
+    }
+    return s.isEmpty ? fallback : s
+}

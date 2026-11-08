@@ -71,7 +71,11 @@ enum Transfer {
         let h = try FileHandle(forReadingFrom: url)
         defer { try? h.close() }
         var sha = Insecure.SHA1()
-        while let chunk = try h.read(upToCount: 4 << 20), !chunk.isEmpty { sha.update(data: chunk) }
+        // stückweise mit autoreleasepool – sonst bleibt die ganze Datei im Speicher (große Videos, HomeRoll-Issue #2)
+        while try autoreleasepool(invoking: {
+            guard let chunk = try h.read(upToCount: 4 << 20), !chunk.isEmpty else { return false }
+            sha.update(data: chunk); return true
+        }) {}
         return sha.finalize().map { String(format: "%02x", $0) }.joined()
     }
 

@@ -6273,6 +6273,96 @@
           }
         }
       }
+    },
+    "%@ Objekte werden im Hintergrund gesichert": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backing Up %@ Items in the Background"
+          }
+        }
+      }
+    },
+    "Diese Adresse liegt im Internet, aber ohne https – Passwort und Fotos gingen unverschlüsselt durchs Netz. Bitte https:// verwenden (z. B. über einen Reverse-Proxy) oder per VPN die Heimnetz-Adresse.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This address is on the internet but has no https – your password and photos would travel unencrypted. Please use https:// (e.g. through a reverse proxy) or your home network address over a VPN."
+          }
+        }
+      }
+    },
+    "Fotos auf deinem Server sichern?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Back Up Photos to Your Server?"
+          }
+        }
+      }
+    },
+    "Neue Fotos und Videos von diesem iPhone werden als Originale hochgeladen nach": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New photos and videos from this iPhone will be uploaded as originals to"
+          }
+        }
+      }
+    },
+    "%@ Fotos und Videos auf diesem iPhone": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ photos and videos on this iPhone"
+          }
+        }
+      }
+    },
+    "Unverschlüsselte Verbindung (http) – nur im eigenen Heimnetz oder über VPN verwenden.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unencrypted connection (http) – only use this on your home network or over a VPN."
+          }
+        }
+      }
+    },
+    "Auf dem iPhone wird nichts gelöscht. Ändern kannst du das jederzeit unter Backup.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing is deleted from your iPhone. You can change this any time in Backup."
+          }
+        }
+      }
+    },
+    "Backup einschalten": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn On Backup"
+          }
+        }
+      }
+    },
+    "Nicht jetzt": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not Now"
+          }
+        }
+      }
     }
   },
   "version": "1.1"
