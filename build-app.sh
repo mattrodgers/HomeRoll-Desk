@@ -13,7 +13,8 @@ xcodebuild -project HomeRollDesktop.xcodeproj -scheme HomeRollDesktop -configura
 APP="build-app/Build/Products/Release/HomeRoll Desktop.app"
 [ -d "$APP" ] || { echo "FEHLER: $APP nicht gefunden"; exit 1; }
 codesign -f -s - --deep "$APP"
-codesign -dvv "$APP" 2>&1 | grep -q "Signature=adhoc" || { echo "FEHLER: nicht ad hoc signiert"; exit 1; }
+SIG=$(codesign -dvv "$APP" 2>&1)
+[[ "$SIG" == *"Signature=adhoc"* ]] || { echo "FEHLER: nicht ad hoc signiert"; exit 1; }
 # Keine Spuren des Bau-Rechners veröffentlichen (Baupfade enthalten sonst den Mac-Benutzernamen)
 if grep -raqiF -e "$USER" -e "$HOME" "$APP"; then
   echo "FEHLER: Benutzername oder Home-Pfad in der App – aus einem neutralen Ordner bauen (z. B. git clone nach /tmp/build)."
