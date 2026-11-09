@@ -25,7 +25,7 @@ HomeRoll Desktop is the Mac sibling of [HomeRoll](https://github.com/silentprovi
 ## Features
 
 **Library**
-- Sidebar like Photos: Library, Collections, media types, albums, people, memories, map, hidden, recently deleted
+- Sidebar like Photos: Library, Collections, media types, albums with their covers, people, memories, map, hidden, recently deleted
 - Years · Months · All Photos, grid with five zoom levels and month headers, made for 80,000+ items
 - Selection with click, ⇧, ⌘ and drag; context menus; drag photos into the Finder or drop files to import
 - Info window (⌘I): caption, camera, place with map, people, albums, multi-selection
@@ -43,7 +43,7 @@ HomeRoll Desktop is the Mac sibling of [HomeRoll](https://github.com/silentprovi
 - Edits are saved as a new version, stacked with the original on your server
 
 **Organise**
-- Albums: create, rename, delete, add and remove; smart albums with rules (⌥⌘N)
+- Albums: create, rename, delete, add and remove, **Make Key Photo** to set the cover; smart albums with rules (⌥⌘N)
 - People: rename, favorite, merge, hide · Duplicates: review and merge
 - Favorite, rotate, hide, delete and restore, shared links, print (⌘P)
 - Export edited or original files; import files and folders (duplicates are skipped by checksum)
@@ -51,11 +51,12 @@ HomeRoll Desktop is the Mac sibling of [HomeRoll](https://github.com/silentprovi
 
 **Accounts**
 - Several Immich accounts, switch any time; per account "view only" (no changes on the server) and "imports from this Mac"
+- **Sign in with password or SSO/OIDC** ("Login with …"), also on servers with password login turned off (e.g. hosted Immich, Authentik, Keycloak)
 - Menus and keyboard shortcuts like Photos for Mac
 
 ## Requirements
 
-- An Immich server (tested with **v3.3.x**) reachable from the Mac – at home or via VPN
+- An Immich server (tested with **v3.3.x**) reachable from the Mac – at home, via VPN or over https; login with password or SSO/OIDC
 - macOS 15 Sequoia or newer (Apple silicon or Intel)
 
 Optional server add-ons from the HomeRoll repo ([`server/`](https://github.com/silentprovider423/HomeRoll/tree/main/server)): Clean Up (retouch brush), relevance and categories services. The app works without them.
@@ -90,6 +91,7 @@ Debug builds can log in from the environment for testing (`FOTOS_SERVER`, `FOTOS
 - The app talks **only** to your Immich server (and Apple Maps for maps).
 - No analytics, no third-party SDKs.
 - The login token is stored in a file only your Mac user can read (`~/Library/Application Support/HomeRoll Desktop/`), never your password.
+- SSO runs in Apple's sign-in sheet – the app never sees the password of your SSO provider.
 
 ## Project layout
 
