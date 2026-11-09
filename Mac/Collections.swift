@@ -16,7 +16,7 @@ struct MemoriesOverview: View {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 260), spacing: 18)], spacing: 18) {
                     ForEach(lib.memories) { m in
                         let title = Self.title(m)
-                        Button { lib.select(.memory(m.id, title)) } label: {
+                        Button { lib.open(.memory(m.id, title)) } label: {
                             Thumb(id: m.assets.first(where: { $0.type == "IMAGE" })?.id ?? m.assets.first?.id)
                                 .frame(height: 300)
                                 .overlay(LinearGradient(colors: [.clear, .black.opacity(0.6)], startPoint: .center, endPoint: .bottom))
@@ -60,7 +60,7 @@ struct MapOverview: View {
         Map {
             ForEach(places) { p in
                 Annotation(p.name, coordinate: p.coord) {
-                    Button { lib.select(.city(p.name)) } label: {
+                    Button { lib.open(.city(p.name)) } label: {
                         Thumb(id: p.sample)
                             .frame(width: size(p), height: size(p))
                             .clipShape(RoundedRectangle(cornerRadius: 8))

@@ -78,6 +78,12 @@ struct MainView: View {
 
     @ToolbarContentBuilder private var toolbar: some ToolbarContent {
         ToolbarItem(placement: .navigation) {
+            // Zurück zur Übersicht wie in Photos (Album → Alben, Person → Personen …)
+            if lib.canGoBack && lib.viewer == nil {
+                Button { lib.goBack() } label: { Label("Back", systemImage: "chevron.left") }.help("Back (⌘[)")
+            }
+        }
+        ToolbarItem(placement: .navigation) {
             if !lib.source.isOverview && lib.viewer == nil && (lib.source != .library || lib.granularity == .all) {
                 Slider(value: Binding(get: { Double(lib.zoom) }, set: { lib.zoom = Int($0.rounded()) }),
                        in: 0...Double(Library.zoomSizes.count - 1), step: 1)
@@ -221,7 +227,7 @@ struct AlbumsOverview: View {
         ScrollView {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 170), spacing: 18)], spacing: 22) {
                 ForEach(lib.albums) { a in
-                    Button { lib.select(.album(a.id, a.albumName)) } label: {
+                    Button { lib.open(.album(a.id, a.albumName)) } label: {
                         VStack(alignment: .leading, spacing: 4) {
                             Thumb(id: a.albumThumbnailAssetId).frame(height: 170).clipShape(RoundedRectangle(cornerRadius: 8))
                             Text(a.albumName).lineLimit(1)
@@ -240,7 +246,7 @@ struct PeopleOverview: View {
         ScrollView {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 120), spacing: 18)], spacing: 22) {
                 ForEach(lib.people) { p in
-                    Button { lib.select(.person(p.id, p.name)) } label: {
+                    Button { lib.open(.person(p.id, p.name)) } label: {
                         VStack(spacing: 6) {
                             PersonThumb(id: p.id).frame(width: 110, height: 110).clipShape(Circle())
                                 .overlay(alignment: .bottomTrailing) {

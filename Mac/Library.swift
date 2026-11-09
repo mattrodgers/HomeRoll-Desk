@@ -124,7 +124,25 @@ final class Library {
         DispatchQueue.main.async { self.onScrollToSection?(section) }
     }
 
-    func select(_ s: Source) {
+    /// Zurück wie in Photos (GitHub-Issue HomeRoll-Desk #3): aus einer Übersicht (Alben, Personen, Rückblicke, Karte)
+    /// Geöffnetes merkt sich, woher es kam. Ein Klick in der Seitenleiste fängt neu an.
+    private(set) var backStack: [Source] = []
+    var canGoBack: Bool { !backStack.isEmpty }
+
+    /// Aus einer Übersicht hinein (Album, Person, Rückblick, Ort) – mit Zurück-Weg.
+    func open(_ s: Source) {
+        guard s != source else { return }
+        backStack.append(source)
+        select(s, keepHistory: true)
+    }
+
+    func goBack() {
+        guard viewer == nil, let s = backStack.popLast() else { return }
+        select(s, keepHistory: true)
+    }
+
+    func select(_ s: Source, keepHistory: Bool = false) {
+        if !keepHistory { backStack = [] }
         if s != .library { granularity = .all }
         guard s != source || sections.isEmpty else { return }
         source = s

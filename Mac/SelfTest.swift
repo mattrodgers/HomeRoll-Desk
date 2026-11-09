@@ -99,6 +99,7 @@ enum SelfTest {
         // nur Albumcover prüfen: FOTOS_SELFTEST_ONLY=albums
         if ProcessInfo.processInfo.environment["FOTOS_SELFTEST_ONLY"] == "albums" {
             await keyPhotoTest()
+            await backTest()
             return finish()
         }
         await scrollBenchmark()
@@ -227,6 +228,7 @@ enum SelfTest {
             if let al { await lib.deleteAlbum(al.id) }
             log("Album löschen", !lib.albums.contains { $0.albumName == name })
             await keyPhotoTest()
+            await backTest()
             // Bearbeiten: Oberfläche zeigen, dann über denselben Kern sichern → neue Fassung gestapelt, danach entfernen
             if let photo = s.last(where: \.isImage) {
                 lib.selection = [photo.id]; lib.focused = photo
@@ -580,6 +582,36 @@ enum SelfTest {
             log("SSO: Testkonto entfernt", !AccountStore.shared.accounts.contains { $0.id == acc?.id })
         } catch {
             log("SSO", false, error.localizedDescription)
+        }
+    }
+
+    /// Zurück wie in Photos (#3): Alben → Album → Zurück, Personen → Person → Zurück; Seitenleiste leert den Verlauf.
+    static func backTest() async {
+        await show(.albums)
+        if let a = lib.albums.first {
+            lib.open(.album(a.id, a.albumName))
+            _ = await waitFor(15) { !lib.loading }
+            await wait(1.5)
+            log("Zurück: im Album", lib.canGoBack, a.albumName)
+            snap("27-album-zurueck")
+            lib.goBack()
+            await wait(1)
+            log("Zurück: Alben-Übersicht", lib.source == .albums && !lib.canGoBack)
+        } else { log("Zurück: Alben", false, "keine Alben") }
+        await show(.people)
+        if let p = lib.people.first {
+            lib.open(.person(p.id, p.name))
+            _ = await waitFor(15) { !lib.loading }
+            log("Zurück: in Person", lib.canGoBack)
+            lib.goBack()
+            await wait(1)
+            log("Zurück: Personen-Übersicht", lib.source == .people)
+        }
+        if let a = lib.albums.first {
+            await show(.albums)
+            lib.open(.album(a.id, a.albumName))
+            await show(.favorites)        // Klick in der Seitenleiste
+            log("Zurück: Seitenleiste leert Verlauf", !lib.canGoBack)
         }
     }
 

@@ -104,6 +104,8 @@ struct FotosCommands: Commands {
             }
         }
         CommandGroup(after: .toolbar) {
+            Button("Back") { lib.goBack() }.keyboardShortcut("[").disabled(!lib.canGoBack || lib.viewer != nil)
+            Divider()
             Button("Zoom In") { lib.zoom = min(Library.zoomSizes.count - 1, lib.zoom + 1) }.keyboardShortcut("+")
             Button("Zoom Out") { lib.zoom = max(0, lib.zoom - 1) }.keyboardShortcut("-")
             Divider()
