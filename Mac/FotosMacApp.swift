@@ -87,6 +87,7 @@ struct FotosCommands: Commands {
                 ForEach(lib.albums) { a in Button(a.albumName) { Task { await lib.addToAlbum(a.id) } } }
             }.disabled(!w || none)
             if case .album = lib.source {
+                Button("Make Key Photo") { Task { await lib.makeKeyPhoto() } }.disabled(!w || lib.targets.count != 1)
                 Button("Remove from Album") { Task { await lib.removeFromAlbum() } }.disabled(!w || none)
             }
             Divider()

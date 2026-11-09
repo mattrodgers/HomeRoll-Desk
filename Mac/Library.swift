@@ -488,6 +488,13 @@ final class Library {
         catch { self.error = error.localizedDescription }
     }
 
+    /// Ausgewähltes Foto als Albumcover („Make Key Photo“ wie bei Apple) – auch in der Seitenleiste zu sehen.
+    func makeKeyPhoto() async {
+        guard canWrite, case .album(let id, _) = source, let a = targets.first, targets.count == 1 else { return }
+        do { try await api.updateAlbum(id, ["albumThumbnailAssetId": a.id]); await loadAlbums() }
+        catch { self.error = error.localizedDescription }
+    }
+
     func deleteAlbum(_ id: String) async {
         guard canWrite else { return }
         do {

@@ -42,7 +42,10 @@ enum Menus {
         addTo.submenu = albumMenu(lib)
         addTo.isEnabled = w
         m.addItem(addTo)
-        if case .album = lib.source { add("Remove from Album", "rectangle.stack.badge.minus", enabled: w) { await lib.removeFromAlbum() } }
+        if case .album = lib.source {
+            if n == 1 { add("Make Key Photo", "photo.badge.checkmark", enabled: w) { await lib.makeKeyPhoto() } }
+            add("Remove from Album", "rectangle.stack.badge.minus", enabled: w) { await lib.removeFromAlbum() }
+        }
         m.addItem(.separator())
         add("Export…", "square.and.arrow.up") { Transfer.export(original: false) }
         add("Export Unmodified Original…", "square.and.arrow.up.on.square") { Transfer.export(original: true) }

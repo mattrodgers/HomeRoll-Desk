@@ -90,6 +90,11 @@ enum SelfTest {
             await offlineTest()
             return finish()
         }
+        // nur Albumcover prüfen: FOTOS_SELFTEST_ONLY=albums
+        if ProcessInfo.processInfo.environment["FOTOS_SELFTEST_ONLY"] == "albums" {
+            await keyPhotoTest()
+            return finish()
+        }
         await scrollBenchmark()
         await footerTests()
 
@@ -215,6 +220,7 @@ enum SelfTest {
             log("Neues Album mit Auswahl", al?.assetCount == 1, al.map { "\($0.assetCount) Objekt" } ?? "fehlt")
             if let al { await lib.deleteAlbum(al.id) }
             log("Album löschen", !lib.albums.contains { $0.albumName == name })
+            await keyPhotoTest()
             // Bearbeiten: Oberfläche zeigen, dann über denselben Kern sichern → neue Fassung gestapelt, danach entfernen
             if let photo = s.last(where: \.isImage) {
                 lib.selection = [photo.id]; lib.focused = photo
@@ -492,6 +498,38 @@ enum SelfTest {
         guard let img = ctx.makeImage(), let d = CGImageDestinationCreateWithURL(url as CFURL, UTType.png.identifier as CFString, 1, nil) else { return false }
         CGImageDestinationAddImage(d, img, nil)
         return CGImageDestinationFinalize(d)
+    }
+
+    /// Album mit zwei Fotos → zweites als Cover („Make Key Photo“) → Server und Seitenleiste prüfen → Album löschen.
+    static func keyPhotoTest() async {
+        await show(.library)
+        let all = lib.sections.compactMap(\.assets).flatMap { $0 }
+        guard all.count >= 2 else { log("Albumcover", false, "zu wenige Objekte"); return }
+        let two = Array(all.suffix(2))
+        lib.selection = Set(two.map(\.id))
+        let name = "Mac-Selbsttest Cover \(Int(Date().timeIntervalSince1970))"
+        await lib.createAlbum(name)
+        guard let al = lib.albums.first(where: { $0.albumName == name }) else { log("Albumcover: Album anlegen", false); return }
+        await show(.album(al.id, al.albumName))
+        let other = two.first { $0.id != al.albumThumbnailAssetId } ?? two[0]
+        lib.selection = [other.id]; lib.focused = other
+        let menu = Menus.assetMenu(lib)
+        log("Albumcover: Menüpunkt", menu.items.contains { $0.title == "Make Key Photo" && $0.isEnabled })
+        await lib.makeKeyPhoto()
+        let server = (try? await api.albums())?.first { $0.id == al.id }?.albumThumbnailAssetId
+        log("Albumcover: Server", server == other.id, "\(String(describing: server)) = \(other.id)")
+        log("Albumcover: Seitenleiste", lib.albums.first { $0.id == al.id }?.albumThumbnailAssetId == other.id)
+        await wait(2.5)
+        // „My Albums“ liegt unten in der Seitenleiste → für das Bild ans Ende scrollen
+        func tables(_ v: NSView) -> [NSTableView] { (v as? NSTableView).map { [$0] } ?? v.subviews.flatMap(tables) }
+        if let content = NSApp.windows.first(where: \.isVisible)?.contentView,
+           let side = tables(content).min(by: { $0.convert($0.bounds, to: nil).minX < $1.convert($1.bounds, to: nil).minX }) {
+            side.scrollRowToVisible(side.numberOfRows - 1)
+        }
+        await wait(1.5)
+        snap("25-albumcover-seitenleiste")
+        await lib.deleteAlbum(al.id)
+        log("Albumcover: Testalbum gelöscht", !lib.albums.contains { $0.id == al.id })
     }
 
     private static func finish() {

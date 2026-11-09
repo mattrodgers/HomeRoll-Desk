@@ -164,8 +164,18 @@ struct Sidebar: View {
             }
             Section("My Albums") {
                 ForEach(lib.albums) { a in
-                    Label(a.albumName, systemImage: "rectangle.stack").tag(Source.album(a.id, a.albumName))
-                        .contextMenu { albumContext(a) }
+                    // kleines Albumcover wie in Apples Seitenleiste (GitHub-Issue HomeRoll-Desk #2)
+                    Label {
+                        Text(a.albumName)
+                    } icon: {
+                        if let cover = a.albumThumbnailAssetId {
+                            Thumb(id: cover).frame(width: 18, height: 18).clipShape(RoundedRectangle(cornerRadius: 3))
+                        } else {
+                            Image(systemName: "rectangle.stack")
+                        }
+                    }
+                    .tag(Source.album(a.id, a.albumName))
+                    .contextMenu { albumContext(a) }
                 }
                 ForEach(SmartAlbums.shared.albums) { a in
                     Label(a.name, systemImage: "gearshape").tag(Source.smart(a.id, a.name))
