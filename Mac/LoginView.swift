@@ -1,4 +1,5 @@
 import AppKit
+import AuthenticationServices
 import SwiftUI
 
 /// Anmeldung an einem Immich-Konto (Passwort tippt der Nutzer selbst; Token landet im Schlüsselbund je Konto).
@@ -9,6 +10,9 @@ struct LoginView: View {
     @State private var password = ""
     @State private var busy = false
     @State private var error: String?
+    /// Anmeldearten des eingegebenen Servers (SSO-Knopf, Passwortfelder) – nil, solange unbekannt
+    @State private var options: ImmichClient.LoginOptions?
+    @Environment(\.webAuthenticationSession) private var webAuth
 
     var body: some View {
         VStack(spacing: 16) {
@@ -17,19 +21,55 @@ struct LoginView: View {
             Text("Connect to your Immich server").foregroundStyle(.secondary)
             Form {
                 TextField("Server", text: $server)
-                TextField("Email", text: $email).textContentType(.username)
-                SecureField("Password", text: $password).textContentType(.password)
+                if options?.password != false {
+                    TextField("Email", text: $email).textContentType(.username)
+                    SecureField("Password", text: $password).textContentType(.password)
+                }
             }
             .formStyle(.grouped)
+            .scrollDisabled(true)
+            .fixedSize(horizontal: false, vertical: true)   // nur so hoch wie die Felder (ohne Passwort: eine Zeile)
             .frame(width: 380)
             .disabled(busy)
             if let error { Text(error).foregroundStyle(.red).font(.callout).frame(width: 360) }
-            Button(busy ? "Signing In…" : "Sign In") { Task { await login() } }
-                .keyboardShortcut(.defaultAction)
-                .disabled(busy || email.isEmpty || password.isEmpty || server.isEmpty)
+            if options?.password != false {
+                Button(busy ? "Signing In…" : "Sign In") { Task { await login() } }
+                    .keyboardShortcut(.defaultAction)
+                    .disabled(busy || email.isEmpty || password.isEmpty || server.isEmpty)
+            }
+            if let o = options, o.sso {
+                // SSO/OIDC wie in der Immich-App; Knopftext kommt vom Server (z. B. „Login with PixelUnion“)
+                Button { Task { await loginSSO() } } label: {
+                    Label(o.ssoTitle ?? "Sign In with SSO", systemImage: "person.badge.key")
+                }
+                .keyboardShortcut(o.password ? nil : .defaultAction)
+                .disabled(busy)
+            }
         }
         .padding(30)
         .frame(minWidth: 480, minHeight: 460)
+        // Nach dem Tippen der Adresse kurz warten, dann die Anmeldearten des Servers abfragen
+        .task(id: server) {
+            options = nil
+            guard server.count > 3 else { return }
+            try? await Task.sleep(for: .milliseconds(700))
+            guard !Task.isCancelled else { return }
+            options = try? await ImmichClient.shared.loginOptions(server: server)
+        }
+    }
+
+    private func loginSSO() async {
+        busy = true; error = nil
+        defer { busy = false }
+        do {
+            let flow = try await ImmichClient.shared.ssoStart(server: server)
+            let callback = try await webAuth.authenticate(using: flow.url, callbackURLScheme: ImmichClient.ssoScheme,
+                                                          preferredBrowserSession: .shared)
+            try await AccountStore.shared.loginSSO(flow, callback: callback)
+            onDone?()
+        } catch let e as ASWebAuthenticationSessionError where e.code == .canceledLogin {
+            // abgebrochen: still zurück
+        } catch { self.error = error.localizedDescription }
     }
 
     private func login() async {

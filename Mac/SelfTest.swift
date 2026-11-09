@@ -75,6 +75,12 @@ enum SelfTest {
             w.setFrame(NSRect(x: 80, y: 80, width: 1280, height: 800), display: true)
         }
 
+        // nur SSO-Anmeldung prüfen (Server mit OAuth): FOTOS_SELFTEST_ONLY=sso
+        if ProcessInfo.processInfo.environment["FOTOS_SELFTEST_ONLY"] == "sso" {
+            await ssoTest()
+            return finish()
+        }
+
         // 1. Mediathek
         let t0 = Date()
         let loaded = await waitFor(25) { !lib.sections.isEmpty }
@@ -530,6 +536,51 @@ enum SelfTest {
         snap("25-albumcover-seitenleiste")
         await lib.deleteAlbum(al.id)
         log("Albumcover: Testalbum gelöscht", !lib.albums.contains { $0.id == al.id })
+    }
+
+    /// SSO/OIDC: Anmeldearten abfragen, Anmeldefenster fotografieren, den Browser-Teil nachspielen (Anmeldeseite
+    /// aufrufen, Rücksprung abfangen), über die echte Konto-Logik einlösen, neues Konto prüfen und wieder entfernen.
+    /// Nicht getestet wird nur Apples Anmeldefenster selbst (ASWebAuthenticationSession).
+    static func ssoTest() async {
+        guard let server = ProcessInfo.processInfo.environment["FOTOS_SERVER"] else { return }
+        let o = try? await api.loginOptions(server: server)
+        log("SSO: Anmeldearten", o?.sso == true, "sso \(String(describing: o?.sso)), Passwort \(String(describing: o?.password)), Knopf \(o?.ssoTitle ?? "-")")
+        LoginWindow.show()
+        await wait(3)
+        if let w = NSApp.windows.first(where: { $0.title == "Add Account" }) { snap("26-sso-anmeldung", window: w); w.close() }
+        do {
+            let flow = try await api.ssoStart(server: server)
+            log("SSO: Anmeldeseite", true, flow.url.host() ?? "")
+            // Browser-Teil: Anmeldeseite aufrufen, Weiterleitung zur App-Adresse (app.immich://) abfangen
+            final class Catcher: NSObject, URLSessionTaskDelegate, @unchecked Sendable {
+                var callback: URL?
+                func urlSession(_ s: URLSession, task: URLSessionTask, willPerformHTTPRedirection r: HTTPURLResponse,
+                                newRequest req: URLRequest) async -> URLRequest? {
+                    if req.url?.scheme == ImmichClient.ssoScheme { callback = req.url; return nil }
+                    return req
+                }
+            }
+            let c = Catcher()
+            let session = URLSession(configuration: .ephemeral, delegate: c, delegateQueue: nil)
+            var loc: URL?
+            if let (_, resp) = try? await session.data(from: flow.url), let h = resp as? HTTPURLResponse,
+               let l = h.value(forHTTPHeaderField: "Location") { loc = URL(string: l) }
+            guard let callback = c.callback ?? loc, callback.scheme == ImmichClient.ssoScheme else {
+                log("SSO: Rücksprung", false, "keine app.immich-Adresse"); return
+            }
+            log("SSO: Rücksprung", true, String(callback.absoluteString.prefix(40)))
+            let before = AccountStore.shared.accounts.count
+            try await AccountStore.shared.loginSSO(flow, callback: callback)
+            let acc = AccountStore.shared.current
+            log("SSO: Konto angelegt", AccountStore.shared.accounts.count == before + 1 && acc?.email.isEmpty == false,
+                "\(acc?.name ?? "-") <\(acc?.email ?? "-")>")
+            let me = try? await api.me()
+            log("SSO: Server kennt Konto", me?.email == acc?.email, me?.email ?? "-")
+            if let acc { AccountStore.shared.remove(acc.id) }
+            log("SSO: Testkonto entfernt", !AccountStore.shared.accounts.contains { $0.id == acc?.id })
+        } catch {
+            log("SSO", false, error.localizedDescription)
+        }
     }
 
     private static func finish() {

@@ -55,7 +55,15 @@ final class AccountStore {
 
     /// Anmeldung mit E-Mail + Passwort (tippt der Nutzer selbst); danach ist das Konto aktiv.
     func login(server: String, email: String, password: String) async throws {
-        let r = try await ImmichClient.shared.login(server: server, email: email, password: password)
+        add(try await ImmichClient.shared.login(server: server, email: email, password: password))
+    }
+
+    /// Anmeldung per SSO/OIDC: Rücksprung des Anbieters einlösen, dann wie bei der Passwort-Anmeldung übernehmen.
+    func loginSSO(_ flow: ImmichClient.SSOFlow, callback: URL) async throws {
+        add(try await ImmichClient.shared.ssoFinish(flow, callback: callback))
+    }
+
+    private func add(_ r: LoginResponse) {
         UserDefaults.standard.removeObject(forKey: "serverURL")
         guard let base = ImmichClient.shared.baseURL else { return }
         TokenStore.set(r.accessToken, for: r.userId)
