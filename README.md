@@ -70,6 +70,8 @@ Optional server add-ons from the HomeRoll repo ([`server/`](https://github.com/s
    Or in Terminal: `xattr -dr com.apple.quarantine "/Applications/HomeRoll Desktop.app"`
 4. Log in with your Immich server address (e.g. `https://photos.example.com` or `http://192.168.x.y:2283`) and your Immich account.
 
+Later versions install themselves: the app checks for updates at launch (or **HomeRoll Desktop → Check for Updates…**), downloads the new version, verifies it and restarts. No trip to GitHub and no **Open Anyway** again.
+
 New to Immich? The [HomeRoll setup guide](https://github.com/silentprovider423/HomeRoll/blob/main/docs/SETUP.md) walks you through the server part.
 
 ## Build
@@ -88,7 +90,7 @@ Debug builds can log in from the environment for testing (`FOTOS_SERVER`, `FOTOS
 
 ## Privacy
 
-- The app talks **only** to your Immich server (and Apple Maps for maps).
+- The app talks **only** to your Immich server (and Apple Maps for maps). The one exception is the update check: at launch it asks GitHub for the newest version number of HomeRoll Desktop. Nothing about you or your photos is sent, and you can switch it off in Settings → Updates.
 - No analytics, no third-party SDKs.
 - The login token is stored in a file only your Mac user can read (`~/Library/Application Support/HomeRoll Desktop/`), never your password.
 - SSO runs in Apple's sign-in sheet – the app never sees the password of your SSO provider.

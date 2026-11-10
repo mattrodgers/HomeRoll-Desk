@@ -20,6 +20,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ n: Notification) {
         MainActor.assumeIsolated { PhotosSync.shared.startIfEnabled() }
         #if DEBUG
+        if ProcessInfo.processInfo.environment["FOTOS_UPDATE_TEST"] != nil { MainActor.assumeIsolated { SelfTest.updateTest() }; return }
+        #endif
+        MainActor.assumeIsolated { Updater.shared.checkAtLaunch() }
+        #if DEBUG
         MainActor.assumeIsolated { SelfTest.runIfRequested() }
         #endif
     }
@@ -31,6 +35,9 @@ struct FotosCommands: Commands {
     @Bindable var accounts = AccountStore.shared
 
     var body: some Commands {
+        CommandGroup(after: .appInfo) {
+            Button("Check for Updates…") { Task { await Updater.shared.check(manual: true) } }.disabled(Updater.shared.busy)
+        }
         CommandGroup(replacing: .newItem) {
             Button("New Album") { Menus.newAlbum(lib) }
                 .keyboardShortcut("n").disabled(!accounts.canWrite)

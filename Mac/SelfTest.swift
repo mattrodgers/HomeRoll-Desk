@@ -16,6 +16,22 @@ enum SelfTest {
         Task { await run(URL(fileURLWithPath: dir)) }
     }
 
+    /// Update-Probe ohne Dialog: neueste Version von GitHub holen, prüfen, einsetzen, neu starten (`FOTOS_UPDATE_TEST=1`).
+    static func updateTest() {
+        Task {
+            log("Versionsvergleich", Updater.isNewer("1.0.10", than: "1.0.9") && !Updater.isNewer("1.0.6", than: "1.0.6") && !Updater.isNewer("1.0", than: "1.0.1"))
+            guard let r = await Updater.latest() else { log("Update abfragen", false); exit(1) }
+            log("Update abfragen", true, "\(r.version) sha=\(r.sha256 != nil)")
+            do {
+                let (app, work) = try await Updater.fetch(r)
+                log("Update laden+prüfen", true, app.lastPathComponent)
+                try Updater.swapAndRelaunch(new: app, work: work, target: Bundle.main.bundleURL)
+                log("Austausch gestartet", true)
+                exit(0)
+            } catch { log("Update laden+prüfen", false, "\(error)"); exit(1) }
+        }
+    }
+
     private static var out: URL!
     private static let lib = Library.shared
     private static let api = ImmichClient.shared

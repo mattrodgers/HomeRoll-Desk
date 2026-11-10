@@ -136,12 +136,18 @@ struct SettingsView: View {
                     }
                 }
             }
+            Section("Updates") {
+                Toggle("Check for updates at launch", isOn: Binding(get: { Updater.shared.auto }, set: { Updater.shared.auto = $0 }))
+                Text("Asks GitHub for the newest version of HomeRoll Desktop (version \(Updater.current) installed). Nothing about you or your photos is sent.")
+                    .font(.caption).foregroundStyle(.secondary)
+                Button("Check Now") { Task { await Updater.shared.check(manual: true) } }.disabled(Updater.shared.busy)
+            }
             Section("Keyboard (like Photos)") {
                 Text("Space/double-click open · ←/→ browse · . favorite · ⌫ delete · ⌘L hide · ⌘R rotate · ⌘I info · ⌘+/⌘− zoom · ⇧⌘I import · ⇧⌘E export · ⌥⌘E export original · ⌃⌘A add to last album")
                     .font(.callout).foregroundStyle(.secondary)
             }
         }
         .formStyle(.grouped)
-        .frame(width: 520, height: 420)
+        .frame(width: 520, height: 520)
     }
 }
