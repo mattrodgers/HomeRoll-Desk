@@ -215,6 +215,16 @@ final class GridCollectionView: NSCollectionView {
         if e.clickCount == 2, let p = indexPathForItem(at: convert(e.locationInWindow, from: nil)) { coordinator?.open(p) }
     }
 
+    /// Trackpad-Pinch wie in Fotos: auseinanderziehen = größere Vorschauen, je ~25 % eine Zoomstufe
+    private var pinch: CGFloat = 0
+    override func magnify(with e: NSEvent) {
+        if e.phase == .began { pinch = 0 }
+        pinch += e.magnification
+        let lib = Library.shared
+        if pinch > 0.25, lib.zoom < Library.zoomSizes.count - 1 { lib.zoom += 1; pinch = 0 }
+        else if pinch < -0.2, lib.zoom > 0 { lib.zoom -= 1; pinch = 0 }
+    }
+
     override func keyDown(with e: NSEvent) {
         let lib = Library.shared
         switch e.keyCode {
