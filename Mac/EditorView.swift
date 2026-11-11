@@ -215,6 +215,9 @@ struct EditorView: View {
             Text("Color").font(.callout); Slider(value: $session.state.styleColor, in: -1...1)
             Text("Palette").font(.callout); Slider(value: $session.state.stylePalette, in: 0...1)
         }.disabled(session.state.style == .standard && session.state.styleTone == 0 && session.state.styleColor == 0)
+        // Fotografische Stile 3 (wie iPhone): Textur und Körnung, auch ohne Stil
+        Text("Texture").font(.callout); Slider(value: $session.state.styleTexture, in: -1...1)
+        Text("Grain").font(.callout); Slider(value: $session.state.styleGrain, in: 0...1)
     }
 
     private func tile(_ img: CGImage?, _ title: String, selected: Bool, _ action: @escaping () -> Void) -> some View {

@@ -181,7 +181,7 @@ struct Sidebar: View {
                         }
                     }
                     .tag(Source.album(a.id, a.albumName))
-                    .contextMenu { albumContext(a) }
+                    .contextMenu { AlbumContextMenu(a: a, lib: lib) }
                 }
                 ForEach(SmartAlbums.shared.albums) { a in
                     Label(a.name, systemImage: "gearshape").tag(Source.smart(a.id, a.name))
@@ -201,8 +201,15 @@ struct Sidebar: View {
     }
 
     private func item(_ s: Source, _ icon: String) -> some View { Label(s.title, systemImage: icon).tag(s) }
+}
 
-    @ViewBuilder private func albumContext(_ a: AlbumDTO) -> some View {
+// MARK: Übersichten
+
+/// Kontextmenü eines Albums – in der Seitenleiste und in der Alben-Übersicht gleich.
+struct AlbumContextMenu: View {
+    let a: AlbumDTO
+    @Bindable var lib: Library
+    var body: some View {
         let w = AccountStore.shared.canWrite
         Button("Add Selected Items") { Task { await lib.addToAlbum(a.id) } }.disabled(!w || lib.targets.isEmpty)
         Button("Rename…") {
@@ -216,27 +223,7 @@ struct Sidebar: View {
             al.addButton(withTitle: "Delete"); al.addButton(withTitle: "Cancel")
             if al.runModal() == .alertFirstButtonReturn { Task { await lib.deleteAlbum(a.id) } }
         }.disabled(!w)
-    }
-}
-
-// MARK: Übersichten
-
-struct AlbumsOverview: View {
-    @Bindable var lib: Library
-    var body: some View {
-        ScrollView {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 170), spacing: 18)], spacing: 22) {
-                ForEach(lib.albums) { a in
-                    Button { lib.open(.album(a.id, a.albumName)) } label: {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Thumb(id: a.albumThumbnailAssetId).frame(height: 170).clipShape(RoundedRectangle(cornerRadius: 8))
-                            Text(a.albumName).lineLimit(1)
-                            Text("\(a.assetCount)").font(.caption).foregroundStyle(.secondary)
-                        }
-                    }.buttonStyle(.plain)
-                }
-            }.padding(20)
-        }
+        AlbumFolderMenu(album: a.id)
     }
 }
 

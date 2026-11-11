@@ -490,10 +490,11 @@ final class Library {
         } catch { self.error = error.localizedDescription }
     }
 
-    func createAlbum(_ name: String) async {
+    /// `assets` nil = die Auswahl kommt mit ins Album (wie Fotos), [] = leeres Album (aus der Alben-Übersicht)
+    func createAlbum(_ name: String, assets: [String]? = nil) async {
         guard canWrite, !name.isEmpty else { return }
         do {
-            let a = try await api.createAlbum(name, targets.map(\.id))
+            let a = try await api.createAlbum(name, assets ?? targets.map(\.id))
             lastAlbumID = a.id
             await loadAlbums()
         } catch { self.error = error.localizedDescription }

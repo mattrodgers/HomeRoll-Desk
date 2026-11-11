@@ -44,6 +44,25 @@ enum SelfTest {
     static func wait(_ s: Double) async { try? await Task.sleep(for: .seconds(s)) }
 
     /// Bereich wählen und warten, bis genau dieser fertig geladen ist (nicht der vorige).
+    /// Alben-Übersicht (GitHub HomeRoll-Desk #6): Ordner anlegen, Album hineinlegen, sortieren – Ordner liegen nur lokal.
+    static func foldersTest() async {
+        await show(.albums)
+        let folders = AlbumFolders.shared
+        folders.use(AccountStore.shared.currentID ?? "")
+        let sortKey = "mac.albumSort", oldSort = UserDefaults.standard.string(forKey: sortKey)
+        UserDefaults.standard.set(AlbumSort.name.rawValue, forKey: sortKey)
+        await wait(1.5); snap("28-alben-name")
+        let names = AlbumSort.name.apply(lib.albums).map(\.albumName)
+        log("Alben: nach Name sortiert", names == names.sorted { $0.localizedStandardCompare($1) == .orderedAscending }, "\(names.count) Alben")
+        let f = folders.create("Selbsttest-Ordner")
+        if let a = lib.albums.first { folders.move(a.id, to: f.id) }
+        await wait(1.5); snap("29-alben-ordner")
+        log("Alben: Ordner mit Album", folders.folder(of: lib.albums.first?.id ?? "")?.id == f.id)
+        folders.delete(f.id)
+        log("Alben: Ordner wieder weg", !folders.folders.contains { $0.id == f.id })
+        if let oldSort { UserDefaults.standard.set(oldSort, forKey: sortKey) } else { UserDefaults.standard.removeObject(forKey: sortKey) }
+    }
+
     static func show(_ s: Source) async {
         lib.select(s)
         await wait(0.4)
@@ -116,6 +135,11 @@ enum SelfTest {
         if ProcessInfo.processInfo.environment["FOTOS_SELFTEST_ONLY"] == "albums" {
             await keyPhotoTest()
             await backTest()
+            return finish()
+        }
+        // nur Alben-Übersicht mit Ordnern + Sortierung: FOTOS_SELFTEST_ONLY=folders
+        if ProcessInfo.processInfo.environment["FOTOS_SELFTEST_ONLY"] == "folders" {
+            await foldersTest()
             return finish()
         }
         await scrollBenchmark()

@@ -139,6 +139,9 @@ struct EditState: Equatable, Codable {
     var styleTone: Double = 0       // −1 … 1 (Steuerfeld senkrecht)
     var styleColor: Double = 0      // −1 … 1 (Steuerfeld waagerecht)
     var stylePalette: Double = 1    // 0 … 1 (Palette)
+    /// Fotografische Stile 3: Textur (−1 weich … 1 knackig) und Körnung (0 … 1, Filmkorn)
+    var styleTexture: Double = 0
+    var styleGrain: Double = 0
     /// Porträt: Blende (ƒ-Zahl) für die Tiefenunschärfe, nil = aus
     var aperture: Double?
     /// Markieren (PencilKit-Zeichnung) und die Größe der Zeichenfläche, auf die sie sich bezieht
@@ -158,7 +161,7 @@ struct EditState: Equatable, Codable {
 
     enum CodingKeys: String, CodingKey {
         case values, auto, autoValues, autoStrength, disabled, filter, angle, mirrored, crop, straighten, perspV, perspH
-        case filterAmount, style, styleTone, styleColor, stylePalette, aperture, markup, markupCanvas, keyFrame, cleanup
+        case filterAmount, style, styleTone, styleColor, stylePalette, styleTexture, styleGrain, aperture, markup, markupCanvas, keyFrame, cleanup
         case curves, levels, selective
     }
     init() {}
@@ -181,6 +184,8 @@ struct EditState: Equatable, Codable {
         styleTone = try c.decodeIfPresent(Double.self, forKey: .styleTone) ?? 0
         styleColor = try c.decodeIfPresent(Double.self, forKey: .styleColor) ?? 0
         stylePalette = try c.decodeIfPresent(Double.self, forKey: .stylePalette) ?? 1
+        styleTexture = try c.decodeIfPresent(Double.self, forKey: .styleTexture) ?? 0
+        styleGrain = try c.decodeIfPresent(Double.self, forKey: .styleGrain) ?? 0
         aperture = try c.decodeIfPresent(Double.self, forKey: .aperture)
         markup = try c.decodeIfPresent(Data.self, forKey: .markup)
         markupCanvas = try c.decodeIfPresent(CGSize.self, forKey: .markupCanvas)
@@ -196,6 +201,7 @@ struct EditState: Equatable, Codable {
         values = o.values; auto = o.auto; autoValues = o.autoValues; autoStrength = o.autoStrength
         disabled = o.disabled; filter = o.filter; filterAmount = o.filterAmount
         style = o.style; styleTone = o.styleTone; styleColor = o.styleColor; stylePalette = o.stylePalette
+        styleTexture = o.styleTexture; styleGrain = o.styleGrain
         curves = o.curves; levels = o.levels; selective = o.selective
     }
 
@@ -210,7 +216,7 @@ struct EditState: Equatable, Codable {
             || (levels.map { abs($0[0]) > 0.003 || abs($0[1] - 1) > 0.003 || abs($0[2] - 1) > 0.003 } ?? false)
             || selective.values.contains { $0.contains { abs($0) > 0.003 } }
     }
-    var hasStyle: Bool { style != .standard || styleTone != 0 || styleColor != 0 }
+    var hasStyle: Bool { style != .standard || styleTone != 0 || styleColor != 0 || abs(styleTexture) > 0.005 || styleGrain > 0.005 }
     var hasGeometry: Bool { angle % 360 != 0 || mirrored || !crop.isApprox(Self.unit) }
     var isIdentity: Bool { !hasColor && !hasGeometry }
 
@@ -586,6 +592,33 @@ final class EditRenderer: @unchecked Sendable {
             let f = CIFilter.dissolveTransition(); f.inputImage = input; f.targetImage = img; f.time = Float(s.stylePalette)
             img = f.outputImage ?? img
         }
+        // Größen relativ zur Bildbreite, damit Vorschau und volle Auflösung gleich aussehen
+        let ext = input.extent, unit = max(ext.width, ext.height) / 1500
+        if abs(s.styleTexture) > 0.005 {
+            if s.styleTexture > 0 {   // feiner lokaler Kontrast (Haut, Stoff, Blätter)
+                let f = CIFilter.unsharpMask(); f.inputImage = img; f.radius = Float(2.5 * unit); f.intensity = Float(s.styleTexture * 0.9)
+                img = f.outputImage ?? img
+            } else {                  // weicher: feine Details leicht glätten
+                let blur = img.clampedToExtent().applyingGaussianBlur(sigma: 1.6 * unit).cropped(to: ext)
+                let f = CIFilter.dissolveTransition(); f.inputImage = img; f.targetImage = blur; f.time = Float(-s.styleTexture * 0.7)
+                img = f.outputImage ?? img
+            }
+        }
+        if s.styleGrain > 0.005 {
+            // Filmkorn: feste Zufallsstruktur (gleich bei jedem Rendern), grau, per „Weiches Licht“ eingemischt
+            let n = CIFilter.randomGenerator().outputImage!
+                .transformed(by: CGAffineTransform(scaleX: max(1, unit * 1.2), y: max(1, unit * 1.2)))
+                .transformed(by: CGAffineTransform(translationX: ext.minX, y: ext.minY))
+            let a = CGFloat(s.styleGrain * 0.55)
+            let m = CIFilter.colorMatrix(); m.inputImage = n
+            // nur der Rotkanal als Grauwert, um 0,5 zentriert und auf die Stärke gedämpft
+            m.rVector = CIVector(x: a, y: 0, z: 0, w: 0); m.gVector = CIVector(x: a, y: 0, z: 0, w: 0); m.bVector = CIVector(x: a, y: 0, z: 0, w: 0)
+            m.aVector = CIVector(x: 0, y: 0, z: 0, w: 0); m.biasVector = CIVector(x: 0.5 - a / 2, y: 0.5 - a / 2, z: 0.5 - a / 2, w: 1)
+            if let grain = m.outputImage?.cropped(to: ext) {
+                let f = CIFilter.softLightBlendMode(); f.inputImage = grain; f.backgroundImage = img
+                img = f.outputImage ?? img
+            }
+        }
         return img.cropped(to: input.extent)
     }
 
@@ -688,6 +721,7 @@ enum EditClipboard {
         c.values = s.values; c.auto = s.auto; c.autoStrength = s.autoStrength; c.disabled = s.disabled
         c.filter = s.filter; c.filterAmount = s.filterAmount
         c.style = s.style; c.styleTone = s.styleTone; c.styleColor = s.styleColor; c.stylePalette = s.stylePalette
+        c.styleTexture = s.styleTexture; c.styleGrain = s.styleGrain
         c.curves = s.curves; c.levels = s.levels; c.selective = s.selective
         guard c.hasColor || c.auto else { return false }
         UserDefaults.standard.set(try? JSONEncoder().encode(c), forKey: key)
@@ -699,6 +733,7 @@ enum EditClipboard {
         s.values = c.values; s.auto = c.auto; s.autoStrength = c.autoStrength; s.disabled = c.disabled
         s.filter = c.filter; s.filterAmount = c.filterAmount
         s.style = c.style; s.styleTone = c.styleTone; s.styleColor = c.styleColor; s.stylePalette = c.stylePalette
+        s.styleTexture = c.styleTexture; s.styleGrain = c.styleGrain
         s.curves = c.curves; s.levels = c.levels; s.selective = c.selective
         s.autoValues = c.auto ? autoValues() : [:]
     }
