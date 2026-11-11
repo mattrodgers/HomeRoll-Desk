@@ -144,6 +144,13 @@ struct EditState: Equatable, Codable {
     var styleGrain: Double = 0
     /// Porträt: Blende (ƒ-Zahl) für die Tiefenunschärfe, nil = aus
     var aperture: Double?
+    /// Schalter „PORTRÄT“ aus: Blende, Fokus und Licht bleiben gemerkt, wirken aber nicht
+    var portraitOff = false
+    /// Schärfepunkt per Tippen (0…1, oben links = 0/0, im unbearbeiteten Bild); nil = Person bzw. Gesicht
+    var focus: CGPoint?
+    /// Porträtlicht und Stärke je Effekt (0…1, Standard 0,5)
+    var light: PortraitLight = .natural
+    var lightStrength: [PortraitLight: Double] = [:]
     /// Markieren (PencilKit-Zeichnung) und die Größe der Zeichenfläche, auf die sie sich bezieht
     var markup: Data?
     var markupCanvas: CGSize?
@@ -161,7 +168,7 @@ struct EditState: Equatable, Codable {
 
     enum CodingKeys: String, CodingKey {
         case values, auto, autoValues, autoStrength, disabled, filter, angle, mirrored, crop, straighten, perspV, perspH
-        case filterAmount, style, styleTone, styleColor, stylePalette, styleTexture, styleGrain, aperture, markup, markupCanvas, keyFrame, cleanup
+        case filterAmount, style, styleTone, styleColor, stylePalette, styleTexture, styleGrain, aperture, portraitOff, focus, light, lightStrength, markup, markupCanvas, keyFrame, cleanup
         case curves, levels, selective
     }
     init() {}
@@ -187,6 +194,10 @@ struct EditState: Equatable, Codable {
         styleTexture = try c.decodeIfPresent(Double.self, forKey: .styleTexture) ?? 0
         styleGrain = try c.decodeIfPresent(Double.self, forKey: .styleGrain) ?? 0
         aperture = try c.decodeIfPresent(Double.self, forKey: .aperture)
+        portraitOff = try c.decodeIfPresent(Bool.self, forKey: .portraitOff) ?? false
+        focus = try c.decodeIfPresent(CGPoint.self, forKey: .focus)
+        light = (try? c.decodeIfPresent(PortraitLight.self, forKey: .light)) ?? .natural
+        lightStrength = (try? c.decodeIfPresent([PortraitLight: Double].self, forKey: .lightStrength)) ?? [:]
         markup = try c.decodeIfPresent(Data.self, forKey: .markup)
         markupCanvas = try c.decodeIfPresent(CGSize.self, forKey: .markupCanvas)
         keyFrame = try c.decodeIfPresent(Double.self, forKey: .keyFrame)
@@ -209,13 +220,16 @@ struct EditState: Equatable, Codable {
     /// Alles, was die App selbst rechnen muss (Server kann nur Zuschnitt + 90°-Drehung + Spiegeln).
     var hasColor: Bool {
         filter != .original || Adjust.allCases.contains { abs(value($0)) > 0.005 } || straighten != 0 || perspV != 0 || perspH != 0
-            || hasStyle || aperture != nil || markup != nil || keyFrame != nil || !cleanup.isEmpty || hasPro
+            || hasStyle || hasPortrait || markup != nil || keyFrame != nil || !cleanup.isEmpty || hasPro
     }
     var hasPro: Bool {
         (curves.map { c in zip(c, [0, 0.25, 0.5, 0.75, 1]).contains { abs($0 - $1) > 0.003 } } ?? false)
             || (levels.map { abs($0[0]) > 0.003 || abs($0[1] - 1) > 0.003 || abs($0[2] - 1) > 0.003 } ?? false)
             || selective.values.contains { $0.contains { abs($0) > 0.003 } }
     }
+    /// Porträt wirkt gerade (Tiefenunschärfe oder Licht) – dafür braucht der Renderer die Tiefendaten
+    var hasPortrait: Bool { !portraitOff && (aperture != nil || light != .natural) }
+    func strength(_ l: PortraitLight) -> Double { lightStrength[l] ?? 0.5 }
     var hasStyle: Bool { style != .standard || styleTone != 0 || styleColor != 0 || abs(styleTexture) > 0.005 || styleGrain > 0.005 }
     var hasGeometry: Bool { angle % 360 != 0 || mirrored || !crop.isApprox(Self.unit) }
     var isIdentity: Bool { !hasColor && !hasGeometry }
@@ -257,6 +271,25 @@ extension CGRect {
     }
 }
 
+/// Porträtlicht wie in Fotos (Reihenfolge wie dort).
+enum PortraitLight: String, CaseIterable, Identifiable, Codable {
+    case natural, studio, contour, stage, stageMono, highKeyMono
+    var id: String { rawValue }
+    var title: String {
+        switch self {
+        case .natural: String(localized: "NATÜRLICHES LICHT"); case .studio: String(localized: "STUDIOLICHT")
+        case .contour: String(localized: "KONTURENLICHT"); case .stage: String(localized: "BÜHNENLICHT")
+        case .stageMono: String(localized: "BÜHNENLICHT MONO"); case .highKeyMono: String(localized: "HIGH-KEY-LICHT MONO")
+        }
+    }
+    var symbol: String {
+        switch self {
+        case .natural: "sun.max"; case .studio: "light.max"; case .contour: "circle.lefthalf.filled"
+        case .stage: "theatermasks"; case .stageMono: "theatermasks.fill"; case .highKeyMono: "circle.dotted"
+        }
+    }
+}
+
 /// Tiefendaten eines Porträtfotos aus dem Original (HEIC): Tiefenkarte und – falls vorhanden – Personen-Matte.
 struct DepthMaps: @unchecked Sendable {
     let disparity: CIImage
@@ -276,7 +309,8 @@ final class EditRenderer: @unchecked Sendable {
     /// disparity: Tiefenkarte des Originals (Porträtfotos) für die Blende.
     func apply(_ base: CIImage, _ s: EditState, crop: Bool = true, disparity: DepthMaps? = nil) -> CIImage {
         var img = base
-        if let f = s.aperture, let disparity { img = depthBlur(img, depth: disparity, aperture: f) }
+        if !s.portraitOff, let f = s.aperture, let disparity { img = depthBlur(img, depth: disparity, aperture: f, focus: s.focus) }
+        if s.hasPortrait, s.light != .natural, let disparity { img = portraitLight(img, depth: disparity, s) }
         if crop && !s.crop.isApprox(EditState.unit) {
             let e = img.extent, r = s.crop
             img = img.cropped(to: CGRect(x: e.minX + r.minX * e.width, y: e.minY + (1 - r.maxY) * e.height,
@@ -369,7 +403,7 @@ final class EditRenderer: @unchecked Sendable {
     /// Eigene Rechnung statt CIDepthBlurEffect (der braucht Apples interne Porträt-Bibliothek und stürzt ohne sie ab):
     /// Schärfeebene = Tiefe der Person (Porträt-Matte, sonst Gesicht per Vision), davor und dahinter wächst die
     /// Unschärfe mit dem Abstand; die Person selbst bleibt über die Matte immer scharf.
-    func depthBlur(_ img: CIImage, depth: DepthMaps, aperture f: Double) -> CIImage {
+    func depthBlur(_ img: CIImage, depth: DepthMaps, aperture f: Double, focus point: CGPoint? = nil) -> CIImage {
         let disparity = depth.disparity
         let e = img.extent, de = disparity.extent
         guard de.width > 0, de.height > 0 else { return img }
@@ -378,33 +412,143 @@ final class EditRenderer: @unchecked Sendable {
         let lo = Double(min(mm[0], mm[1])), hi = Double(max(mm[0], mm[1]))   // R = Minimum, G = Maximum
         let span = hi - lo
         guard span > 0.001 else { return img }
-        let focus = focusDisparity(img, depth: depth) ?? (hi - span * 0.15)
-        // schmaler scharfer Bereich um die Schärfeebene, danach weicher Anstieg bis volle Unschärfe
-        let band = span * 0.08, ramp = max(0.001, span * 0.3)
-        func side(_ k: Double, _ bias: Double) -> CIImage {
-            disparity.applyingFilter("CIColorMatrix", parameters: [
-                "inputRVector": CIVector(x: k, y: 0, z: 0, w: 0), "inputGVector": CIVector(x: k, y: 0, z: 0, w: 0),
-                "inputBVector": CIVector(x: k, y: 0, z: 0, w: 0), "inputAVector": CIVector(x: 0, y: 0, z: 0, w: 0),
-                "inputBiasVector": CIVector(x: bias, y: bias, z: bias, w: 1)]).applyingFilter("CIColorClamp")
-        }
-        let behind = side(-1 / ramp, (focus - band) / ramp)      // weiter weg als das Motiv
-        let front = side(1 / ramp, -(focus + band) / ramp)       // näher als das Motiv
-        var mask = Self.fit(behind.applyingFilter("CIAdditionCompositing", parameters: [kCIInputBackgroundImageKey: front])
-            .applyingFilter("CIColorClamp").cropped(to: de), to: e)
-        if let matte = depth.matte {
-            mask = mask.applyingFilter("CIMultiplyCompositing",
-                                       parameters: [kCIInputBackgroundImageKey: Self.fit(matte, to: e).applyingFilter("CIColorInvert")])
+        let focus = point.flatMap { tapDisparity(depth, at: $0) } ?? focusDisparity(img, depth: depth) ?? (hi - span * 0.15)
+        // Wie Fotos: Unschärfe wächst linear mit dem Nähe-Abstand HINTER der Schärfeebene und umgekehrt mit der ƒ-Zahl,
+        // höchstens 3 % der Bildbreite; was vor der Schärfeebene liegt, bleibt scharf. 1,75 = bei ƒ1.4 volle Unschärfe
+        // ab einem Abstand von 0,8 (Person ~1 m vor Hintergrund in einigen Metern).
+        let k = 1.75 / f
+        var mask = Self.fit(disparity.applyingFilter("CIColorMatrix", parameters: [
+            "inputRVector": CIVector(x: -k, y: 0, z: 0, w: 0), "inputGVector": CIVector(x: -k, y: 0, z: 0, w: 0),
+            "inputBVector": CIVector(x: -k, y: 0, z: 0, w: 0), "inputAVector": CIVector(x: 0, y: 0, z: 0, w: 0),
+            "inputBiasVector": CIVector(x: k * focus, y: k * focus, z: k * focus, w: 1)])
+            .applyingFilter("CIColorClamp")
+            .applyingFilter("CIGammaAdjust", parameters: ["inputPower": 1.5])   // nahe der Ebene erst sanft (quadratischer Anlauf)
+            .cropped(to: de), to: e)
+        // Person über die Matte scharf halten (ab ~50 % Matte voll scharf) – außer der Fokus liegt bewusst neben der Person
+        if let matte = depth.matte, point.map({ onPerson(depth, at: $0) }) ?? true {
+            let keep = Self.fit(matte, to: e).applyingFilter("CIColorMatrix", parameters: [
+                "inputRVector": CIVector(x: -2, y: 0, z: 0, w: 0), "inputGVector": CIVector(x: -2, y: 0, z: 0, w: 0),
+                "inputBVector": CIVector(x: -2, y: 0, z: 0, w: 0), "inputAVector": CIVector(x: 0, y: 0, z: 0, w: 0),
+                "inputBiasVector": CIVector(x: 1, y: 1, z: 1, w: 1)]).applyingFilter("CIColorClamp")
+            mask = mask.applyingFilter("CIMultiplyCompositing", parameters: [kCIInputBackgroundImageKey: keep])
         }
         mask = mask.clampedToExtent()
-            .applyingFilter("CIGaussianBlur", parameters: [kCIInputRadiusKey: max(2, e.width / 400)])   // weiche Kanten
+            .applyingFilter("CIGaussianBlur", parameters: [kCIInputRadiusKey: max(1, e.width / 1500)])   // schmaler Kantenübergang
             .cropped(to: e)
-        // ƒ1,4 … ƒ16 → Radius 1,6 % … 0 % der Bildbreite (logarithmisch wie Blendenstufen)
-        let strength = max(0, 1 - log(f / 1.4) / log(16 / 1.4))
-        let radius = strength * e.width * 0.016
+        let radius = e.width * 0.03
         guard radius > 0.5 else { return img }
         return img.clampedToExtent()
             .applyingFilter("CIMaskedVariableBlur", parameters: ["inputMask": mask, kCIInputRadiusKey: radius])
             .cropped(to: e)
+    }
+
+    // MARK: Porträtlicht
+
+    /// Stärke-Regler → wirksame Stärke je Effekt (wie Fotos): Studio/High-Key steigen anfangs schneller (Potenz 0,75),
+    /// Kontur/Bühne noch steiler (1,8·s − 0,8·s²); 50 % ergeben so ~59 % bzw. 70 %.
+    static func appliedStrength(_ l: PortraitLight, _ s: Double) -> Double {
+        let s = max(0, min(1, s))
+        switch l {
+        case .natural: return 0
+        case .studio, .highKeyMono: return pow(s, 0.75)
+        case .contour, .stage, .stageMono: return 1.8 * s - 0.8 * s * s
+        }
+    }
+
+    /// Gesichter für das Licht: nur breiter als ~15 % des Bildes und weniger als ~60° geneigt (Rechtecke in Bildkoordinaten, CI = unten links).
+    private var faceCache: (ObjectIdentifier, [CGRect])?
+    private func lightFaces(_ img: CIImage, key: ObjectIdentifier) -> [CGRect] {
+        if let c = focusLock.withLock({ faceCache }), c.0 == key { return c.1 }
+        let e = img.extent, scale = 800 / max(e.width, e.height)
+        var out: [CGRect] = []
+        if let cg = context.createCGImage(img.transformed(by: CGAffineTransform(scaleX: scale, y: scale)),
+                                          from: e.applying(CGAffineTransform(scaleX: scale, y: scale))) {
+            let req = VNDetectFaceRectanglesRequest()
+            try? VNImageRequestHandler(cgImage: cg).perform([req])
+            for f in req.results ?? [] where f.boundingBox.width > 0.15 && abs(f.roll?.doubleValue ?? 0) < .pi / 3 {
+                let b = f.boundingBox
+                out.append(CGRect(x: e.minX + b.minX * e.width, y: e.minY + b.minY * e.height, width: b.width * e.width, height: b.height * e.height))
+            }
+        }
+        focusLock.withLock { faceCache = (key, out) }
+        return out
+    }
+
+    /// Weicher elliptischer Lichtfleck (1 innen → 0 außen) als Maske.
+    private static func spot(_ r: CGRect, in e: CGRect, softness: CGFloat = 1) -> CIImage {
+        let c = CIVector(x: r.midX, y: r.midY), rad = max(r.width, r.height) / 2
+        let g = CIFilter.radialGradient()
+        g.center = CGPoint(x: c.x, y: c.y); g.radius0 = Float(rad * (1 - 0.6 * softness)); g.radius1 = Float(rad)
+        g.color0 = CIColor(red: 1, green: 1, blue: 1); g.color1 = CIColor(red: 0, green: 0, blue: 0)
+        // Kreis auf Ellipse stauchen
+        let sx = r.width / max(1, max(r.width, r.height)), sy = r.height / max(1, max(r.width, r.height))
+        return g.outputImage!.transformed(by: CGAffineTransform(translationX: -r.midX, y: -r.midY)
+            .concatenating(CGAffineTransform(scaleX: sx, y: sy)).concatenating(CGAffineTransform(translationX: r.midX, y: r.midY))).cropped(to: e)
+    }
+
+    private static func blend(_ a: CIImage, _ b: CIImage, mask: CIImage) -> CIImage {
+        b.applyingFilter("CIBlendWithMask", parameters: [kCIInputBackgroundImageKey: a, kCIInputMaskImageKey: mask])
+    }
+    private static func mono(_ img: CIImage) -> CIImage {
+        img.applyingFilter("CIColorControls", parameters: [kCIInputSaturationKey: 0, kCIInputContrastKey: 1.12])
+    }
+
+    /// Porträtlicht wie Fotos: Studio hellt das Gesicht auf (Wangen-Lichter, leichter Schatten unters Kinn), Kontur setzt
+    /// Schatten an die Gesichtsseiten und dunkelt den Rand ab, Bühne stellt die Person vor Schwarz, High-Key Mono vor Weiß.
+    /// Der Effekt wird nach der Stärke mit dem Bild gemischt; Schwarz/Weiß im Hintergrund hängt nur an der Personen-Maske.
+    func portraitLight(_ input: CIImage, depth: DepthMaps, _ s: EditState) -> CIImage {
+        let l = s.light
+        guard l != .natural else { return input }
+        let e = input.extent
+        let st = Self.appliedStrength(l, s.strength(l))
+        let faces = lightFaces(input, key: ObjectIdentifier(depth.disparity))
+        var fx = input
+        // Studio-Grundlage (für alle außer „Natürlich“): Gesicht aufhellen + Wangen-Kicker + Kinnschatten, Farben anreichern
+        var faceMask = CIImage(color: .black).cropped(to: e)
+        for f in faces {
+            let ell = f.insetBy(dx: -f.width * 0.08, dy: -f.height * 0.12)
+            faceMask = Self.spot(ell, in: e, softness: 0.8).applyingFilter("CILightenBlendMode", parameters: [kCIInputBackgroundImageKey: faceMask])
+        }
+        let bright = fx.applyingFilter("CIExposureAdjust", parameters: [kCIInputEVKey: 0.35])
+            .applyingFilter("CIHighlightShadowAdjust", parameters: ["inputShadowAmount": 0.35, "inputHighlightAmount": 0.95])
+            .applyingFilter("CIVibrance", parameters: ["inputAmount": 0.15])
+        fx = Self.blend(fx, bright, mask: faceMask)
+        for f in faces {
+            // Wangen-Lichter links/rechts unterhalb der Augen, Schatten unters Kinn
+            for side in [0.28, 0.72] {
+                let cheek = CGRect(x: f.minX + f.width * side - f.width * 0.16, y: f.minY + f.height * 0.25, width: f.width * 0.32, height: f.height * 0.24)
+                fx = Self.blend(fx, fx.applyingFilter("CIExposureAdjust", parameters: [kCIInputEVKey: 0.3]), mask: Self.spot(cheek, in: e))
+            }
+            let chin = CGRect(x: f.midX - f.width * 0.3, y: f.minY - f.height * 0.18, width: f.width * 0.6, height: f.height * 0.22)
+            fx = Self.blend(fx, fx.applyingFilter("CIExposureAdjust", parameters: [kCIInputEVKey: -0.35]), mask: Self.spot(chin, in: e))
+        }
+        if l == .contour || l == .stage || l == .stageMono {
+            // Schatten an den Gesichtsseiten + Rand rund ums Gesicht abdunkeln, mehr lokaler Kontrast
+            for f in faces {
+                for x in [f.minX - f.width * 0.05, f.maxX - f.width * 0.25] {
+                    let edge = CGRect(x: x, y: f.minY + f.height * 0.1, width: f.width * 0.3, height: f.height * 0.75)
+                    fx = Self.blend(fx, fx.applyingFilter("CIExposureAdjust", parameters: [kCIInputEVKey: -0.55]), mask: Self.spot(edge, in: e))
+                }
+            }
+            var keep = faceMask
+            if let m = depth.matte { keep = Self.fit(m, to: e).applyingFilter("CILightenBlendMode", parameters: [kCIInputBackgroundImageKey: faceMask]) }
+            let dark = fx.applyingFilter("CIExposureAdjust", parameters: [kCIInputEVKey: -0.6])
+            fx = Self.blend(dark, fx, mask: keep.applyingFilter("CIGaussianBlur", parameters: [kCIInputRadiusKey: e.width / 60]).cropped(to: e))
+            fx = fx.applyingFilter("CIUnsharpMask", parameters: [kCIInputRadiusKey: e.width / 120, kCIInputIntensityKey: 0.25])
+        }
+        // nach Stärke mischen
+        var out = fx
+        if st < 0.999 { out = input.applyingFilter("CIDissolveTransition", parameters: ["inputTargetImage": fx, kCIInputTimeKey: st]) }
+        // Bühne: Hintergrund schwarz, High-Key: weiß – über die Personen-Maske (weiche Schwelle), unabhängig von der Stärke
+        if l == .stage || l == .stageMono || l == .highKeyMono, let m = depth.matte {
+            let person = Self.fit(m, to: e).applyingFilter("CIColorControls", parameters: [kCIInputContrastKey: 1.6])
+                .applyingFilter("CIColorClamp").cropped(to: e)
+            if l == .highKeyMono { out = out.applyingFilter("CIExposureAdjust", parameters: [kCIInputEVKey: 0.25]) }
+            let ground = CIImage(color: l == .highKeyMono ? .white : .black).cropped(to: e)
+            out = Self.blend(ground, out.applyingFilter("CISharpenLuminance", parameters: [kCIInputSharpnessKey: 0.3]), mask: person)
+        }
+        if l == .stageMono || l == .highKeyMono { out = Self.mono(out) }
+        return out.cropped(to: e)
     }
 
     /// Bild auf ein Zielrechteck strecken (Tiefenkarte/Matte haben eine kleinere Auflösung als das Foto).
@@ -446,6 +590,31 @@ final class EditRenderer: @unchecked Sendable {
         }
         focusLock.withLock { focusCache = (key, value) }
         return value
+    }
+
+    /// Liegt der Punkt auf der Person (Porträt-Matte)? Ohne Matte: ja.
+    private func onPerson(_ depth: DepthMaps, at p: CGPoint) -> Bool {
+        guard let m = depth.matte else { return true }
+        let e = m.extent
+        let r = CGRect(x: e.minX + p.x * e.width - 2, y: e.minY + (1 - p.y) * e.height - 2, width: 4, height: 4).intersection(e)
+        guard !r.isEmpty else { return false }
+        return (pixel(m.applyingFilter("CIAreaAverage", parameters: [kCIInputExtentKey: CIVector(cgRect: r)]))?[0] ?? 1) > 0.5
+    }
+
+    /// Fokus per Tippen wie Fotos: im Quadrat von etwa 20 % der Bildbreite um den Punkt wird das 75-%-Quantil der Nähe
+    /// zur Schärfeebene (eher das Nähere im Ausschnitt, nicht der Mittelwert).
+    private func tapDisparity(_ depth: DepthMaps, at p: CGPoint) -> Double? {
+        let de = depth.disparity.extent
+        let w = de.width * 0.2, h = min(de.height, w)
+        let cx = de.minX + p.x * de.width, cy = de.minY + (1 - p.y) * de.height   // Core Image zählt von unten
+        let r = CGRect(x: cx - w / 2, y: cy - h / 2, width: w, height: h).intersection(de).integral
+        guard r.width >= 1, r.height >= 1 else { return nil }
+        let n = Int(r.width) * Int(r.height)
+        var px = [Float](repeating: 0, count: n * 4)
+        context.render(depth.disparity, toBitmap: &px, rowBytes: Int(r.width) * 16, bounds: r, format: .RGBAf, colorSpace: nil)
+        let vals = stride(from: 0, to: px.count, by: 4).map { px[$0] }.filter { $0.isFinite }.sorted()
+        guard !vals.isEmpty else { return nil }
+        return Double(vals[min(vals.count - 1, Int(Double(vals.count) * 0.75))])
     }
 
     /// Ein Pixel (RGBA float) aus einem 1×1-Ergebnis lesen.
@@ -781,6 +950,8 @@ final class EditSession {
     /// Tiefenkarte (Porträtfotos) – dann gibt es die Blende
     private(set) var disparity: DepthMaps?
     var hasDepth: Bool { disparity != nil }
+    /// Porträtlicht braucht die Personen-Maske (Bühne/High-Key stellen die Person frei)
+    var hasMatte: Bool { disparity?.matte != nil }
     /// Live Photo: Standbilder des Videos (Auswahlleiste) und Länge
     var liveFrames: [UIImage] = []
     var liveDuration: Double = 0
@@ -987,7 +1158,7 @@ final class EditSession {
         }
         let jpeg = await Task.detached(priority: .userInitiated) { () -> Data? in
             guard let full = cleanedFull ?? key ?? CIImage(data: data, options: [.applyOrientationProperty: true]) else { return nil }
-            let depth = s.aperture == nil ? nil : DepthMaps(data: data)
+            let depth = s.hasPortrait ? DepthMaps(data: data) : nil
             return r.jpeg(r.apply(full, s, disparity: depth), originalData: data)
         }.value
         guard let jpeg else { throw APIError.http(0, String(localized: "Bild konnte nicht berechnet werden")) }
@@ -1032,7 +1203,7 @@ final class EditSession {
         }
         let jpeg = await Task.detached(priority: .userInitiated) { () -> Data? in
             guard let full = cleanedFull ?? key ?? CIImage(data: data, options: [.applyOrientationProperty: true]) else { return nil }
-            let depth = s.aperture == nil ? nil : DepthMaps(data: data)
+            let depth = s.hasPortrait ? DepthMaps(data: data) : nil
             return r.jpeg(r.apply(full, s, disparity: depth), originalData: data)
         }.value
         guard let jpeg else { throw APIError.http(0, String(localized: "Bild konnte nicht berechnet werden")) }
