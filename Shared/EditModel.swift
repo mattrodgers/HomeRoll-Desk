@@ -1171,6 +1171,7 @@ final class EditSession {
         try await api.setMetadata(newID, key: "fotos.edit", value: ["originalId": originalID, "state": stateJSON])
         try? await api.createStack([newID, originalID])
         try? await api.tag([newID], with: "Kategorie/Bearbeitet")
+        if !state.cleanup.isEmpty { try? await api.tag([newID], with: "Kategorie/Bereinigt") }
         if asset.isFavorite { try? await api.setFavorite(newID, true) }
         // Der Server liest Datum/Ort erst nach ein paar Sekunden aus → Werte vom Original übernehmen.
         let r0 = base.map { $0.extent.width / $0.extent.height } ?? asset.ratio
