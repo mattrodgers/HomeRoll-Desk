@@ -414,15 +414,15 @@ final class EditRenderer: @unchecked Sendable {
         guard span > 0.001 else { return img }
         let focus = point.flatMap { tapDisparity(depth, at: $0) } ?? focusDisparity(img, depth: depth) ?? (hi - span * 0.15)
         // Wie Fotos: Unschärfe wächst linear mit dem Nähe-Abstand HINTER der Schärfeebene und umgekehrt mit der ƒ-Zahl,
-        // höchstens 3 % der Bildbreite; was vor der Schärfeebene liegt, bleibt scharf. 1,75 = bei ƒ1.4 volle Unschärfe
-        // ab einem Abstand von 0,8 (Person ~1 m vor Hintergrund in einigen Metern).
-        let k = 1.75 / f
+        // höchstens 3 % der Bildbreite; was vor der Schärfeebene liegt, bleibt scharf. 2,8 = bei ƒ4.5 etwa halbe Unschärfe
+        // für eine Wand im Abstand 0,8 hinter der Person, bei ƒ1.4 schon ab 0,25 die volle.
+        let k = 2.8 / f
         var mask = Self.fit(disparity.applyingFilter("CIColorMatrix", parameters: [
             "inputRVector": CIVector(x: -k, y: 0, z: 0, w: 0), "inputGVector": CIVector(x: -k, y: 0, z: 0, w: 0),
             "inputBVector": CIVector(x: -k, y: 0, z: 0, w: 0), "inputAVector": CIVector(x: 0, y: 0, z: 0, w: 0),
             "inputBiasVector": CIVector(x: k * focus, y: k * focus, z: k * focus, w: 1)])
             .applyingFilter("CIColorClamp")
-            .applyingFilter("CIGammaAdjust", parameters: ["inputPower": 1.5])   // nahe der Ebene erst sanft (quadratischer Anlauf)
+            .applyingFilter("CIGammaAdjust", parameters: ["inputPower": 1.3])   // nahe der Ebene erst sanft (quadratischer Anlauf)
             .cropped(to: de), to: e)
         // Person über die Matte scharf halten (ab ~50 % Matte voll scharf) – außer der Fokus liegt bewusst neben der Person
         if let matte = depth.matte, point.map({ onPerson(depth, at: $0) }) ?? true {
