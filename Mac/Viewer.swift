@@ -72,6 +72,7 @@ struct ViewerView: View {
 private struct StillView: View {
     let asset: Asset
     @State private var image: CGImage?
+    @State private var hdr = false
     @State private var scale: CGFloat = 1
     @GestureState private var pinch: CGFloat = 1
 
@@ -80,6 +81,7 @@ private struct StillView: View {
             if let image {
                 Image(decorative: image, scale: 1)
                     .resizable().interpolation(.high).aspectRatio(contentMode: .fit)
+                    .allowedDynamicRange(hdr ? .high : .standard)
                     .scaleEffect(scale * pinch)
                     .frame(width: g.size.width, height: g.size.height)
                     .gesture(MagnifyGesture().updating($pinch) { v, s, _ in s = v.magnification }
@@ -92,8 +94,22 @@ private struct StillView: View {
         .task {
             if let t = ImageCache.shared.get(asset.id, .preview) ?? ImageCache.shared.get(asset.id, .thumbnail) { image = t }
             if let p = await ImageCache.shared.load(asset.id, .preview) { image = p }
+            // GitHub HomeRoll #36: Immichs Vorschauen sind ohne HDR → Original mit Gain-Map selbst dekodieren
+            if UserDefaults.standard.object(forKey: "mac.alwaysOriginal") as? Bool ?? true, asset.isImage,
+               let f = await Self.original(asset.id) { image = f; hdr = true; return }
             if let f = await ImageCache.shared.load(asset.id, .fullsize) { image = f }
         }
+    }
+
+    /// Original vom Server als HDR-Bild (Gain-Map/HDR-Format), höchstens 6000 px; nil = nicht dekodierbar.
+    static func original(_ id: String) async -> CGImage? {
+        guard let url = ImmichClient.shared.originalURL(id), let data = try? await ImmichClient.shared.data(url) else { return nil }
+        return await Task.detached(priority: .userInitiated) { () -> CGImage? in
+            guard let src = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
+            let o: [CFString: Any] = [kCGImageSourceCreateThumbnailFromImageAlways: true, kCGImageSourceCreateThumbnailWithTransform: true,
+                                      kCGImageSourceThumbnailMaxPixelSize: 6000, kCGImageSourceDecodeRequest: kCGImageSourceDecodeToHDR]
+            return CGImageSourceCreateThumbnailAtIndex(src, 0, o as CFDictionary)
+        }.value
     }
 }
 

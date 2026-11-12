@@ -136,6 +136,13 @@ struct SettingsView: View {
                     }
                 }
             }
+            Section("Viewer") {
+                Toggle("Always show the original (HDR)", isOn: Binding(
+                    get: { UserDefaults.standard.object(forKey: "mac.alwaysOriginal") as? Bool ?? true },
+                    set: { UserDefaults.standard.set($0, forKey: "mac.alwaysOriginal") }))
+                Text("Immich's previews are SDR. With this on, photos open from the original file, so HDR photos show their full brightness.")
+                    .font(.caption).foregroundStyle(.secondary)
+            }
             Section("Updates") {
                 Toggle("Check for updates at launch", isOn: Binding(get: { Updater.shared.auto }, set: { Updater.shared.auto = $0 }))
                 Text("Asks GitHub for the newest version of HomeRoll Desktop (version \(Updater.current) installed). Nothing about you or your photos is sent.")
@@ -148,6 +155,6 @@ struct SettingsView: View {
             }
         }
         .formStyle(.grouped)
-        .frame(width: 520, height: 520)
+        .frame(width: 520, height: 600)
     }
 }
