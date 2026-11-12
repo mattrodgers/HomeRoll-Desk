@@ -81,7 +81,7 @@ struct ViewerView: View {
     }
 }
 
-/// Foto: Vorschau sofort, volle Auflösung danach; Zoomen per Trackpad/Scrollrad.
+/// Foto: Vorschau sofort, volle Auflösung danach; Zoomen per Trackpad/Scrollrad, Verschieben per Zwei-Finger-Geste oder Klick & Ziehen.
 private struct StillView: View {
     let asset: Asset
     @Binding var live: LiveMode
@@ -91,23 +91,89 @@ private struct StillView: View {
     /// Wie Fotos: beim Öffnen bewegt sich ein Live Photo einmal kurz, dann steht das Foto
     @State private var openingPlay = true
     @State private var hdr = false
-    @State private var scale: CGFloat = 1
+    @State private var pan = ViewerPanState()
     @GestureState private var pinch: CGFloat = 1
+    @GestureState private var drag: CGSize = .zero
+    @State private var monitor: Any?
 
     var body: some View {
         GeometryReader { g in
-            if let image {
-                Image(decorative: image, scale: 1)
-                    .resizable().interpolation(.high).aspectRatio(contentMode: .fit)
-                    .allowedDynamicRange(hdr ? .high : .standard)
-                    .scaleEffect(scale * pinch)
-                    .frame(width: g.size.width, height: g.size.height)
-                    .gesture(MagnifyGesture().updating($pinch) { v, s, _ in s = v.magnification }
-                        .onEnded { v in scale = min(6, max(1, scale * v.magnification)) })
-                    .onTapGesture(count: 2) { withAnimation(.snappy) { scale = scale > 1 ? 1 : 2.5 } }
-                    .overlay { liveLayer.scaleEffect(scale * pinch).allowsHitTesting(false) }
-            } else {
-                ProgressView().frame(width: g.size.width, height: g.size.height)
+            let currentScale = pan.scale * pinch
+            let rawOffset = CGSize(width: pan.offset.width + drag.width, height: pan.offset.height + drag.height)
+            let currentOffset = pan.clamp(rawOffset, scale: currentScale)
+
+            ZStack {
+                if let image {
+                    Image(decorative: image, scale: 1)
+                        .resizable().interpolation(.high).aspectRatio(contentMode: .fit)
+                        .allowedDynamicRange(hdr ? .high : .standard)
+                        .scaleEffect(currentScale)
+                        .offset(currentOffset)
+                        .frame(width: g.size.width, height: g.size.height)
+                        .overlay {
+                            liveLayer
+                                .scaleEffect(currentScale)
+                                .offset(currentOffset)
+                                .allowsHitTesting(false)
+                        }
+                        .simultaneousGesture(
+                            MagnifyGesture()
+                                .updating($pinch) { v, s, _ in s = v.magnification }
+                                .onEnded { v in
+                                    let newScale = min(6, max(1, pan.scale * v.magnification))
+                                    pan.scale = newScale
+                                    if newScale <= 1 {
+                                        pan.offset = .zero
+                                    } else {
+                                        pan.offset = pan.clamp(pan.offset, scale: newScale)
+                                    }
+                                }
+                        )
+                        .simultaneousGesture(
+                            DragGesture(minimumDistance: 1)
+                                .updating($drag) { v, s, _ in
+                                    if pan.scale * pinch > 1 {
+                                        s = v.translation
+                                    }
+                                }
+                                .onEnded { v in
+                                    if pan.scale > 1 {
+                                        pan.offset = pan.clamp(
+                                            CGSize(width: pan.offset.width + v.translation.width, height: pan.offset.height + v.translation.height),
+                                            scale: pan.scale
+                                        )
+                                    }
+                                }
+                        )
+                        .onTapGesture(count: 2) {
+                            withAnimation(.snappy) {
+                                if pan.scale > 1 {
+                                    pan.scale = 1
+                                    pan.offset = .zero
+                                } else {
+                                    pan.scale = 2.5
+                                }
+                            }
+                        }
+                } else {
+                    ProgressView().frame(width: g.size.width, height: g.size.height)
+                }
+            }
+            .onAppear {
+                pan.viewSize = g.size
+                if let image {
+                    pan.imageSize = CGSize(width: image.width, height: image.height)
+                }
+            }
+            .onChange(of: g.size) { _, newSize in
+                pan.viewSize = newSize
+                pan.offset = pan.clamp(pan.offset, scale: pan.scale)
+            }
+            .onChange(of: image) { _, newImg in
+                if let newImg {
+                    pan.imageSize = CGSize(width: newImg.width, height: newImg.height)
+                    pan.offset = pan.clamp(pan.offset, scale: pan.scale)
+                }
             }
         }
         .task(id: live) {
@@ -121,6 +187,31 @@ private struct StillView: View {
             if UserDefaults.standard.object(forKey: "mac.alwaysOriginal") as? Bool ?? true, asset.isImage,
                let f = await Self.original(asset.id) { image = f; hdr = true; return }
             if let f = await ImageCache.shared.load(asset.id, .fullsize) { image = f }
+        }
+        .onAppear {
+            setupScrollMonitor()
+        }
+        .onDisappear {
+            removeScrollMonitor()
+        }
+    }
+
+    private func setupScrollMonitor() {
+        removeScrollMonitor()
+        monitor = NSEvent.addLocalMonitorForEvents(matching: .scrollWheel) { [weak pan] event in
+            guard let pan, pan.scale > 1.0 else { return event }
+            let dx = event.scrollingDeltaX
+            let dy = event.scrollingDeltaY
+            guard dx != 0 || dy != 0 else { return event }
+            pan.handleScroll(dx: dx, dy: dy)
+            return nil
+        }
+    }
+
+    private func removeScrollMonitor() {
+        if let m = monitor {
+            NSEvent.removeMonitor(m)
+            monitor = nil
         }
     }
 
@@ -152,6 +243,45 @@ private struct StillView: View {
                                       kCGImageSourceThumbnailMaxPixelSize: 6000, kCGImageSourceDecodeRequest: kCGImageSourceDecodeToHDR]
             return CGImageSourceCreateThumbnailAtIndex(src, 0, o as CFDictionary)
         }.value
+    }
+}
+
+@Observable
+@MainActor
+final class ViewerPanState {
+    var scale: CGFloat = 1.0
+    var offset: CGSize = .zero
+    var viewSize: CGSize = .zero
+    var imageSize: CGSize = .zero
+
+    func handleScroll(dx: CGFloat, dy: CGFloat) {
+        guard scale > 1.0 else { return }
+        offset = clamp(CGSize(width: offset.width + dx, height: offset.height + dy), scale: scale)
+    }
+
+    func clamp(_ target: CGSize, scale s: CGFloat) -> CGSize {
+        guard s > 1.0, viewSize.width > 0, viewSize.height > 0, imageSize.width > 0, imageSize.height > 0 else {
+            return .zero
+        }
+        let aspect = imageSize.width / imageSize.height
+        let viewAspect = viewSize.width / viewSize.height
+        let fitW: CGFloat
+        let fitH: CGFloat
+        if aspect > viewAspect {
+            fitW = viewSize.width
+            fitH = viewSize.width / aspect
+        } else {
+            fitH = viewSize.height
+            fitW = viewSize.height * aspect
+        }
+        let scaledW = fitW * s
+        let scaledH = fitH * s
+        let maxOffsetX = max(0, (scaledW - viewSize.width) / 2)
+        let maxOffsetY = max(0, (scaledH - viewSize.height) / 2)
+        return CGSize(
+            width: min(maxOffsetX, max(-maxOffsetX, target.width)),
+            height: min(maxOffsetY, max(-maxOffsetY, target.height))
+        )
     }
 }
 
