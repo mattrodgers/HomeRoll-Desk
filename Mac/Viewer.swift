@@ -57,7 +57,7 @@ struct ViewerView: View {
                     .onScrollGeometryChange(for: CGFloat.self) { g in
                         g.contentOffset.y
                     } action: { oldOffset, newOffset in
-                        if newOffset > 25 {
+                        if newOffset > 10 {
                             hasScrolledDown = true
                         } else if newOffset <= 8.0 && (hasScrolledDown || (isUnlocked && newOffset < oldOffset)) {
                             isUnlocked = false
@@ -164,13 +164,15 @@ struct ViewerView: View {
             if dy < 0 {
                 videoPlayer?.pause()
                 resetTask?.cancel()
-                let delta = event.hasPreciseScrollingDeltas ? abs(dy) : abs(dy) * 25.0
+                let isMouse = !event.hasPreciseScrollingDeltas
+                let delta = isMouse ? abs(dy) * 35.0 : abs(dy)
                 resistanceDelta += delta
-                let threshold: CGFloat = 200.0
+                let threshold: CGFloat = isMouse ? 50.0 : 200.0
 
                 if resistanceDelta < threshold {
-                    // Dampened resistance: gives an elastic pulling sensation
-                    let peek = -min(22, resistanceDelta * 0.10)
+                    // Dampened resistance: gives an elastic pulling sensation scaled to threshold
+                    let progress = min(1.0, resistanceDelta / threshold)
+                    let peek = -min(22, progress * 20.0)
                     withAnimation(.interactiveSpring(response: 0.15, dampingFraction: 0.86)) {
                         peekOffset = peek
                     }
@@ -181,10 +183,10 @@ struct ViewerView: View {
                             peekOffset = 0
                             resistanceDelta = 0
                         }
-                    } else if !event.hasPreciseScrollingDeltas || event.phase == [] {
+                    } else if isMouse || event.phase == [] {
                         // On mouse wheel (no continuous phase), reset after pause
                         resetTask = Task { @MainActor in
-                            try? await Task.sleep(for: .milliseconds(600))
+                            try? await Task.sleep(for: isMouse ? .milliseconds(1200) : .milliseconds(600))
                             if !isUnlocked && resistanceDelta > 0 {
                                 withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
                                     peekOffset = 0
