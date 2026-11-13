@@ -82,8 +82,6 @@ struct FotosCommands: Commands {
                 .keyboardShortcut("r").disabled(!w || none)
             Button("Rotate Clockwise") { Task { await lib.rotate(clockwise: true) } }
                 .keyboardShortcut("r", modifiers: [.command, .option]).disabled(!w || none)
-            Button("Auto Enhance") { Task { await lib.autoEnhance() } }
-                .keyboardShortcut("e").disabled(!w || !lib.targets.contains(where: \.isImage) || lib.editing != nil)
             Divider()
             Button("Edit") { lib.edit() }.disabled(!w || !lib.targets.contains(where: \.isImage) || lib.editing != nil)
             Button("Copy Edits") { Task { await lib.copyEdits() } }

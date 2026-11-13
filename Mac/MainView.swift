@@ -78,7 +78,7 @@ struct MainView: View {
     }
 
     @ToolbarContentBuilder private var toolbar: some ToolbarContent {
-        ToolbarItemGroup(placement: .navigation) {
+        ToolbarItem(placement: .navigation) {
             if lib.viewer != nil {
                 Button {
                     lib.closeViewer()
@@ -86,17 +86,22 @@ struct MainView: View {
                     Label("Back", systemImage: "chevron.left")
                 }
                 .help("Back (Space)")
-
+            } else if lib.canGoBack {
+                Button {
+                    lib.goBack()
+                } label: {
+                    Label("Back", systemImage: "chevron.left")
+                }
+                .help("Back (⌘[)")
+            }
+        }
+        ToolbarItem(placement: .navigation) {
+            if lib.viewer != nil {
                 ViewerZoomControl(lib: lib)
-            } else {
-                if lib.canGoBack {
-                    Button { lib.goBack() } label: { Label("Back", systemImage: "chevron.left") }.help("Back (⌘[)")
-                }
-                if !lib.source.isOverview && (lib.source != .library || lib.granularity == .all) {
-                    Slider(value: Binding(get: { Double(lib.zoom) }, set: { lib.zoom = Int($0.rounded()) }),
-                           in: 0...Double(Library.zoomSizes.count - 1), step: 1)
-                        .frame(width: 110).help("Zoom (⌘+ / ⌘−)")
-                }
+            } else if !lib.source.isOverview && (lib.source != .library || lib.granularity == .all) {
+                Slider(value: Binding(get: { Double(lib.zoom) }, set: { lib.zoom = Int($0.rounded()) }),
+                       in: 0...Double(Library.zoomSizes.count - 1), step: 1)
+                    .frame(width: 110).help("Zoom (⌘+ / ⌘−)")
             }
         }
         ToolbarItem(placement: .principal) {
@@ -112,6 +117,8 @@ struct MainView: View {
                             .lineLimit(1)
                     }
                 }
+                .multilineTextAlignment(.center)
+                .background(ToolbarItemBorderRemover())
             } else if lib.source == .library {
                 Picker("View", selection: $lib.granularity) {
                     ForEach(Library.Granularity.allCases, id: \.self) { Text($0.rawValue).tag($0) }
@@ -126,36 +133,65 @@ struct MainView: View {
             }
         }
         ToolbarItemGroup(placement: .primaryAction) {
-            if let a = lib.viewerAsset {
-                ControlGroup {
-                    Button { InfoWindow.show() } label: { Image(systemName: "info.circle") }.help("Info (⌘I)")
-                    ViewerShareButton(asset: a)
-                    Button { Task { await lib.toggleFavorite() } } label: {
-                        Image(systemName: a.isFavorite ? "heart.fill" : "heart")
-                    }.disabled(!accounts.canWrite).help("Favorite (.)")
-                    Button { Task { await lib.rotate(clockwise: false) } } label: {
-                        Image(systemName: "rotate.left")
-                    }.disabled(!accounts.canWrite || a.isVideo).help("Rotate Counterclockwise (⌘R)")
-                    Button { Task { await lib.autoEnhance() } } label: {
-                        Image(systemName: "wand.and.stars")
-                    }.disabled(!accounts.canWrite || a.isVideo).help("Auto Enhance (⌘E)")
-                }
+            Button { InfoWindow.show() } label: { Label("Info", systemImage: "info.circle") }.help("Info (⌘I)")
+            Button { Task { await lib.toggleFavorite() } } label: {
+                Label("Favorite", systemImage: (lib.viewerAsset?.isFavorite == true || (lib.viewer == nil && lib.targets.allSatisfy(\.isFavorite) && !lib.targets.isEmpty)) ? "heart.fill" : "heart")
+            }
+            .disabled(!accounts.canWrite || lib.targets.isEmpty).help("Favorite (.)")
+            ShareButton(lib: lib)
+            if accounts.canImport {
+                Button { Transfer.chooseAndImport() } label: { Label("Import", systemImage: "square.and.arrow.down") }
+                    .help("Import (⇧⌘I)")
+            }
+            AccountMenu()
+            if let a = lib.viewerAsset, a.isImage {
                 Button("Edit") { lib.edit() }
                     .buttonStyle(.bordered)
-                    .disabled(!accounts.canWrite || !a.isImage)
+                    .disabled(!accounts.canWrite)
                     .help("Edit (↩)")
-            } else {
-                Button { InfoWindow.show() } label: { Label("Info", systemImage: "info.circle") }.help("Info (⌘I)")
-                Button { Task { await lib.toggleFavorite() } } label: { Label("Favorite", systemImage: "heart") }
-                    .disabled(!accounts.canWrite || lib.targets.isEmpty).help("Favorite (.)")
-                ShareButton(lib: lib)
-                if accounts.canImport {
-                    Button { Transfer.chooseAndImport() } label: { Label("Import", systemImage: "square.and.arrow.down") }
-                        .help("Import (⇧⌘I)")
-                }
-                AccountMenu()
             }
         }
+    }
+}
+
+/// Entfernt den Rahmen/Bezel (die „Blase“) eines NSToolbarItems im macOS-AppKit.
+struct ToolbarItemBorderRemover: NSViewRepresentable {
+    func makeNSView(context: Context) -> NSView {
+        let v = NSView()
+        DispatchQueue.main.async { [weak v] in
+            configure(v)
+        }
+        return v
+    }
+
+    func updateNSView(_ nsView: NSView, context: Context) {
+        DispatchQueue.main.async { [weak nsView] in
+            configure(nsView)
+        }
+    }
+
+    private func configure(_ view: NSView?) {
+        guard let view else { return }
+        func apply() {
+            guard let window = view.window, let toolbar = window.toolbar else { return }
+            for item in toolbar.items {
+                if let itemView = item.view, view.isDescendant(of: itemView) || view == itemView {
+                    item.isBordered = false
+                    itemView.wantsLayer = true
+                    itemView.layer?.backgroundColor = nil
+                    itemView.layer?.borderWidth = 0
+                    if let superview = itemView.superview {
+                        superview.wantsLayer = true
+                        superview.layer?.backgroundColor = nil
+                        superview.layer?.borderWidth = 0
+                    }
+                }
+            }
+        }
+        apply()
+        DispatchQueue.main.async { apply() }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { apply() }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { apply() }
     }
 }
 

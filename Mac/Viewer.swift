@@ -241,6 +241,26 @@ struct ViewerView: View {
     }
 }
 
+/// Zurück-Schaltfläche mit kreisförmigem Hintergrund in der Einzelansicht (Toolbar).
+struct ViewerBackButton: View {
+    let action: () -> Void
+    @State private var hovered = false
+
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: "chevron.left")
+                .font(.system(size: 11, weight: .semibold))
+                .foregroundStyle(.primary)
+                .frame(width: 24, height: 24)
+                .background(hovered ? Color(nsColor: .controlColor) : Color(nsColor: .controlBackgroundColor).opacity(0.5), in: Circle())
+                .overlay(Circle().strokeBorder(Color(nsColor: .separatorColor).opacity(0.3), lineWidth: 0.5))
+        }
+        .buttonStyle(.plain)
+        .onHover { hovered = $0 }
+        .help("Back (Space)")
+    }
+}
+
 /// Regler für die Zoomstufe in der Einzelansicht (Toolbar).
 struct ViewerZoomControl: View {
     @Bindable var lib: Library
@@ -279,9 +299,9 @@ struct ViewerZoomControl: View {
             .help("Zoom In (⌘+)")
         }
         .padding(.horizontal, 8)
-        .padding(.vertical, 3)
+        .frame(height: 24)
         .background(Color(nsColor: .controlBackgroundColor).opacity(0.5), in: Capsule())
-        .overlay(Capsule().strokeBorder(Color(nsColor: .separatorColor).opacity(0.25), lineWidth: 0.5))
+        .overlay(Capsule().strokeBorder(Color(nsColor: .separatorColor).opacity(0.3), lineWidth: 0.5))
         .opacity(isVideo ? 0.4 : 1.0)
     }
 }
