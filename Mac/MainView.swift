@@ -19,17 +19,18 @@ struct MainView: View {
             } detail: {
                 detail
             }
-            .navigationTitle(lib.source.title)
-            .navigationSubtitle(subtitle)
-            .searchable(text: $query, placement: .toolbar, prompt: "Search")
-            .searchFocused($searchFocused)
+            .navigationTitle(lib.viewer != nil ? "" : lib.source.title)
+            .navigationSubtitle(lib.viewer != nil ? "" : subtitle)
+            .searchableIf(lib.viewer == nil && lib.editing == nil, text: $query, focused: $searchFocused, prompt: "Search")
             .onSubmit(of: .search) {
                 let q = query.trimmingCharacters(in: .whitespaces)
                 if !q.isEmpty { lib.select(.search(q)) }
             }
             .toolbar { if lib.editing == nil { toolbar } }
             .task(id: accounts.currentID) { lib.reset(); await lib.load() }
-            .onReceive(NotificationCenter.default.publisher(for: .focusSearch)) { _ in searchFocused = true }
+            .onReceive(NotificationCenter.default.publisher(for: .focusSearch)) { _ in
+                if lib.viewer == nil { searchFocused = true }
+            }
             // Fußzeile der Mediathek → Einstellungen (Abgleich mit Fotos)
             .onReceive(NotificationCenter.default.publisher(for: .openBackupSettings)) { _ in openSettings() }
             .onReceive(NotificationCenter.default.publisher(for: .sessionExpired)) { _ in
@@ -77,21 +78,41 @@ struct MainView: View {
     }
 
     @ToolbarContentBuilder private var toolbar: some ToolbarContent {
-        ToolbarItem(placement: .navigation) {
-            // Zurück zur Übersicht wie in Photos (Album → Alben, Person → Personen …)
-            if lib.canGoBack && lib.viewer == nil {
-                Button { lib.goBack() } label: { Label("Back", systemImage: "chevron.left") }.help("Back (⌘[)")
-            }
-        }
-        ToolbarItem(placement: .navigation) {
-            if !lib.source.isOverview && lib.viewer == nil && (lib.source != .library || lib.granularity == .all) {
-                Slider(value: Binding(get: { Double(lib.zoom) }, set: { lib.zoom = Int($0.rounded()) }),
-                       in: 0...Double(Library.zoomSizes.count - 1), step: 1)
-                    .frame(width: 110).help("Zoom (⌘+ / ⌘−)")
+        ToolbarItemGroup(placement: .navigation) {
+            if lib.viewer != nil {
+                Button {
+                    lib.closeViewer()
+                } label: {
+                    Label("Back", systemImage: "chevron.left")
+                }
+                .help("Back (Space)")
+
+                ViewerZoomControl(lib: lib)
+            } else {
+                if lib.canGoBack {
+                    Button { lib.goBack() } label: { Label("Back", systemImage: "chevron.left") }.help("Back (⌘[)")
+                }
+                if !lib.source.isOverview && (lib.source != .library || lib.granularity == .all) {
+                    Slider(value: Binding(get: { Double(lib.zoom) }, set: { lib.zoom = Int($0.rounded()) }),
+                           in: 0...Double(Library.zoomSizes.count - 1), step: 1)
+                        .frame(width: 110).help("Zoom (⌘+ / ⌘−)")
+                }
             }
         }
         ToolbarItem(placement: .principal) {
-            if lib.source == .library && lib.viewer == nil {
+            if lib.viewer != nil {
+                VStack(spacing: 1) {
+                    Text(lib.viewerTitle)
+                        .font(.system(size: 13, weight: .bold))
+                        .lineLimit(1)
+                    if !lib.viewerSubtitle.isEmpty {
+                        Text(lib.viewerSubtitle)
+                            .font(.system(size: 11))
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                    }
+                }
+            } else if lib.source == .library {
                 Picker("View", selection: $lib.granularity) {
                     ForEach(Library.Granularity.allCases, id: \.self) { Text($0.rawValue).tag($0) }
                 }
@@ -100,18 +121,52 @@ struct MainView: View {
             }
         }
         ToolbarItem(placement: .status) {
-            if let s = lib.status { Text(s).font(.callout).foregroundStyle(.secondary).lineLimit(1) }
+            if lib.viewer == nil, let s = lib.status {
+                Text(s).font(.callout).foregroundStyle(.secondary).lineLimit(1)
+            }
         }
         ToolbarItemGroup(placement: .primaryAction) {
-            Button { InfoWindow.show() } label: { Label("Info", systemImage: "info.circle") }.help("Info (⌘I)")
-            Button { Task { await lib.toggleFavorite() } } label: { Label("Favorite", systemImage: "heart") }
-                .disabled(!accounts.canWrite || lib.targets.isEmpty).help("Favorite (.)")
-            ShareButton(lib: lib)
-            if accounts.canImport {
-                Button { Transfer.chooseAndImport() } label: { Label("Import", systemImage: "square.and.arrow.down") }
-                    .help("Import (⇧⌘I)")
+            if let a = lib.viewerAsset {
+                ControlGroup {
+                    Button { InfoWindow.show() } label: { Image(systemName: "info.circle") }.help("Info (⌘I)")
+                    ViewerShareButton(asset: a)
+                    Button { Task { await lib.toggleFavorite() } } label: {
+                        Image(systemName: a.isFavorite ? "heart.fill" : "heart")
+                    }.disabled(!accounts.canWrite).help("Favorite (.)")
+                    Button { Task { await lib.rotate(clockwise: false) } } label: {
+                        Image(systemName: "rotate.left")
+                    }.disabled(!accounts.canWrite || a.isVideo).help("Rotate Counterclockwise (⌘R)")
+                    Button { Task { await lib.autoEnhance() } } label: {
+                        Image(systemName: "wand.and.stars")
+                    }.disabled(!accounts.canWrite || a.isVideo).help("Auto Enhance (⌘E)")
+                }
+                Button("Edit") { lib.edit() }
+                    .buttonStyle(.bordered)
+                    .disabled(!accounts.canWrite || !a.isImage)
+                    .help("Edit (↩)")
+            } else {
+                Button { InfoWindow.show() } label: { Label("Info", systemImage: "info.circle") }.help("Info (⌘I)")
+                Button { Task { await lib.toggleFavorite() } } label: { Label("Favorite", systemImage: "heart") }
+                    .disabled(!accounts.canWrite || lib.targets.isEmpty).help("Favorite (.)")
+                ShareButton(lib: lib)
+                if accounts.canImport {
+                    Button { Transfer.chooseAndImport() } label: { Label("Import", systemImage: "square.and.arrow.down") }
+                        .help("Import (⇧⌘I)")
+                }
+                AccountMenu()
             }
-            AccountMenu()
+        }
+    }
+}
+
+extension View {
+    @ViewBuilder
+    func searchableIf(_ condition: Bool, text: Binding<String>, focused: FocusState<Bool>.Binding, prompt: String = "Search") -> some View {
+        if condition {
+            self.searchable(text: text, placement: .toolbar, prompt: prompt)
+                .searchFocused(focused)
+        } else {
+            self
         }
     }
 }

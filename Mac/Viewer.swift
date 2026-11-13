@@ -42,7 +42,7 @@ struct ViewerView: View {
                                     .background(Color(nsColor: .windowBackgroundColor))
                                     .id(a.id)
                                 } else {
-                                    StillView(asset: a, isZoomed: $isZoomed)
+                                    StillView(lib: lib, asset: a, isZoomed: $isZoomed)
                                         .frame(width: geo.size.width, height: geo.size.height)
                                         .id(a.id)
                                 }
@@ -77,31 +77,6 @@ struct ViewerView: View {
                 } else { ProgressView() }
                 KeyCatcher { key in handle(key) }.frame(width: 0, height: 0)
             }
-            .overlay(alignment: .top) {
-                if let a {
-                    HStack(spacing: 14) {
-                        Button { lib.closeViewer() } label: { Image(systemName: "chevron.left") }.help("Back (Space)")
-                        VStack(alignment: .leading, spacing: 1) {
-                            Text(Fmt.relativeDay(a.date, fallback: Fmt.dayLongMonthYear)).font(.headline)
-                            Text([Fmt.time.string(from: a.date), a.city].compactMap { $0 }.joined(separator: " · "))
-                                .font(.caption).foregroundStyle(.secondary)
-                        }
-                        Spacer()
-                        Button { Task { await lib.toggleFavorite() } } label: {
-                            Image(systemName: a.isFavorite ? "heart.fill" : "heart")
-                        }.disabled(!AccountStore.shared.canWrite).help("Favorite (.)")
-                        ViewerShareButton(asset: a)
-                        Button { InfoWindow.show() } label: { Image(systemName: "info.circle") }.help("Info (⌘I)")
-                        if a.isImage {
-                            Button("Edit") { lib.edit() }.disabled(!AccountStore.shared.canWrite).help("Edit (↩)")
-                        }
-                    }
-                    .buttonStyle(.borderless)
-                    .font(.title3)
-                    .padding(.horizontal, 16).padding(.vertical, 10)
-                    .background(.ultraThinMaterial)
-                }
-            }
         }
         .onAppear {
             lib.focused = a
@@ -117,6 +92,7 @@ struct ViewerView: View {
         }
         .onChange(of: path) {
             lib.focused = lib.asset(at: path)
+            lib.viewerScale = 1.0
             isZoomed = false
             isUnlocked = false
             hasScrolledDown = false
@@ -237,6 +213,12 @@ struct ViewerView: View {
         case 49 where plain, 53: videoPlayer?.pause(); lib.closeViewer(); return true   // Leertaste, Esc
         case 126 where e.modifierFlags.contains(.command): videoPlayer?.pause(); lib.closeViewer(); return true   // ⌘↑
         case 36 where plain, 76 where plain: lib.edit(); return true                          // ↩ = Bearbeiten
+        case 24 where e.modifierFlags.contains(.command): // ⌘+ / ⌘=
+            withAnimation(.easeOut(duration: 0.15)) { lib.viewerScale = min(6.0, lib.viewerScale + 0.5) }
+            return true
+        case 27 where e.modifierFlags.contains(.command): // ⌘-
+            withAnimation(.easeOut(duration: 0.15)) { lib.viewerScale = max(1.0, lib.viewerScale - 0.5) }
+            return true
         case 125 where plain: // ↓ Down arrow unlocks and scrolls down
             videoPlayer?.pause()
             if !isUnlocked {
@@ -259,8 +241,54 @@ struct ViewerView: View {
     }
 }
 
+/// Regler für die Zoomstufe in der Einzelansicht (Toolbar).
+struct ViewerZoomControl: View {
+    @Bindable var lib: Library
+
+    var body: some View {
+        let isVideo = lib.viewerAsset?.isVideo == true
+        HStack(spacing: 5) {
+            Button {
+                withAnimation(.easeOut(duration: 0.15)) {
+                    lib.viewerScale = max(1.0, lib.viewerScale - 0.5)
+                }
+            } label: {
+                Image(systemName: "minus")
+                    .font(.system(size: 9, weight: .semibold))
+            }
+            .buttonStyle(.plain)
+            .disabled(isVideo || lib.viewerScale <= 1.0)
+            .help("Zoom Out (⌘−)")
+
+            Slider(value: $lib.viewerScale, in: 1.0...6.0)
+                .controlSize(.small)
+                .frame(width: 80)
+                .disabled(isVideo)
+                .help("Zoom (⌘+ / ⌘−)")
+
+            Button {
+                withAnimation(.easeOut(duration: 0.15)) {
+                    lib.viewerScale = min(6.0, lib.viewerScale + 0.5)
+                }
+            } label: {
+                Image(systemName: "plus")
+                    .font(.system(size: 9, weight: .semibold))
+            }
+            .buttonStyle(.plain)
+            .disabled(isVideo || lib.viewerScale >= 6.0)
+            .help("Zoom In (⌘+)")
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 3)
+        .background(Color(nsColor: .controlBackgroundColor).opacity(0.5), in: Capsule())
+        .overlay(Capsule().strokeBorder(Color(nsColor: .separatorColor).opacity(0.25), lineWidth: 0.5))
+        .opacity(isVideo ? 0.4 : 1.0)
+    }
+}
+
 /// Foto: Vorschau sofort, volle Auflösung danach; Zoomen per Trackpad/Scrollrad, Verschieben per Zwei-Finger-Geste oder Klick & Ziehen.
 private struct StillView: View {
+    @Bindable var lib: Library
     let asset: Asset
     @Binding var isZoomed: Bool
     @State private var image: CGImage?
@@ -290,6 +318,7 @@ private struct StillView: View {
                                 .onEnded { v in
                                     let newScale = min(6, max(1, pan.scale * v.magnification))
                                     pan.scale = newScale
+                                    lib.viewerScale = newScale
                                     if newScale <= 1 {
                                         pan.offset = .zero
                                     } else {
@@ -320,9 +349,11 @@ private struct StillView: View {
                                     pan.scale = 1
                                     pan.offset = .zero
                                     isZoomed = false
+                                    lib.viewerScale = 1
                                 } else {
                                     pan.scale = 2.5
                                     isZoomed = true
+                                    lib.viewerScale = 2.5
                                 }
                             }
                         }
@@ -334,6 +365,20 @@ private struct StillView: View {
                 pan.viewSize = g.size
                 if let image {
                     pan.imageSize = CGSize(width: image.width, height: image.height)
+                }
+                pan.scale = lib.viewerScale
+                isZoomed = lib.viewerScale > 1.01
+            }
+            .onChange(of: lib.viewerScale) { _, newScale in
+                if abs(pan.scale - newScale) > 0.001 {
+                    pan.scale = newScale
+                    if newScale <= 1.01 {
+                        pan.offset = .zero
+                        isZoomed = false
+                    } else {
+                        pan.offset = pan.clamp(pan.offset, scale: newScale)
+                        isZoomed = true
+                    }
                 }
             }
             .onChange(of: g.size) { _, newSize in

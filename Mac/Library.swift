@@ -75,6 +75,7 @@ final class Library {
     var selection: Set<String> = []
     var focused: Asset?
     var viewer: IndexPath?
+    var viewerScale: CGFloat = 1.0
     /// Zoomstufe des Rasters (Kantenlänge in Punkt), ⌘+ / ⌘−
     static let zoomSizes: [CGFloat] = [72, 104, 150, 210, 300]
     var zoom = UserDefaults.standard.object(forKey: "mac.zoom") as? Int ?? 2 { didSet { UserDefaults.standard.set(zoom, forKey: "mac.zoom") } }
@@ -438,10 +439,65 @@ final class Library {
         focused = a
         selection = [a.id]
         viewer = p
+        viewerScale = 1.0
     }
     func closeViewer() {
         if let v = viewer { onReloadItems?([v]) }
         viewer = nil
+        viewerScale = 1.0
+    }
+
+    func viewerPosition() -> (index: Int, total: Int)? {
+        guard let v = viewer else { return nil }
+        guard sections.indices.contains(v.section) else { return nil }
+        let before = sections[0..<v.section].reduce(0) { $0 + $1.count }
+        let total = totalCount
+        let index = min(total, before + v.item + 1)
+        return (index, total)
+    }
+
+    var viewerAsset: Asset? {
+        guard let v = viewer else { return nil }
+        return asset(at: v)
+    }
+
+    var viewerTitle: String {
+        guard let a = viewerAsset else { return "" }
+        if let place = a.locationName {
+            return place
+        } else {
+            return Fmt.viewerDateTime.string(from: a.date)
+        }
+    }
+
+    var viewerSubtitle: String {
+        guard let a = viewerAsset else { return "" }
+        let countText = viewerPositionText
+        if a.locationName != nil {
+            let dateText = Fmt.viewerDateTime.string(from: a.date)
+            return [dateText, countText].filter { !$0.isEmpty }.joined(separator: "  ·  ")
+        } else {
+            return countText
+        }
+    }
+
+    var viewerPositionText: String {
+        guard let pos = viewerPosition(), pos.total > 0 else { return "" }
+        return "\(pos.index.formatted()) of \(pos.total.formatted())"
+    }
+
+    func autoEnhance() async {
+        guard AccountStore.shared.canWrite, let a = targets.first(where: \.isImage) else { return }
+        let session = EditSession(asset: a)
+        await session.load()
+        session.toggleAuto()
+        guard session.changed else { return }
+        do {
+            let new = try await session.save()
+            await afterEdit(old: a, new: new)
+        } catch {
+            self.error = error.localizedDescription
+        }
     }
 
     // MARK: Änderungen (nur wenn das Konto nicht auf „Nur ansehen“ steht)
