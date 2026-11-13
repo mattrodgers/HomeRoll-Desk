@@ -90,6 +90,7 @@ struct ViewerView: View {
                         Button { Task { await lib.toggleFavorite() } } label: {
                             Image(systemName: a.isFavorite ? "heart.fill" : "heart")
                         }.disabled(!AccountStore.shared.canWrite).help("Favorite (.)")
+                        ViewerShareButton(asset: a)
                         Button { InfoWindow.show() } label: { Image(systemName: "info.circle") }.help("Info (⌘I)")
                         if a.isImage {
                             Button("Edit") { lib.edit() }.disabled(!AccountStore.shared.canWrite).help("Edit (↩)")

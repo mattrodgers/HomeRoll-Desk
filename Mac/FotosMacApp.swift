@@ -54,6 +54,7 @@ struct FotosCommands: Commands {
                 Button("Export Unmodified Original…") { Transfer.export(original: true) }
                     .keyboardShortcut("e", modifiers: [.command, .option])
             }.disabled(lib.targets.isEmpty)
+            Button("Share…") { Task { await Sharing.share(lib.targets) } }.disabled(lib.targets.isEmpty)
             Button("Share Link") { Task { await Menus.shareLink(lib) } }.disabled(lib.targets.isEmpty)
         }
         CommandGroup(replacing: .printItem) {

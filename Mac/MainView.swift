@@ -106,8 +106,7 @@ struct MainView: View {
             Button { InfoWindow.show() } label: { Label("Info", systemImage: "info.circle") }.help("Info (⌘I)")
             Button { Task { await lib.toggleFavorite() } } label: { Label("Favorite", systemImage: "heart") }
                 .disabled(!accounts.canWrite || lib.targets.isEmpty).help("Favorite (.)")
-            Button { Transfer.export(original: false) } label: { Label("Export", systemImage: "square.and.arrow.up") }
-                .disabled(lib.targets.isEmpty).help("Export (⇧⌘E)")
+            ShareButton(lib: lib)
             if accounts.canImport {
                 Button { Transfer.chooseAndImport() } label: { Label("Import", systemImage: "square.and.arrow.down") }
                     .help("Import (⇧⌘I)")
