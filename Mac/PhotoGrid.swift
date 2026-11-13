@@ -13,11 +13,12 @@ struct PhotoGrid: NSViewRepresentable {
 
     func makeNSView(context: Context) -> NSScrollView {
         let c = context.coordinator
-        let layout = NSCollectionViewFlowLayout()
-        layout.minimumInteritemSpacing = 2
-        layout.minimumLineSpacing = 2
-        layout.headerReferenceSize = NSSize(width: 100, height: 40)
-        layout.sectionInset = NSEdgeInsets(top: 0, left: 0, bottom: 8, right: 0)
+        let layout = ContinuousGridLayout()
+        layout.edge = edge
+        layout.footerProvider = { [weak c = context.coordinator] in
+            guard let c else { return 0 }
+            return MainActor.assumeIsolated { LibraryFooter.shows(c.lib) ? LibraryFooter.height : 0 }
+        }
         let cv = GridCollectionView()
         cv.collectionViewLayout = layout
         cv.isSelectable = true
@@ -42,6 +43,9 @@ struct PhotoGrid: NSViewRepresentable {
         scroll.hasVerticalScroller = true
         scroll.drawsBackground = false
         scroll.automaticallyAdjustsContentInsets = true
+        scroll.contentView.postsBoundsChangedNotifications = true
+        NotificationCenter.default.addObserver(c, selector: #selector(Coordinator.updateTopTitle),
+                                               name: NSView.boundsDidChangeNotification, object: scroll.contentView)
         c.attach()
         return scroll
     }
@@ -50,12 +54,12 @@ struct PhotoGrid: NSViewRepresentable {
         let c = context.coordinator
         if c.edge != edge {
             c.edge = edge
-            c.cv?.collectionViewLayout?.invalidateLayout()
+            (c.cv?.collectionViewLayout as? ContinuousGridLayout)?.edge = edge
         }
     }
 
     @MainActor
-    final class Coordinator: NSObject, NSCollectionViewDataSource, NSCollectionViewDelegateFlowLayout, NSCollectionViewPrefetching {
+    final class Coordinator: NSObject, NSCollectionViewDataSource, NSCollectionViewDelegate, NSCollectionViewPrefetching {
         let lib: Library
         weak var cv: GridCollectionView?
         var edge: CGFloat = 150
@@ -78,8 +82,7 @@ struct PhotoGrid: NSViewRepresentable {
             lib.onScrollToSection = { [weak self] s in
                 guard let cv = self?.cv, s < cv.numberOfSections else { return }
                 cv.layoutSubtreeIfNeeded()
-                if let a = cv.layoutAttributesForSupplementaryElement(ofKind: NSCollectionView.elementKindSectionHeader,
-                                                                      at: IndexPath(item: 0, section: s)) {
+                if cv.numberOfItems(inSection: s) > 0, let a = cv.layoutAttributesForItem(at: IndexPath(item: 0, section: s)) {
                     cv.scroll(NSPoint(x: 0, y: a.frame.minY))
                 }
             }
@@ -96,6 +99,19 @@ struct PhotoGrid: NSViewRepresentable {
         func reloadAll() {
             cv?.reloadData()
             restoreSelection()
+            updateTopTitle()
+        }
+
+        /// Monat der obersten sichtbaren Reihe → mitlaufende Kapsel (Fotos zeigt das Datum oben beim Scrollen)
+        @objc func updateTopTitle() {
+            guard let cv, let layout = cv.collectionViewLayout as? ContinuousGridLayout,
+                  let clip = cv.enclosingScrollView?.contentView,
+                  let p = layout.indexPath(atY: clip.bounds.minY + 4), lib.sections.indices.contains(p.section) else {
+                if lib.gridTitle != "" { lib.gridTitle = "" }
+                return
+            }
+            let t = lib.sections.count > 1 || lib.source == .library ? lib.sections[p.section].title : ""
+            if lib.gridTitle != t { lib.gridTitle = t }
         }
 
         private func restoreSelection() {
@@ -130,21 +146,6 @@ struct PhotoGrid: NSViewRepresentable {
             for s in Set(paths.map(\.section)) { lib.ensureLoaded(s) }
             let size: ImmichClient.Size = edge > 220 ? .preview : .thumbnail
             for p in paths.prefix(60) { if let a = lib.asset(at: p) { Task { _ = await ImageCache.shared.load(a.id, size) } } }
-        }
-
-        // MARK: Größe – Spalten füllen die Breite (wie Fotos), Kantenlänge ≈ Zoomstufe
-
-        func collectionView(_ cv: NSCollectionView, layout: NSCollectionViewLayout, sizeForItemAt p: IndexPath) -> NSSize {
-            let w = max(1, cv.enclosingScrollView?.contentSize.width ?? cv.bounds.width)
-            let cols = max(1, Int((w + 2) / (edge + 2)))
-            let side = floor((w - CGFloat(cols - 1) * 2) / CGFloat(cols))
-            return NSSize(width: side, height: side)
-        }
-
-        /// Sicherungsstatus unter dem neuesten Monat (nur Mediathek, siehe LibraryFooter)
-        func collectionView(_ cv: NSCollectionView, layout: NSCollectionViewLayout, referenceSizeForFooterInSection s: Int) -> NSSize {
-            guard LibraryFooter.shows(lib), s == lib.sections.count - 1 else { return .zero }
-            return NSSize(width: max(1, cv.enclosingScrollView?.contentSize.width ?? cv.bounds.width), height: LibraryFooter.height)
         }
 
         // MARK: Auswahl

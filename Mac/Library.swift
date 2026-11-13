@@ -77,6 +77,8 @@ final class Library {
     var viewer: IndexPath?
     /// Zoomstufe des Rasters (Kantenlänge in Punkt), ⌘+ / ⌘−
     static let zoomSizes: [CGFloat] = [72, 104, 150, 210, 300]
+    /// Monat oben im Raster (mitlaufende Kapsel, GitHub #7)
+    var gridTitle = ""
     var zoom = UserDefaults.standard.object(forKey: "mac.zoom") as? Int ?? 2 { didSet { UserDefaults.standard.set(zoom, forKey: "mac.zoom") } }
 
     /// Mediathek wie Fotos: Jahre · Monate · Alle Fotos

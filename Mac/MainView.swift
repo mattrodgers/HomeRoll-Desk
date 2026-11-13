@@ -63,6 +63,14 @@ struct MainView: View {
                 PeriodGrid(lib: lib, years: lib.granularity == .years)
             default:
                 PhotoGrid(lib: lib, edge: Library.zoomSizes[lib.zoom])
+                    .overlay(alignment: .topLeading) {
+                        if !lib.gridTitle.isEmpty {
+                            Text(lib.gridTitle).font(.title2.weight(.bold))
+                                .padding(.horizontal, 14).padding(.vertical, 6)
+                                .background(.regularMaterial, in: Capsule())
+                                .padding(12).allowsHitTesting(false)
+                        }
+                    }
                 if lib.loading && lib.sections.isEmpty { ProgressView() }
                 else if !lib.loading && lib.sections.isEmpty {
                     ContentUnavailableView(lib.source == .trash ? "No Recently Deleted Items" : "No Photos",
