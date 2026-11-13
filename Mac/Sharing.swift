@@ -6,14 +6,13 @@ import SwiftUI
 @MainActor
 enum Sharing {
     fileprivate static var activePicker: NSSharingServicePicker?
-    fileprivate static var lastDismissedAt: Date?
+    fileprivate static weak var currentAnchorView: NSView?
+    fileprivate static var dismissedByAnchorClick = false
 
-    /// Prüft, ob das Teilen-Menü gerade geöffnet ist oder durch den Klick gerade geschlossen wurde.
+    /// Prüft, ob das Teilen-Menü gerade geöffnet ist.
     static var isOpen: Bool {
         if activePicker != nil { return true }
-        if let last = lastDismissedAt, Date().timeIntervalSince(last) < 0.45 {
-            return true
-        }
+        if dismissedByAnchorClick { return true }
         return false
     }
 
@@ -23,7 +22,8 @@ enum Sharing {
             picker.close()
             activePicker = nil
         }
-        lastDismissedAt = Date()
+        dismissedByAnchorClick = false
+        currentAnchorView = nil
     }
 
     /// Zwischenspeicher für geteilte Dateien in temporärem Ordner
@@ -120,9 +120,10 @@ enum Sharing {
         let picker = NSSharingServicePicker(items: files)
         picker.delegate = SharingDelegate.shared
         activePicker = picker
-        lastDismissedAt = nil
 
         if let anchor = resolveAnchor(sourceView) {
+            currentAnchorView = anchor.view
+            dismissedByAnchorClick = false
             picker.show(relativeTo: anchor.rect, of: anchor.view, preferredEdge: .minY)
         }
     }
@@ -238,9 +239,27 @@ final class SharingDelegate: NSObject, NSSharingServicePickerDelegate, NSSharing
     }
 
     nonisolated func sharingServicePicker(_ sharingServicePicker: NSSharingServicePicker, didChoose service: NSSharingService?) {
+        let isCancelled = (service == nil)
         Task { @MainActor in
             Sharing.activePicker = nil
-            Sharing.lastDismissedAt = Date()
+
+            // Prüfen, ob das Menü durch einen Klick auf die Teilen-Schaltfläche selbst geschlossen wurde
+            if isCancelled,
+               let event = NSApp.currentEvent,
+               event.type == .leftMouseDown,
+               let anchor = Sharing.currentAnchorView,
+               let window = anchor.window ?? anchor.superview?.window,
+               event.window == window {
+                let targetView = anchor.superview ?? anchor
+                let point = targetView.convert(event.locationInWindow, from: nil)
+                if targetView.bounds.insetBy(dx: -6, dy: -6).contains(point) {
+                    Sharing.dismissedByAnchorClick = true
+                    Task {
+                        try? await Task.sleep(nanoseconds: 300_000_000)
+                        Sharing.dismissedByAnchorClick = false
+                    }
+                }
+            }
         }
     }
 
