@@ -6,6 +6,25 @@ import SwiftUI
 @MainActor
 enum Sharing {
     fileprivate static var activePicker: NSSharingServicePicker?
+    fileprivate static var lastDismissedAt: Date?
+
+    /// Prüft, ob das Teilen-Menü gerade geöffnet ist oder durch den Klick gerade geschlossen wurde.
+    static var isOpen: Bool {
+        if activePicker != nil { return true }
+        if let last = lastDismissedAt, Date().timeIntervalSince(last) < 0.45 {
+            return true
+        }
+        return false
+    }
+
+    /// Schließt das Teilen-Menü, falls es geöffnet ist.
+    static func close() {
+        if let picker = activePicker {
+            picker.close()
+            activePicker = nil
+        }
+        lastDismissedAt = Date()
+    }
 
     /// Zwischenspeicher für geteilte Dateien in temporärem Ordner
     private static var cacheDirectory: URL {
@@ -80,17 +99,28 @@ enum Sharing {
 
     /// Öffnet das native macOS Share Sheet für die übergebenen Assets.
     static func share(_ assets: [Asset], from sourceView: NSView? = nil) async {
+        if isOpen {
+            close()
+            return
+        }
+
         let lib = Library.shared
         guard !assets.isEmpty else { return }
 
         let files = await prepareFiles(for: assets, lib: lib)
         guard !files.isEmpty else { return }
 
+        if isOpen {
+            close()
+            return
+        }
+
         SharingDelegate.shared.setContext(assets: assets, files: files)
 
         let picker = NSSharingServicePicker(items: files)
         picker.delegate = SharingDelegate.shared
         activePicker = picker
+        lastDismissedAt = nil
 
         if let anchor = resolveAnchor(sourceView) {
             picker.show(relativeTo: anchor.rect, of: anchor.view, preferredEdge: .minY)
@@ -210,6 +240,7 @@ final class SharingDelegate: NSObject, NSSharingServicePickerDelegate, NSSharing
     nonisolated func sharingServicePicker(_ sharingServicePicker: NSSharingServicePicker, didChoose service: NSSharingService?) {
         Task { @MainActor in
             Sharing.activePicker = nil
+            Sharing.lastDismissedAt = Date()
         }
     }
 
@@ -255,21 +286,26 @@ struct ViewAccessor: NSViewRepresentable {
 /// Teilen-Schaltfläche für die Symbolleiste (Toolbar).
 struct ShareButton: View {
     @Bindable var lib = Library.shared
-    @State private var isSharing = false
+    @State private var isPreparing = false
     @State private var anchorView: NSView?
 
     var body: some View {
         Button {
             Task {
-                isSharing = true
-                defer { isSharing = false }
+                if Sharing.isOpen {
+                    Sharing.close()
+                    return
+                }
+                guard !isPreparing else { return }
+                isPreparing = true
+                defer { isPreparing = false }
                 await Sharing.share(lib.targets, from: anchorView)
             }
         } label: {
             Label("Share", systemImage: "square.and.arrow.up")
         }
         .background(ViewAccessor { anchorView = $0 })
-        .disabled(lib.targets.isEmpty || isSharing)
+        .disabled(lib.targets.isEmpty)
         .help("Share")
     }
 }
@@ -277,21 +313,25 @@ struct ShareButton: View {
 /// Teilen-Schaltfläche für die Einzelansicht (Viewer).
 struct ViewerShareButton: View {
     let asset: Asset
-    @State private var isSharing = false
+    @State private var isPreparing = false
     @State private var anchorView: NSView?
 
     var body: some View {
         Button {
             Task {
-                isSharing = true
-                defer { isSharing = false }
+                if Sharing.isOpen {
+                    Sharing.close()
+                    return
+                }
+                guard !isPreparing else { return }
+                isPreparing = true
+                defer { isPreparing = false }
                 await Sharing.share([asset], from: anchorView)
             }
         } label: {
             Image(systemName: "square.and.arrow.up")
         }
         .background(ViewAccessor { anchorView = $0 })
-        .disabled(isSharing)
         .help("Share")
     }
 }
