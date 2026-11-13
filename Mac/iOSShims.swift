@@ -63,19 +63,6 @@ final class UIGraphicsImageRenderer {
     }
 }
 
-/// Live-Video eines Live Photos als lokale Datei (Schlüsselbild wählen im Editor).
-enum LiveClip {
-    static func file(_ videoID: String) async -> URL? {
-        let dir = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0].appendingPathComponent("live")
-        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-        let f = dir.appendingPathComponent("\(videoID).mov")
-        if FileManager.default.fileExists(atPath: f.path) { return f }
-        guard let url = ImmichClient.shared.videoURL(videoID), let d = try? await ImmichClient.shared.data(url) else { return nil }
-        try? d.write(to: f, options: .atomic)
-        return f
-    }
-}
-
 /// Nur damit EditClipboard.paste/copy (iPhone-Wege) übersetzt; der Mac nutzt eigene Abläufe (Library.pasteEdits).
 @MainActor final class AppModel {
     var busy: String?

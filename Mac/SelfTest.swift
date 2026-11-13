@@ -1,5 +1,6 @@
 #if DEBUG
 import AppKit
+import AVFoundation
 import CoreGraphics
 import ImageIO
 import UniformTypeIdentifiers
@@ -75,6 +76,49 @@ enum SelfTest {
         return cond()
     }
 
+    /// Live Photos: Abzeichen, Abspielen beim Öffnen/Zeigen, Loop/Bounce/Long Exposure (GitHub #8)
+    static func liveTest() async {
+        for i in lib.sections.indices { lib.ensureLoaded(i) }
+        _ = await waitFor(30) { lib.sections.allSatisfy { $0.assets != nil } }
+        guard let a = lib.sections.compactMap(\.assets).flatMap({ $0 }).first(where: { $0.isLivePhoto && $0.isImage }),
+              let p = lib.indexPath(a.id), let v = a.livePhotoVideoId else { log("Live: Live Photo gefunden", false); return }
+        log("Live: Live Photo gefunden", true, a.id)
+        let f = await LiveClip.file(v)
+        log("Live: Video geladen", f != nil, f.map { "\((try? $0.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0) Bytes" } ?? "")
+        func players() -> [AVPlayer] {
+            func walk(_ v: NSView) -> [AVPlayer] {
+                ((v as? LiveVideo.LayerView)?.playerLayer.player.map { [$0] } ?? []) + v.subviews.flatMap(walk)
+            }
+            return NSApp.windows.compactMap(\.contentView).flatMap(walk)
+        }
+        for m in [LiveMode.live, .loop, .bounce, .longExposure, .off] {
+            LiveMode.set(m, for: a.id)
+            lib.viewer = nil; await wait(0.6)
+            lib.selection = [a.id]; lib.focused = a; lib.viewer = p
+            await wait(m == .longExposure ? 1 : 0.4)
+            let playing = await waitFor(m == .longExposure ? 25 : 6) {
+                switch m {
+                case .live, .loop, .bounce: return players().contains { $0.timeControlStatus == .playing }
+                case .longExposure, .off: return players().isEmpty
+                }
+            }
+            if m == .bounce { _ = await waitFor(8) { players().contains { $0.rate < 0 } } }
+            let detail = m == .bounce ? "rückwärts: \(players().contains { $0.rate < 0 })" : "Player: \(players().count)"
+            if m == .longExposure { await wait(8) }
+            snap("live-\(m.rawValue)")
+            log("Live: \(m.title)", playing, detail)
+            if m == .live {
+                // nach dem einmaligen Abspielen steht wieder das Foto
+                let stopped = await waitFor(8) { players().isEmpty }
+                log("Live: nach Abspielen wieder Foto", stopped)
+            }
+        }
+        LiveMode.set(.live, for: a.id)
+        lib.viewer = nil
+        let le = await LiveClip.longExposure(v)
+        log("Live: Langzeitbelichtung berechnet", le != nil, le.map { "\($0.width)×\($0.height)" } ?? "")
+    }
+
     static func snap(_ name: String, window: NSWindow? = nil) {
         guard let w = window ?? NSApp.windows.first(where: { $0.isVisible && !($0 is NSPanel) && $0.frame.height > 300 }),
               let img = windowImage(CGWindowID(w.windowNumber)) ?? viewImage(w.contentView)
@@ -135,6 +179,11 @@ enum SelfTest {
         if ProcessInfo.processInfo.environment["FOTOS_SELFTEST_ONLY"] == "albums" {
             await keyPhotoTest()
             await backTest()
+            return finish()
+        }
+        // nur Live Photos (GitHub #8): FOTOS_SELFTEST_ONLY=live
+        if ProcessInfo.processInfo.environment["FOTOS_SELFTEST_ONLY"] == "live" {
+            await liveTest()
             return finish()
         }
         // nur Alben-Übersicht mit Ordnern + Sortierung: FOTOS_SELFTEST_ONLY=folders

@@ -7,6 +7,8 @@ import SwiftUI
 struct ViewerView: View {
     @Bindable var lib: Library
     let path: IndexPath
+    @State private var live: LiveMode = .live
+    @State private var hoverPlay = false
 
     var body: some View {
         let a = lib.asset(at: path)
@@ -14,7 +16,7 @@ struct ViewerView: View {
             Color.black.ignoresSafeArea()
             if let a {
                 if a.isVideo { VideoPlayerView(asset: a).id(a.id) }
-                else { StillView(asset: a).id(a.id) }
+                else { StillView(asset: a, live: $live, hoverPlay: hoverPlay).id(a.id) }
             } else { ProgressView() }
             KeyCatcher { key in handle(key) }.frame(width: 0, height: 0)
         }
@@ -42,8 +44,19 @@ struct ViewerView: View {
                 .background(.ultraThinMaterial)
             }
         }
-        .onAppear { lib.focused = a }
-        .onChange(of: path) { lib.focused = lib.asset(at: path) }
+        .overlay(alignment: .topLeading) {
+            if let a, a.isLivePhoto, a.isImage {
+                LiveBadge(mode: live, onHover: { hoverPlay = $0 && live == .live }) { m in
+                    live = m; LiveMode.set(m, for: a.id); hoverPlay = false
+                }
+                .padding(.leading, 16).padding(.top, 62)
+            }
+        }
+        .onAppear { lib.focused = a; if let a { live = LiveMode.get(a.id) } }
+        .onChange(of: path) {
+            lib.focused = lib.asset(at: path); hoverPlay = false
+            if let a = lib.focused { live = LiveMode.get(a.id) }
+        }
     }
 
     private func handle(_ e: NSEvent) -> Bool {
@@ -71,7 +84,12 @@ struct ViewerView: View {
 /// Foto: Vorschau sofort, volle Auflösung danach; Zoomen per Trackpad/Scrollrad.
 private struct StillView: View {
     let asset: Asset
+    @Binding var live: LiveMode
+    let hoverPlay: Bool
     @State private var image: CGImage?
+    @State private var exposure: CGImage?
+    /// Wie Fotos: beim Öffnen bewegt sich ein Live Photo einmal kurz, dann steht das Foto
+    @State private var openingPlay = true
     @State private var hdr = false
     @State private var scale: CGFloat = 1
     @GestureState private var pinch: CGFloat = 1
@@ -87,9 +105,14 @@ private struct StillView: View {
                     .gesture(MagnifyGesture().updating($pinch) { v, s, _ in s = v.magnification }
                         .onEnded { v in scale = min(6, max(1, scale * v.magnification)) })
                     .onTapGesture(count: 2) { withAnimation(.snappy) { scale = scale > 1 ? 1 : 2.5 } }
+                    .overlay { liveLayer.scaleEffect(scale * pinch).allowsHitTesting(false) }
             } else {
                 ProgressView().frame(width: g.size.width, height: g.size.height)
             }
+        }
+        .task(id: live) {
+            guard live == .longExposure, exposure == nil, let v = asset.livePhotoVideoId else { return }
+            exposure = await LiveClip.longExposure(v)
         }
         .task {
             if let t = ImageCache.shared.get(asset.id, .preview) ?? ImageCache.shared.get(asset.id, .thumbnail) { image = t }
@@ -98,6 +121,25 @@ private struct StillView: View {
             if UserDefaults.standard.object(forKey: "mac.alwaysOriginal") as? Bool ?? true, asset.isImage,
                let f = await Self.original(asset.id) { image = f; hdr = true; return }
             if let f = await ImageCache.shared.load(asset.id, .fullsize) { image = f }
+        }
+    }
+
+    @ViewBuilder private var liveLayer: some View {
+        if let v = asset.livePhotoVideoId, asset.isImage {
+            switch live {
+            case .loop: LiveVideo(videoID: v, style: .loop).id("loop\(v)")
+            case .bounce: LiveVideo(videoID: v, style: .bounce).id("bounce\(v)")
+            case .longExposure:
+                if let exposure { Image(decorative: exposure, scale: 1).resizable().aspectRatio(contentMode: .fit) }
+                else { ProgressView().controlSize(.small) }
+            case .live:
+                if hoverPlay { LiveVideo(videoID: v, style: .loop).id("hover\(v)") }
+                else if openingPlay {
+                    LiveVideo(videoID: v, style: .once) { withAnimation(.easeOut(duration: 0.3)) { openingPlay = false } }
+                        .id("open\(v)").transition(.opacity)
+                }
+            case .off: EmptyView()
+            }
         }
     }
 
