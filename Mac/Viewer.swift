@@ -2,7 +2,6 @@ import AppKit
 import AVKit
 import CoreLocation
 import MapKit
-import ObjectiveC
 import SwiftUI
 import Vision
 
@@ -487,37 +486,40 @@ final class ViewerPanState {
     }
 }
 
-final class NonScrubbingPlayerView: AVPlayerView {
-    private static var didDisableScrubbing = false
+/// A container view that embeds an AVPlayerView and intercepts scroll events
+/// to prevent AVKit from fast-forwarding the video via scrolling or trackpad input.
+final class VideoContainerView: NSView {
+    let playerView = AVPlayerView()
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
-        Self.disableScrubbing()
+        setup()
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        Self.disableScrubbing()
+        setup()
     }
 
-    override func viewDidMoveToWindow() {
-        super.viewDidMoveToWindow()
-        Self.disableScrubbing()
+    private func setup() {
+        wantsLayer = true
+        layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
+        playerView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(playerView)
+        NSLayoutConstraint.activate([
+            playerView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            playerView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            playerView.topAnchor.constraint(equalTo: topAnchor),
+            playerView.bottomAnchor.constraint(equalTo: bottomAnchor),
+        ])
     }
 
-    private static func disableScrubbing() {
-        guard !didDisableScrubbing else { return }
-        if let cls = NSClassFromString("AVDesktopPlayerViewContentView") {
-            let block: @convention(block) (NSView, NSEvent) -> Void = { view, event in
-                view.nextResponder?.scrollWheel(with: event)
-            }
-            let imp = imp_implementationWithBlock(block)
-            let sel = #selector(NSResponder.scrollWheel(with:))
-            if let method = class_getInstanceMethod(cls, sel) {
-                method_setImplementation(method, imp)
-                didDisableScrubbing = true
-            }
+    override func hitTest(_ point: NSPoint) -> NSView? {
+        let hit = super.hitTest(point)
+        if hit != nil, NSApp.currentEvent?.type == .scrollWheel {
+            return self
         }
+        return hit
     }
 
     override func scrollWheel(with event: NSEvent) {
@@ -531,8 +533,9 @@ private struct VideoPlayerView: NSViewRepresentable {
     @Binding var player: AVPlayer?
     @Binding var naturalRatio: Double?
 
-    func makeNSView(context: Context) -> NonScrubbingPlayerView {
-        let v = NonScrubbingPlayerView()
+    func makeNSView(context: Context) -> VideoContainerView {
+        let container = VideoContainerView()
+        let v = container.playerView
         v.controlsStyle = .floating
         v.showsFullScreenToggleButton = true
         v.wantsLayer = true
@@ -573,16 +576,17 @@ private struct VideoPlayerView: NSViewRepresentable {
                 }
             }
         }
-        return v
+        return container
     }
 
-    func updateNSView(_ v: NonScrubbingPlayerView, context: Context) {
-        v.layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
+    func updateNSView(_ container: VideoContainerView, context: Context) {
+        container.layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
+        container.playerView.layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
     }
 
-    static func dismantleNSView(_ v: NonScrubbingPlayerView, coordinator: ()) {
-        v.player?.pause()
-        v.player = nil
+    static func dismantleNSView(_ container: VideoContainerView, coordinator: ()) {
+        container.playerView.player?.pause()
+        container.playerView.player = nil
     }
 }
 
