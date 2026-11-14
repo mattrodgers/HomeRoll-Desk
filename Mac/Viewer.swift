@@ -239,7 +239,6 @@ struct ViewerView: View {
             NSEvent.removeMonitor(m)
             scrollMonitor = nil
         }
-        }
     }
 
     private func handle(_ e: NSEvent) -> Bool {
