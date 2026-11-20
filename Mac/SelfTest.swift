@@ -113,6 +113,24 @@ enum SelfTest {
         lib.select(.library)
     }
 
+    /// Teilen (HomeRoll-Desk #13): Dateien für ein Foto und ein Video bereitlegen, Mac-Teilen-Dienste dafür vorhanden
+    static func shareTest() async {
+        _ = await waitFor(20) { !lib.sections.isEmpty }
+        for i in lib.sections.indices.prefix(6) { lib.ensureLoaded(i) }
+        _ = await waitFor(20) { lib.sections.prefix(6).contains { $0.assets != nil } }
+        let all = lib.sections.compactMap(\.assets).flatMap { $0 }
+        let picks = [all.first(where: \.isImage), all.first(where: \.isVideo)].compactMap { $0 }
+        log("Teilen: Testobjekte", !picks.isEmpty, picks.map { $0.isVideo ? "Video" : "Foto" }.joined(separator: "+"))
+        let urls = await Sharing.prepare(picks)
+        let sizes = urls.map { (try? $0.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0 }
+        log("Teilen: Dateien bereit", urls.count == picks.count && !sizes.contains(0),
+            zip(urls, sizes).map { "\($0.lastPathComponent) \($1 / 1024) KB" }.joined(separator: ", "))
+        let services = NSSharingService.sharingServices(forItems: urls).map(\.title)
+        log("Teilen: Mac-Dienste", !services.isEmpty, services.prefix(8).joined(separator: ", "))
+        let again = await Sharing.prepare(picks)
+        log("Teilen: zweites Mal aus dem Zwischenordner", again == urls)
+    }
+
     /// Live Photos: Abzeichen, Abspielen beim Öffnen/Zeigen, Loop/Bounce/Long Exposure (GitHub #8)
     static func liveTest() async {
         for i in lib.sections.indices { lib.ensureLoaded(i) }
@@ -266,6 +284,11 @@ enum SelfTest {
         // nur Server-Ordner (GitHub #10): FOTOS_SELFTEST_ONLY=serverfolders (mit FOTOS_FOLDERS_ALL=1 auf Testservern)
         if ProcessInfo.processInfo.environment["FOTOS_SELFTEST_ONLY"] == "serverfolders" {
             await serverFoldersTest()
+            return finish()
+        }
+        // nur Teilen (HomeRoll-Desk #13): FOTOS_SELFTEST_ONLY=share
+        if ProcessInfo.processInfo.environment["FOTOS_SELFTEST_ONLY"] == "share" {
+            await shareTest()
             return finish()
         }
         // nur Live Photos (GitHub #8): FOTOS_SELFTEST_ONLY=live

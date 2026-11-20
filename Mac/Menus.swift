@@ -47,8 +47,9 @@ enum Menus {
             add("Remove from Album", "rectangle.stack.badge.minus", enabled: w) { await lib.removeFromAlbum() }
         }
         m.addItem(.separator())
-        add("Export…", "square.and.arrow.up") { Transfer.export(original: false) }
-        add("Export Unmodified Original…", "square.and.arrow.up.on.square") { Transfer.export(original: true) }
+        add("Share…", "square.and.arrow.up") { Sharing.share(t) }
+        add("Export…", "square.and.arrow.up.on.square") { Transfer.export(original: false) }
+        add("Export Unmodified Original…", "square.and.arrow.up.on.square.fill") { Transfer.export(original: true) }
         add(n == 1 ? "Share Link" : "Share Link for \(n) Items", "link") { await shareLink(lib) }
         add("Print…", "printer") { await Printing.printSelection() }
         m.addItem(.separator())
