@@ -48,6 +48,21 @@ import SwiftUI
         return common.joined(separator: "/")
     }
 
+    /// Alle Ordner unterhalb der obersten Ebene, auch reine Zwischenordner – für die Suche (HomeRoll-Desk #12)
+    var allDirectories: [String] {
+        var out = Set<String>()
+        let pre = root.isEmpty ? "" : root + "/"
+        for p in paths where p.hasPrefix(pre) {
+            var d = p
+            while d.count > pre.count, d.hasPrefix(pre) {
+                out.insert(d)
+                guard let i = d.lastIndex(of: "/") else { break }
+                d = String(d[..<i])
+            }
+        }
+        return out.sorted { $0.localizedStandardCompare($1) == .orderedAscending }
+    }
+
     nonisolated static func name(_ dir: String) -> String { dir.split(separator: "/").last.map(String.init) ?? dir }
 
     func children(of dir: String) -> [String] {

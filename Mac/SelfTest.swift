@@ -113,6 +113,31 @@ enum SelfTest {
         lib.select(.library)
     }
 
+    /// Suche findet Ordner, Alben, Personen (HomeRoll-Desk #12) – gleiche Filter wie die Suchvorschläge
+    static func searchCollectionsTest() async {
+        await lib.loadAlbums(); await lib.loadPeople(); await FolderStore.shared.load()
+        let dirs = FolderStore.shared.allDirectories
+        log("Suche: Ordner geladen", !dirs.isEmpty, "\(dirs.count) Ordner")
+        if let d = dirs.first(where: { FolderStore.name($0).count >= 2 }) {
+            let q = String(FolderStore.name(d).prefix(2)).lowercased()
+            let hits = dirs.filter { FolderStore.name($0).lowercased().contains(q) }
+            log("Suche: Ordner „\(q)“", hits.contains(d), "\(hits.count) Treffer, z. B. \(FolderStore.name(d))")
+            let leaf = FolderStore.shared.children(of: d).isEmpty
+            lib.select(leaf ? .folder(d) : .folderList(d))
+            let ok = await waitFor(15) { !lib.loading && (leaf ? lib.totalCount > 0 : true) }
+            log("Suche: Ordner öffnen", ok && lib.source == (leaf ? .folder(d) : .folderList(d)), lib.source.title)
+        }
+        if let a = lib.albums.first {
+            let q = String(a.albumName.prefix(3)).lowercased()
+            log("Suche: Album „\(q)“", lib.albums.contains { $0.albumName.lowercased().contains(q) }, a.albumName)
+        }
+        if let p = lib.people.first(where: { !$0.name.isEmpty }) {
+            let q = String(p.name.prefix(3)).lowercased()
+            log("Suche: Person „\(q)“", lib.people.contains { $0.name.lowercased().contains(q) }, p.name)
+        }
+        lib.select(.library)
+    }
+
     /// Teilen (HomeRoll-Desk #13): Dateien für ein Foto und ein Video bereitlegen, Mac-Teilen-Dienste dafür vorhanden
     static func shareTest() async {
         _ = await waitFor(20) { !lib.sections.isEmpty }
@@ -284,6 +309,11 @@ enum SelfTest {
         // nur Server-Ordner (GitHub #10): FOTOS_SELFTEST_ONLY=serverfolders (mit FOTOS_FOLDERS_ALL=1 auf Testservern)
         if ProcessInfo.processInfo.environment["FOTOS_SELFTEST_ONLY"] == "serverfolders" {
             await serverFoldersTest()
+            return finish()
+        }
+        // nur Suche nach Sammlungen (HomeRoll-Desk #12): FOTOS_SELFTEST_ONLY=search
+        if ProcessInfo.processInfo.environment["FOTOS_SELFTEST_ONLY"] == "search" {
+            await searchCollectionsTest()
             return finish()
         }
         // nur Teilen (HomeRoll-Desk #13): FOTOS_SELFTEST_ONLY=share

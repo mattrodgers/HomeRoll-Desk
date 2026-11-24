@@ -23,6 +23,16 @@ struct MainView: View {
             .navigationSubtitle(subtitle)
             .searchable(text: $query, placement: .toolbar, prompt: "Search")
             .searchFocused($searchFocused)
+            // wie auf dem iPhone: passende Ordner, Alben und Personen schon beim Tippen (HomeRoll-Desk #12)
+            .searchSuggestions { suggestions }
+            .onChange(of: searchFocused) { _, on in
+                guard on else { return }
+                Task {
+                    if lib.people.isEmpty { await lib.loadPeople() }
+                    if lib.albums.isEmpty { await lib.loadAlbums() }
+                    if FolderStore.shared.paths.isEmpty { await FolderStore.shared.load() }
+                }
+            }
             .onSubmit(of: .search) {
                 let q = query.trimmingCharacters(in: .whitespaces)
                 if !q.isEmpty { lib.select(.search(q)) }
@@ -42,6 +52,43 @@ struct MainView: View {
                 Button("OK") { lib.error = nil }
             } message: { Text(lib.error ?? "") }
         }
+    }
+
+    @ViewBuilder private var suggestions: some View {
+        let q = query.trimmingCharacters(in: .whitespaces).lowercased()
+        if q.count >= 2 {
+            let folders = FolderStore.shared.allDirectories.filter { FolderStore.name($0).lowercased().contains(q) }.prefix(6)
+            let albums = lib.albums.filter { $0.albumName.lowercased().contains(q) }.prefix(6)
+            let people = lib.people.filter { !$0.name.isEmpty && $0.name.lowercased().contains(q) }.prefix(6)
+            if !folders.isEmpty {
+                Section("Folders") {
+                    ForEach(Array(folders), id: \.self) { f in
+                        Button { pick(FolderStore.shared.children(of: f).isEmpty ? .folder(f) : .folderList(f)) } label: {
+                            Label(FolderStore.name(f), systemImage: "folder")
+                        }
+                    }
+                }
+            }
+            if !albums.isEmpty {
+                Section("Albums") {
+                    ForEach(Array(albums)) { a in
+                        Button { pick(.album(a.id, a.albumName)) } label: { Label(a.albumName, systemImage: "rectangle.stack") }
+                    }
+                }
+            }
+            if !people.isEmpty {
+                Section("People") {
+                    ForEach(Array(people)) { p in
+                        Button { pick(.person(p.id, p.name)) } label: { Label(p.name, systemImage: "person.crop.circle") }
+                    }
+                }
+            }
+        }
+    }
+
+    private func pick(_ s: Source) {
+        query = ""; searchFocused = false
+        lib.select(s)
     }
 
     private var subtitle: String {
