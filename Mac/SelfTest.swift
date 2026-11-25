@@ -138,6 +138,42 @@ enum SelfTest {
         lib.select(.library)
     }
 
+    /// Eigene Rückblicke (HomeRoll-Desk #14): anlegen, Reihenfolge, entfernen, abspielen – danach wieder löschen.
+    static func memoriesTest() async {
+        _ = await waitFor(20) { !lib.sections.isEmpty }
+        for i in lib.sections.indices.suffix(4) { lib.ensureLoaded(i) }
+        _ = await waitFor(20) { lib.sections.suffix(4).contains { $0.assets != nil } }
+        let picks = Array(lib.sections.compactMap(\.assets).flatMap { $0 }.filter(\.isImage).suffix(5))
+        log("Rückblick: Testfotos", picks.count == 5, "\(picks.count)")
+        guard picks.count == 5 else { return }
+        let ids = picks.map(\.id)
+        let m = MyMemory(title: "Selbsttest-Rückblick", assetIDs: ids)
+        MyMemories.shared.save(m)
+        lib.select(.myMemory(m.id, m.title))
+        var ok = await waitFor(20) { !lib.loading && lib.totalCount == 5 }
+        log("Rückblick: Raster", ok && lib.sections.count == 1, lib.sections.first?.title ?? "")
+        log("Rückblick: Reihenfolge", lib.sections.first?.assets?.map(\.id) == ids)
+        await wait(1.5); snap("40-rueckblick-raster")
+        MyMemories.shared.move([ids[4]], to: 0, in: m.id)
+        MyMemories.shared.shift([ids[0]], by: 1, in: m.id)
+        let expect = [ids[4], ids[1], ids[0], ids[2], ids[3]]
+        log("Rückblick: verschieben", MyMemories.shared.memory(m.id)?.assetIDs == expect, "\(MyMemories.shared.memory(m.id)?.assetIDs.map { $0.prefix(4) } ?? [])")
+        MyMemories.shared.remove([ids[2]], from: m.id)
+        await lib.memoryChanged()
+        ok = await waitFor(10) { lib.totalCount == 4 }
+        log("Rückblick: entfernen", ok && lib.sections.first?.assets?.map(\.id) == expect.filter { $0 != ids[2] })
+        await lib.play()
+        await wait(1.5); snap("41-rueckblick-titel")
+        log("Rückblick: Abspielen", lib.playing?.assets.count == 4 && lib.playing?.title == m.title, lib.playing?.subtitle ?? "")
+        await wait(4.5); snap("42-rueckblick-foto")
+        lib.playing = nil
+        lib.select(.memories)
+        await wait(2); snap("43-rueckblicke-uebersicht")
+        MyMemories.shared.delete(m.id)
+        log("Rückblick: gelöscht", MyMemories.shared.memory(m.id) == nil)
+        lib.select(.library)
+    }
+
     /// Teilen (HomeRoll-Desk #13): Dateien für ein Foto und ein Video bereitlegen, Mac-Teilen-Dienste dafür vorhanden
     static func shareTest() async {
         _ = await waitFor(20) { !lib.sections.isEmpty }
@@ -314,6 +350,11 @@ enum SelfTest {
         // nur Suche nach Sammlungen (HomeRoll-Desk #12): FOTOS_SELFTEST_ONLY=search
         if ProcessInfo.processInfo.environment["FOTOS_SELFTEST_ONLY"] == "search" {
             await searchCollectionsTest()
+            return finish()
+        }
+        // nur eigene Rückblicke (HomeRoll-Desk #14): FOTOS_SELFTEST_ONLY=memories
+        if ProcessInfo.processInfo.environment["FOTOS_SELFTEST_ONLY"] == "memories" {
+            await memoriesTest()
             return finish()
         }
         // nur Teilen (HomeRoll-Desk #13): FOTOS_SELFTEST_ONLY=share

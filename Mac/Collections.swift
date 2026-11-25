@@ -4,33 +4,72 @@ import SwiftUI
 
 // MARK: - Rückblicke
 
-/// Rückblicke wie in Fotos (Immich erzeugt „Heute vor X Jahren“); Klick zeigt die Fotos des Rückblicks.
+/// Rückblicke wie in Fotos: eigene (auf dem Mac erstellt, HomeRoll-Desk #14) und die des Servers („Heute vor X Jahren“).
+/// Klick zeigt die Fotos, ▶︎ spielt den Rückblick als Film.
 struct MemoriesOverview: View {
     @Bindable var lib: Library
+    @State private var mine = MyMemories.shared
+
     var body: some View {
-        if lib.memories.isEmpty {
-            ContentUnavailableView("No Memories for Today", systemImage: "clock.arrow.circlepath",
-                                   description: Text("The server creates memories from photos taken on this day in previous years."))
-        } else {
-            ScrollView {
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 260), spacing: 18)], spacing: 18) {
-                    ForEach(lib.memories) { m in
-                        let title = Self.title(m)
-                        Button { lib.open(.memory(m.id, title)) } label: {
-                            Thumb(id: m.assets.first(where: { $0.type == "IMAGE" })?.id ?? m.assets.first?.id)
-                                .frame(height: 300)
-                                .overlay(LinearGradient(colors: [.clear, .black.opacity(0.6)], startPoint: .center, endPoint: .bottom))
-                                .overlay(alignment: .bottomLeading) {
-                                    VStack(alignment: .leading) {
-                                        Text(title).font(.title2.bold())
-                                        Text(itemsText(m.assets.count)).font(.callout)
-                                    }.foregroundStyle(.white).padding(14)
-                                }
-                                .clipShape(RoundedRectangle(cornerRadius: 14))
-                        }.buttonStyle(.plain)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 14) {
+                HStack {
+                    Text("My Memories").font(.title2.bold())
+                    Spacer()
+                    Button { NewMemoryWindow.show(lib) } label: { Label("New Memory…", systemImage: "plus") }
+                }
+                if mine.items.isEmpty {
+                    Text("Create a memory from a time span here, or select photos in any view and choose “Create Memory…” from the right-click menu.")
+                        .font(.callout).foregroundStyle(.secondary)
+                } else {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 260), spacing: 18)], spacing: 18) {
+                        ForEach(mine.items) { m in
+                            card(cover: m.assetIDs.first, title: m.title, count: m.assetIDs.count,
+                                 open: { lib.open(.myMemory(m.id, m.title)) },
+                                 play: { Task { await lib.play(.myMemory(m.id, m.title)) } })
+                                .contextMenu { MyMemoryContextMenu(m: m, lib: lib) }
+                        }
                     }
-                }.padding(20)
+                }
+                Text("For Today").font(.title2.bold()).padding(.top, 12)
+                if lib.memories.isEmpty {
+                    Text("The server creates memories from photos taken on this day in previous years.")
+                        .font(.callout).foregroundStyle(.secondary)
+                } else {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 260), spacing: 18)], spacing: 18) {
+                        ForEach(lib.memories) { m in
+                            let title = Self.title(m)
+                            card(cover: m.assets.first(where: { $0.type == "IMAGE" })?.id ?? m.assets.first?.id, title: title,
+                                 count: m.assets.count,
+                                 open: { lib.open(.memory(m.id, title)) },
+                                 play: { Task { await lib.play(.memory(m.id, title)) } })
+                        }
+                    }
+                }
+            }.padding(20)
+        }
+    }
+
+    private func card(cover: String?, title: String, count: Int, open: @escaping () -> Void, play: @escaping () -> Void) -> some View {
+        Button(action: open) {
+            Thumb(id: cover)
+                .frame(height: 300)
+                .overlay(LinearGradient(colors: [.clear, .black.opacity(0.6)], startPoint: .center, endPoint: .bottom))
+                .overlay(alignment: .bottomLeading) {
+                    VStack(alignment: .leading) {
+                        Text(title).font(.title2.bold())
+                        Text(itemsText(count)).font(.callout)
+                    }.foregroundStyle(.white).padding(14)
+                }
+                .clipShape(RoundedRectangle(cornerRadius: 14))
+        }
+        .buttonStyle(.plain)
+        .overlay(alignment: .bottomTrailing) {
+            Button(action: play) {
+                Image(systemName: "play.fill").font(.title3).foregroundStyle(.white)
+                    .frame(width: 44, height: 44).background(.ultraThinMaterial, in: Circle())
             }
+            .buttonStyle(.plain).padding(14).help("Play Memory")
         }
     }
 

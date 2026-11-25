@@ -128,8 +128,12 @@ struct MainView: View {
             }
             if let v = lib.viewer { ViewerView(lib: lib, path: v).transition(.opacity) }
             if let e = lib.editing { EditorView(lib: lib, asset: e).id(e.id).transition(.opacity) }
+            if let p = lib.playing {
+                MemoryPlayerView(lib: lib, show: p).id("\(p.title)\(p.assets.count)\(p.assets.first?.id ?? "")").transition(.opacity)
+            }
         }
         .animation(.easeOut(duration: 0.15), value: lib.viewer)
+        .animation(.easeOut(duration: 0.25), value: lib.playing)
     }
 
     @ToolbarContentBuilder private var toolbar: some ToolbarContent {
@@ -159,6 +163,10 @@ struct MainView: View {
             if let s = lib.status { Text(s).font(.callout).foregroundStyle(.secondary).lineLimit(1) }
         }
         ToolbarItemGroup(placement: .primaryAction) {
+            if lib.playing == nil, lib.viewer == nil, lib.source.isMemory {
+                Button { Task { await lib.play() } } label: { Label("Play Memory", systemImage: "play.fill") }
+                    .help("Play Memory")
+            }
             Button { InfoWindow.show() } label: { Label("Info", systemImage: "info.circle") }.help("Info (⌘I)")
             Button { Task { await lib.toggleFavorite() } } label: { Label("Favorite", systemImage: "heart") }
                 .disabled(!accounts.canWrite || lib.targets.isEmpty).help("Favorite (.)")

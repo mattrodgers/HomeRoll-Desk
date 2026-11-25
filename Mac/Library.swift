@@ -10,6 +10,7 @@ enum Source: Hashable {
     case person(String, String)            // ID, Name
     case search(String)
     case memory(String, String)            // Rückblick: ID, Titel
+    case myMemory(String, String)          // eigener Rückblick (auf dem Mac gespeichert): ID, Titel
     case city(String)                      // Ort aus der Karte
     case smart(String, String)             // intelligentes Album: ID, Name
     case folder(String)                    // Fotos direkt in einem Server-Ordner (Pfad)
@@ -22,10 +23,14 @@ enum Source: Hashable {
         case .videos: "Videos"; case .livePhotos: "Live Photos"; case .hidden: "Hidden"; case .trash: "Recently Deleted"
         case .category(let n): Self.displayName(tag: n); case .album(_, let n): n; case .person(_, let n): n.isEmpty ? "Unnamed" : n
         case .search(let q): "Search: “\(q)”"; case .people: "People"; case .albums: "Albums"
-        case .memory(_, let t): t; case .city(let c): c; case .smart(_, let n): n
+        case .memory(_, let t): t; case .myMemory(_, let t): t; case .city(let c): c; case .smart(_, let n): n
         case .memories: "Memories"; case .map: "Map"; case .duplicates: "Duplicates"
         case .folder(let p): FolderStore.name(p); case .folderList(let p): p.isEmpty ? "Folders" : FolderStore.name(p)
         }
+    }
+    /// Raster eines Rückblicks (lässt sich abspielen)
+    var isMemory: Bool {
+        switch self { case .memory, .myMemory: true; default: false }
     }
     var isOverview: Bool {
         if case .folderList = self { return true }
@@ -105,6 +110,8 @@ final class Library {
         didSet { UserDefaults.standard.set(lastAlbumID, forKey: "mac.lastAlbum") }
     }
     var status: String?            // Fortschritt (Import/Export) für die Symbolleiste
+    /// Rückblick läuft gerade als Film (über dem Raster)
+    var playing: MemoryShow?
     var fileNames: [String: String] = [:]
 
     /// Das Raster (NSCollectionView) meldet sich hier an, um gezielt neu zu zeichnen.
@@ -168,6 +175,7 @@ final class Library {
         generation += 1
         sections = []; index = [:]; selection = []; focused = nil; viewer = nil; albums = []; people = []; memories = []
         SmartAlbums.shared.reload()
+        MyMemories.shared.reload()
         tagIDs = [:]; fileNames = [:]; source = .library; sectionsSource = nil
         FolderStore.shared.reset()
         onReloadAll?()
@@ -216,6 +224,9 @@ final class Library {
                 guard g == generation else { return }
                 if case .search(let q) = source {
                     sections = [GridSection(id: "q", title: "\(list.count == 1 ? "1 result" : "\(list.count) results") for “\(q)”", count: list.count, assets: list)]
+                } else if case .myMemory = source {
+                    // eigene Reihenfolge, nicht nach Monaten (HomeRoll-Desk #14)
+                    sections = [GridSection(id: "m", title: "\(itemsText(list.count)) · drag to reorder", count: list.count, assets: list)]
                 } else {
                     sections = Self.byMonth(list)
                 }
@@ -318,6 +329,7 @@ final class Library {
         case .memory(let id, _):
             if memories.isEmpty { memories = (try? await api.memories()) ?? [] }
             return memories.first { $0.id == id }?.assets.map(\.asset) ?? []
+        case .myMemory(let id, _): return await MyMemories.assets(MyMemories.shared.memory(id)?.assetIDs ?? [])
         case .city(let c): return try await f(["city": ["eq": c]])
         case .folder(let p): return await FolderStore.shared.assets(p)
         case .smart(let id, _):
@@ -485,6 +497,32 @@ final class Library {
         rebuildIndex()
         onReloadAll?()
     }
+
+    // MARK: Rückblicke (HomeRoll-Desk #14)
+
+    /// Rückblick abspielen – der gerade gezeigte oder einer aus der Übersicht.
+    func play(_ s: Source? = nil) async {
+        let s = s ?? source
+        var list = s == source ? sections.flatMap { $0.assets ?? [] } : ((try? await fetch(s)) ?? [])
+        guard !list.isEmpty else { return }
+        var mood = MemoryMood.gentle, myID: String?, title = s.title
+        if case .myMemory(let id, _) = s, let m = MyMemories.shared.memory(id) {
+            myID = id; title = m.title; mood = MemoryMood(rawValue: m.mood) ?? .gentle
+        } else {
+            list.sort { $0.date < $1.date }
+        }
+        let dates = list.map(\.date)
+        var sub = ""
+        if let a = dates.min(), let b = dates.max() {
+            let x = Fmt.dayLongMonthYear.string(from: a), y = Fmt.dayLongMonthYear.string(from: b)
+            sub = x == y ? x : "\(x) – \(y)"
+        }
+        viewer = nil
+        playing = MemoryShow(title: title, subtitle: sub, assets: list, mood: mood, myID: myID)
+    }
+
+    /// Reihenfolge/Inhalt des eigenen Rückblicks geändert → Raster neu (ohne Springen)
+    func memoryChanged() async { await load(keepCurrent: true) }
 
     func toggleFavorite() async {
         let t = targets; guard canWrite, !t.isEmpty else { return }

@@ -33,8 +33,10 @@ struct PhotoGrid: NSViewRepresentable {
                     withIdentifier: MonthHeader.ident)
         cv.register(LibraryFooterCell.self, forSupplementaryViewOfKind: NSCollectionView.elementKindSectionFooter,
                     withIdentifier: LibraryFooterCell.ident)
-        cv.registerForDraggedTypes([.fileURL])
+        // Dateien aus dem Finder (Import) + eigene Kacheln (Umsortieren im eigenen Rückblick, HomeRoll-Desk #14)
+        cv.registerForDraggedTypes([.fileURL] + NSFilePromiseReceiver.readableDraggedTypes.map { NSPasteboard.PasteboardType($0) })
         cv.setDraggingSourceOperationMask(.copy, forLocal: false)
+        cv.setDraggingSourceOperationMask([.move, .copy], forLocal: true)
         cv.coordinator = c
         c.cv = cv
         c.edge = edge
@@ -180,9 +182,30 @@ struct PhotoGrid: NSViewRepresentable {
 
         // MARK: Ablegen aus dem Finder = Import ins Mac-Konto
 
+        /// gerade gezogene eigene Kacheln (für das Umsortieren)
+        private var dragging: [String] = []
+
+        func collectionView(_ cv: NSCollectionView, draggingSession session: NSDraggingSession, willBeginAt point: NSPoint,
+                            forItemsAt paths: Set<IndexPath>) {
+            dragging = paths.sorted().compactMap { lib.asset(at: $0)?.id }
+        }
+        func collectionView(_ cv: NSCollectionView, draggingSession session: NSDraggingSession, endedAt point: NSPoint,
+                            dragOperation operation: NSDragOperation) {
+            dragging = []
+        }
+
+        private var reordering: String? {
+            if case .myMemory(let id, _) = lib.source, !dragging.isEmpty { return id }
+            return nil
+        }
+
         func collectionView(_ cv: NSCollectionView, validateDrop info: NSDraggingInfo,
                             proposedIndexPath p: AutoreleasingUnsafeMutablePointer<NSIndexPath>,
                             dropOperation op: UnsafeMutablePointer<NSCollectionView.DropOperation>) -> NSDragOperation {
+            if info.draggingSource as? NSCollectionView === cv, reordering != nil {
+                op.pointee = .before
+                return .move
+            }
             guard info.draggingSource == nil, AccountStore.shared.canImport,
                   info.draggingPasteboard.canReadObject(forClasses: [NSURL.self], options: [.urlReadingFileURLsOnly: true])
             else { return [] }
@@ -191,6 +214,12 @@ struct PhotoGrid: NSViewRepresentable {
 
         func collectionView(_ cv: NSCollectionView, acceptDrop info: NSDraggingInfo, indexPath: IndexPath,
                             dropOperation: NSCollectionView.DropOperation) -> Bool {
+            if info.draggingSource as? NSCollectionView === cv, let id = reordering {
+                MyMemories.shared.move(dragging, to: indexPath.item, in: id)
+                dragging = []
+                Task { await lib.memoryChanged() }
+                return true
+            }
             let urls = info.draggingPasteboard.readObjects(forClasses: [NSURL.self], options: [.urlReadingFileURLsOnly: true]) as? [URL] ?? []
             guard !urls.isEmpty else { return false }
             Task { await Transfer.importFiles(urls) }

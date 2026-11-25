@@ -42,6 +42,14 @@ enum Menus {
         addTo.submenu = albumMenu(lib)
         addTo.isEnabled = w
         m.addItem(addTo)
+        add("Create Memory…", "play.rectangle.on.rectangle", enabled: n >= 3) { MyMemories.create(from: t, lib: lib) }
+        if case .myMemory(let id, _) = lib.source {
+            let ids = t.map(\.id)
+            add("Move Earlier", "arrow.left") { MyMemories.shared.shift(ids, by: -1, in: id); await lib.memoryChanged() }
+            add("Move Later", "arrow.right") { MyMemories.shared.shift(ids, by: 1, in: id); await lib.memoryChanged() }
+            if n == 1 { add("Make Key Photo", "photo.badge.checkmark") { MyMemories.shared.move(ids, to: 0, in: id); await lib.memoryChanged() } }
+            add("Remove from Memory", "minus.rectangle") { MyMemories.shared.remove(Set(ids), from: id); await lib.memoryChanged() }
+        }
         if case .album = lib.source {
             if n == 1 { add("Make Key Photo", "photo.badge.checkmark", enabled: w) { await lib.makeKeyPhoto() } }
             add("Remove from Album", "rectangle.stack.badge.minus", enabled: w) { await lib.removeFromAlbum() }
@@ -73,6 +81,18 @@ enum Menus {
         m.addItem(.separator())
         for a in lib.albums {
             m.addItem(BlockMenuItem(a.albumName, symbol: "rectangle.stack") { Task { await lib.addToAlbum(a.id) } })
+        }
+        // eigene Rückblicke (nur auf diesem Mac)
+        let mine = MyMemories.shared.items
+        if !mine.isEmpty {
+            m.addItem(.separator())
+            for mm in mine {
+                m.addItem(BlockMenuItem(mm.title, symbol: "play.rectangle") {
+                    let ids = lib.targets.map(\.id)
+                    MyMemories.shared.add(ids, to: mm.id)
+                    lib.status = "Added \(itemsText(ids.count)) to “\(mm.title)”"
+                })
+            }
         }
         return m
     }
